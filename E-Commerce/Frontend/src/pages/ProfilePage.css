@@ -1,0 +1,124 @@
+/* Container principal da página de perfil */
+.profile-page {
+  display: grid;
+  grid-template-columns: 250px 1fr; /* Coluna para sidebar e conteúdo */
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 5%;
+  font-family: sans-serif;
+}
+
+/* Sidebar de navegação */
+.profile-sidebar {
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eee;
+  align-self: start; /* Alinha a sidebar ao topo */
+}
+
+.profile-sidebar nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.profile-sidebar nav a {
+  display: block;
+  padding: 0.8rem 1rem;
+  text-decoration: none;
+  color: var(--cor-primaria);
+  font-weight: bold;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.profile-sidebar nav a:hover {
+  background-color: #f0f0f0;
+}
+
+/* Estilo para o link ativo */
+.profile-sidebar nav a.active {
+  background-color: var(--cor-acento);
+  color: white;
+}
+
+/* Área de conteúdo principal */
+.profile-content {
+  background-color: #fff;
+  padding: 2.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eee;
+}
+
+.profile-content h1 {
+  font-size: 2rem;
+  color: var(--cor-primaria);
+  margin-bottom: 2rem;
+  border-bottom: 2px solid var(--cor-acento);
+  padding-bottom: 0.5rem;
+}
+
+/* Estilos para a seção de informações do perfil */
+.info-perfil p {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.info-perfil strong {
+  color: var(--cor-primaria);
+}
+
+/* Estilos para a lista de pedidos */
+.lista-pedidos .pedido {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.lista-pedidos .pedido-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.lista-pedidos .pedido-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-top: 1px solid #eee;
+}
+
+/* Botão de Sair */
+.btn-logout {
+  margin-top: 2rem;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #dc3545; /* Cor de perigo */
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-logout:hover {
+  background-color: #c82333;
+}
+
+/* Media Query para layout de coluna única em telas menores */
+@media (max-width: 768px) {
+  .profile-page {
+    grid-template-columns: 1fr;
+  }
+}

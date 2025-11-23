@@ -1,0 +1,64 @@
+.main-header {
+  background-color: var(--cor-card); /* Branco */
+  border-bottom: 1px solid var(--cor-borda); /* Linha sutil em vez de sombra pesada */
+  padding: 1rem 0;
+  position: sticky; /* Fixa no topo */
+  top: 0;
+  z-index: 100;
+}
+
+/* Container interno para alinhar o conteúdo no centro */
+.main-header > div {
+  max-width: var(--largura-maxima);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--cor-primaria);
+  letter-spacing: -0.03em; /* Letras mais juntas (estilo moderno) */
+}
+
+.nav-e-icon {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+nav {
+  display: flex;
+  gap: 1.5rem;
+}
+
+nav a {
+  font-size: 0.95rem;
+  color: var(--cor-texto-corpo);
+  font-weight: 500;
+  transition: color 0.2s ease; /* Transição suave de cor */
+}
+
+nav a:hover {
+  color: var(--cor-primaria); /* Fica preto no hover */
+}
+
+/* Estilo para o link da página ativa (usando NavLink do react-router-dom) */
+nav a.active {
+  color: var(--cor-acento); /* Usa a cor de destaque azul */
+}
+
+/* Estilo para o botão de logout para que pareça um link */
+.nav-logout {
+  cursor: pointer;
+}
+
+/* Responsividade Básica */
+@media (max-width: 768px) {
+  .nav-e-icon nav {
+    display: none; /* Esconde menu no mobile por enquanto (simplificado) */
+  }
+}

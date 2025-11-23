@@ -1,0 +1,129 @@
+.checkout-page {
+  padding: 2rem 5%;
+  max-width: 1200px;
+  margin: 2rem auto;
+  font-family: sans-serif;
+}
+
+.checkout-page h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--cor-primaria);
+  font-size: 2.5rem; /* Consistência com outras páginas */
+}
+
+.checkout-container {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 3rem;
+}
+
+.coluna-form h2,
+.coluna-resumo h2 {
+  font-size: 1.5rem; /* Ajuste para melhor hierarquia */
+  border-bottom: 2px solid var(--cor-acento);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--cor-primaria);
+}
+
+.coluna-form input[type="text"],
+.coluna-form input[type="email"] {
+  width: 100%;
+  padding: 12px; /* Mais preenchimento interno */
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px; /* Bordas mais arredondadas */
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.coluna-form input[type="text"]:focus,
+.coluna-form input[type="email"]:focus {
+  outline: none;
+  border-color: var(--cor-acento);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+
+.coluna-resumo {
+  background-color: #f9f9f9; /* Cor de fundo suave */
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  align-self: start; /* Alinha o resumo ao topo */
+}
+
+.resumo-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.total-final {
+  font-size: 1.5rem; /* Ajuste para consistência */
+  font-weight: bold;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--cor-primaria); /* Linha mais forte */
+  text-align: right;
+}
+
+.btn-finalizar-pedido {
+  width: 100%;
+  padding: 1rem;
+  background-color: var(--cor-acento);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-top: 2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-finalizar-pedido:hover {
+  background-color: #0056b3; /* Cor mais escura no hover */
+  transform: scale(1.03); /* Leve aumento no hover */
+}
+
+/* Estilos para as opções de pagamento */
+.payment-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Espaço entre os botões de pagamento */
+  margin-top: 1rem;
+}
+
+/* Estilo para o botão de voltar para a loja (no caso de carrinho vazio) */
+.btn-loja {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 1rem 2rem;
+  background-color: var(--cor-primaria);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.btn-loja:hover {
+  background-color: #333; /* Cor mais escura no hover */
+}
+
+/* Media Query (Mobile) */
+@media (max-width: 768px) {
+  .checkout-container {
+    grid-template-columns: 1fr;
+    gap: 2rem; /* Adiciona espaço entre o formulário e o resumo */
+  }
+
+  .total-final {
+    text-align: left; /* Alinha o total à esquerda no mobile */
+  }
+}

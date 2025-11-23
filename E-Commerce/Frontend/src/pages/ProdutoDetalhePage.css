@@ -1,0 +1,126 @@
+.detalhe-produto-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem; /* Mais espaço entre as colunas */
+  padding: 2rem 5%;
+  max-width: 1200px;
+  margin: 2rem auto;
+  background-color: #fff; /* Fundo branco para o card */
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.coluna-imagem {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.imagem-principal-galeria {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1; /* Mantém a imagem quadrada */
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.miniaturas-galeria {
+  display: flex;
+  gap: 0.75rem; /* Mais espaço entre as miniaturas */
+  flex-wrap: wrap;
+}
+
+.miniatura-item {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px; /* Bordas mais arredondadas */
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  opacity: 0.7;
+}
+
+.miniatura-item.ativa {
+  border-color: var(--cor-acento);
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.coluna-info h1 {
+  font-size: 2.5rem;
+  color: var(--cor-primaria);
+}
+
+.preco-detalhe {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: var(--cor-acento); /* Cor de destaque para o preço */
+  margin: 1rem 0;
+}
+
+.coluna-info h3 {
+  font-size: 1.2rem;
+  margin-top: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--cor-acento);
+  color: var(--cor-primaria);
+}
+
+.coluna-info ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin-top: 1rem;
+  color: #555;
+}
+
+/* Estilos para o seletor de quantidade */
+.controle-quantidade {
+  display: flex;
+  align-items: center;
+  margin-top: 2rem;
+  gap: 1rem;
+}
+
+.controle-quantidade label {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.controle-quantidade input {
+  width: 60px;
+  text-align: center;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1.1rem;
+}
+
+.btn-comprar {
+  display: inline-block;
+  width: 100%;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--cor-acento);
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 2rem;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-comprar:hover {
+  background-color: #0056b3;
+  transform: scale(1.02);
+}
+
+/* Media Query (Mobile) */
+@media (max-width: 768px) {
+  .detalhe-produto-container {
+    grid-template-columns: 1fr;
+  }
+}

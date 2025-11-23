@@ -1,0 +1,54 @@
+/* Container principal do rodapé */
+.main-footer {
+  background-color: transparent; /* Remove o fundo escuro */
+  color: var(--cor-texto-corpo); /* Usa a cor de texto padrão */
+  padding: 2rem 5%;
+  margin-top: 5rem; /* Aumenta um pouco a margem para dar mais respiro */
+  font-family: sans-serif;
+  border-top: 1px solid var(--cor-borda); /* Adiciona uma linha sutil no topo */
+}
+
+/* Conteúdo interno do rodapé */
+.footer-content {
+  max-width: var(--largura-maxima);
+  margin: 0 auto;
+  display: flex; /* Muda para flexbox para um layout mais simples */
+  justify-content: center; /* Centraliza o conteúdo */
+  gap: 3rem; /* Espaço entre as colunas */
+  text-align: center;
+}
+
+/* Coluna individual no rodapé */
+.footer-column h4 {
+  color: var(--cor-texto-titulo); /* Usa a cor de título padrão */
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex; /* Coloca os links lado a lado */
+  gap: 1.5rem;
+}
+
+.footer-column a {
+  color: var(--cor-texto-corpo); /* Usa a cor de texto padrão */
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-column a:hover {
+  color: var(--cor-acento); /* Usa a cor de destaque no hover */
+}
+
+/* Barra inferior com o copyright */
+.footer-bottom {
+  max-width: var(--largura-maxima);
+  margin: 2.5rem auto 0;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--cor-texto-leve); /* Usa a cor de texto mais clara */
+}

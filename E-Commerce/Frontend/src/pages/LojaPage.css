@@ -1,0 +1,64 @@
+/* Renomeado para consistência e adicionado layout padrão */
+.loja-page {
+  padding: 2rem 5%;
+  max-width: 1200px;
+  margin: 2rem auto;
+  font-family: sans-serif;
+}
+
+.loja-page h1 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 3rem; /* Mais espaço abaixo do título */
+  color: var(--cor-primaria);
+}
+
+/* Container para os controles de filtro e busca */
+.loja-controles {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* Permite que os filtros quebrem a linha em telas menores */
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+  padding: 1.5rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.campo-busca, .campo-filtro {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.campo-busca input, .campo-filtro select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  min-width: 200px; /* Largura mínima para os campos */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.campo-busca input:focus, .campo-filtro select:focus {
+  outline: none;
+  border-color: var(--cor-acento);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+
+/* O grid de produtos em si */
+.produtos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+/* Media Query para ajustar os controles em telas menores */
+@media (max-width: 768px) {
+  .loja-controles {
+    flex-direction: column;
+    align-items: stretch; /* Faz os campos ocuparem a largura total */
+  }
+}

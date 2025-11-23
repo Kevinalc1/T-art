@@ -1,0 +1,101 @@
+/* Reutilizando o estilo do container de login para consistência */
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  padding: 4rem 2rem;
+  background-color: #f9f9f9; /* Fundo suave para a página */
+  font-family: sans-serif;
+}
+
+/* O "card" do formulário, espelhado do login */
+.register-form {
+  width: 100%;
+  max-width: 420px;
+  padding: 2.5rem;
+  background-color: white;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.register-form h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  color: var(--cor-primaria);
+}
+
+/* Grupo de formulário (label + input) */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #555;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--cor-acento);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+
+.btn-register {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--cor-acento); /* Usando a cor de destaque padrão */
+  color: white;
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-register:hover {
+  background-color: #0056b3; /* Cor mais escura no hover */
+  transform: scale(1.02);
+}
+
+/* Link para voltar ao login */
+.register-links {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.register-links a {
+  color: var(--cor-acento);
+  text-decoration: none;
+  transition: text-decoration 0.3s ease;
+}
+
+.register-links a:hover {
+  text-decoration: underline;
+}
+
+.error-message {
+  color: #d93025;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+}

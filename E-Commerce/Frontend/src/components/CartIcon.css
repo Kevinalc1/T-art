@@ -1,0 +1,31 @@
+.cart-icon {
+  position: relative; /* Permite o posicionamento absoluto do contador */
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1.6rem; /* Ícone um pouco maior para destaque */
+  color: var(--cor-primaria);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.cart-icon:hover {
+  transform: scale(1.1); /* Aumenta um pouco no hover */
+  color: var(--cor-acento); /* Muda para a cor de destaque */
+}
+
+.contador {
+  position: absolute;
+  top: -5px;      /* Posiciona acima do ícone */
+  right: -10px;   /* Posiciona à direita do ícone */
+  background-color: var(--cor-acento);
+  color: white;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: bold;
+  min-width: 20px;  /* Garante que seja sempre um círculo */
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--cor-card); /* Borda da cor do fundo do header para criar um recorte */
+}

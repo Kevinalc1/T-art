@@ -1,0 +1,112 @@
+/* 1. Importar Fonte Profissional */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* 2. Variáveis de Design (O "DNA" do seu site) */
+:root {
+  /* Paleta Monocromática */
+  --cor-fundo: #f9fafb;       /* Cinza muito claro, quase branco */
+  --cor-card: #ffffff;        /* Branco puro */
+  
+  --cor-texto-titulo: #111827; /* Preto suave */
+  --cor-texto-corpo: #4b5563;  /* Cinza médio para leitura */
+  --cor-texto-leve: #9ca3af;   /* Cinza claro para detalhes */
+
+  --cor-primaria: #000000;     /* Preto absoluto (Botões/Ações) */
+  --cor-primaria-hover: #333333; 
+
+  /* Cor de Destaque (Azul) para botões principais e links */
+  --cor-acento: #007bff;
+  --cor-acento-hover: #0056b3;
+
+  --cor-borda: #e5e7eb;        /* Linhas sutis */
+  --cor-erro: #ef4444;
+  --cor-sucesso: #10b981;
+
+  /* Espaçamento e Formas */
+  --raio-borda: 8px;           /* Cantos arredondados modernos */
+  --sombra-suave: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --sombra-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+  
+  /* Layout */
+  --largura-maxima: 1200px;
+}
+
+/* 3. Reset Básico e Tipografia */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif; /* A mágica acontece aqui */
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto-corpo);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased; /* Fontes mais nítidas */
+}
+
+/* 4. Estilos Globais para Títulos */
+h1, h2, h3, h4 {
+  color: var(--cor-texto-titulo);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+h1 { font-size: 2.5rem; letter-spacing: -0.02em; }
+h2 { font-size: 1.8rem; letter-spacing: -0.01em; }
+h3 { font-size: 1.5rem; }
+
+/* 5. Estilos Globais para Links e Botões */
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+/* Botão Padrão (usado em todo o site) */
+button, .btn-primary, .btn-login, .btn-register, .btn-comprar, .btn-finalizar, .btn-submit {
+  background-color: var(--cor-acento); /* Usa a cor de destaque azul */
+  color: white;
+  border: none;
+  padding: 0.85rem 1.5rem; /* Leve ajuste no padding */
+  border-radius: var(--raio-borda);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button:hover, .btn-primary:hover, .btn-login:hover, .btn-register:hover, .btn-comprar:hover, .btn-finalizar:hover, .btn-submit:hover {
+  background-color: var(--cor-acento-hover); /* Usa a cor de destaque mais escura */
+  transform: translateY(-1px); /* Efeito sutil de elevação */
+  box-shadow: var(--sombra-suave);
+}
+
+button:disabled {
+  background-color: var(--cor-texto-leve);
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* 6. Inputs Globais (Formulários Bonitos) */
+input, textarea, select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-borda);
+  background-color: var(--cor-card);
+  font-family: inherit;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: var(--cor-primaria);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1); /* Anel de foco */
+}

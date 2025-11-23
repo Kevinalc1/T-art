@@ -1,0 +1,144 @@
+.carrinho-page {
+  padding: 2rem 5%;
+  max-width: 1200px; /* Aumenta a largura máxima para um layout mais espaçoso */
+  margin: 2rem auto;
+  font-family: sans-serif; /* Define uma fonte padrão para consistência */
+}
+
+.carrinho-page h1 {
+  color: var(--cor-primaria);
+  margin-bottom: 2rem;
+  text-align: center;
+  font-size: 2.5rem; /* Aumenta o tamanho do título */
+}
+
+.lista-itens {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* Espaçamento entre os itens do carrinho */
+}
+
+.item-carrinho {
+  display: grid;
+  grid-template-columns: 100px 3fr 1fr 1fr 1fr 80px; /* Ajuste nas colunas */
+  align-items: center;
+  padding: 1.5rem;
+  gap: 1rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Adiciona sombra para efeito de card */
+  border: 1px solid #eee;
+}
+
+.item-carrinho img {
+  width: 100%;
+  height: 100px; /* Aumenta a altura da imagem */
+  object-fit: cover;
+  border-radius: 8px; /* Bordas mais arredondadas */
+}
+
+.info-produto h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.info-produto p {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.resumo-compra {
+  margin-top: 3rem;
+  padding: 2rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  border-top: 3px solid var(--cor-primaria);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* Alinha o conteúdo à direita */
+}
+
+.total-compra {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--cor-primaria);
+  margin-bottom: 1.5rem;
+}
+
+.btn-finalizar {
+  padding: 1rem 2rem;
+  background-color: var(--cor-acento);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Transição suave */
+}
+
+.btn-finalizar:hover {
+  background-color: #0056b3; /* Cor mais escura no hover */
+  transform: scale(1.03); /* Leve aumento no hover */
+}
+
+/* Estilo para quando o carrinho está vazio */
+.carrinho-vazio {
+  text-align: center;
+  padding: 4rem 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Media Query (Mobile) */
+@media (max-width: 768px) {
+  .carrinho-page h1 {
+    font-size: 2rem;
+  }
+
+  .item-carrinho {
+    /* Muda para um layout de coluna única com áreas de grid */
+    grid-template-columns: 80px 1fr;
+    grid-template-areas:
+      "imagem info"
+      "imagem preco"
+      "imagem quantidade"
+      "imagem subtotal"
+      "imagem acoes";
+    padding: 1rem;
+    gap: 0.5rem 1rem;
+  }
+
+  /* Mapeia cada elemento para sua área no grid */
+  .item-carrinho img { grid-area: imagem; height: auto; }
+  .item-carrinho .info-produto { grid-area: info; }
+  .item-carrinho .preco-unitario { grid-area: preco; }
+  .item-carrinho .quantidade { grid-area: quantidade; }
+  .item-carrinho .subtotal { grid-area: subtotal; }
+  .item-carrinho .acoes { grid-area: acoes; }
+
+  .resumo-compra {
+    align-items: center; /* Centraliza o conteúdo do resumo no mobile */
+  }
+}
+
+/* Estilo para o botão de remover item */
+.btn-remover {
+  background-color: transparent;
+  border: 1px solid #ccc;
+  color: #888;
+  padding: 0.4rem 0.8rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-remover:hover {
+  background-color: #f8d7da; /* Cor de perigo suave */
+  color: #721c24;
+  border-color: #f5c6cb;
+}

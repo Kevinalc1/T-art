@@ -1,0 +1,48 @@
+.confirmacao-container {
+    max-width: 600px;
+    margin: 4rem auto;
+    padding: 2.5rem 3rem; /* Ajuste no padding */
+    text-align: center;
+    background-color: #fff; /* Fundo branco para o card */
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Sombra mais sutil */
+    border: 1px solid #eee;
+    font-family: sans-serif;
+}
+
+.confirmacao-container h1 {
+    color: #28a745; /* Cor verde para sucesso */
+    margin-bottom: 1.5rem;
+    font-size: 2.5rem;
+}
+
+.confirmacao-container p {
+    font-size: 1.1rem;
+    color: #555; /* Cor de texto padrão */
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.icone-sucesso {
+    font-size: 5rem;
+    color: #28a745; /* Cor verde para sucesso */
+    margin: 2rem 0;
+    line-height: 1;
+}
+
+.btn-voltar-loja {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding: 1rem 2rem;
+    background-color: var(--cor-primaria);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px; /* Bordas consistentes */
+    font-size: 1.1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn-voltar-loja:hover {
+    background-color: #333; /* Cor mais escura no hover */
+}

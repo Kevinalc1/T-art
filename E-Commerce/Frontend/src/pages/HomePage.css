@@ -1,0 +1,111 @@
+/* Estilos da Seção Hero (Banner Principal) */
+.hero {
+  text-align: center;
+  padding: 5rem 2rem; /* Ajuste no espaçamento */
+  background-color: var(--cor-fundo); /* Fundo claro para uma aparência mais leve */
+  color: var(--cor-texto-titulo); /* Cor de texto escura para contraste */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero h1 {
+  font-size: 3rem; /* Título maior */
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.25rem;
+  max-width: 600px; /* Limita a largura do subtítulo */
+  margin-bottom: 2rem;
+  color: var(--cor-texto-corpo); /* Cor de texto padrão para o parágrafo */
+}
+
+.btn-cta {
+  padding: 1rem 2.5rem;
+  background-color: var(--cor-acento);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-cta:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+/* Estilos da Grade de Produtos */
+.product-grid {
+  padding: 2rem 5%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.product-grid h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: var(--cor-primaria);
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem; /* Aumenta o espaçamento entre os cards */
+}
+
+/* Estilos para o Card de Produto (ProductCard) */
+.product-card {
+  background-color: #fff;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  overflow: hidden;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.product-card img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+}
+
+.product-card h3 {
+  font-size: 1.1rem;
+  margin: 1rem;
+  color: var(--cor-primaria);
+}
+
+.product-card .price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--cor-acento);
+  margin-bottom: 1rem;
+}
+
+.product-card .btn-detalhes {
+  display: block;
+  background-color: var(--cor-primaria);
+  color: white;
+  padding: 0.8rem;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.product-card .btn-detalhes:hover {
+  background-color: #333;
+}

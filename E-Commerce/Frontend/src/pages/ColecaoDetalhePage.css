@@ -1,0 +1,42 @@
+.colecao-detalhe-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 5%;
+  font-family: sans-serif;
+}
+
+.colecao-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 3rem 2rem;
+  background-color: #f9f9f9; /* Fundo suave para destacar */
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.colecao-header h1 {
+  font-size: 2.5rem;
+  color: var(--cor-primaria);
+  margin-bottom: 1rem;
+}
+
+.colecao-header p {
+  font-size: 1.1rem;
+  color: #666;
+  max-width: 700px;
+  margin: 0 auto; /* Centraliza o parágrafo */
+}
+
+.colecao-detalhe-page h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2.5rem;
+  color: var(--cor-primaria);
+}
+
+/* Reutilizando o estilo da LojaPage para a grelha de produtos */
+.produtos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem; /* Garante o espaçamento consistente com a HomePage */
+}

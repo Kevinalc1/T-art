@@ -1,0 +1,61 @@
+.produto-card {
+  background-color: var(--cor-card);
+  border-radius: var(--raio-borda);
+  overflow: hidden; /* Para a imagem não sair das bordas */
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid transparent; /* Prepara para o hover */
+  display: flex;
+  flex-direction: column;
+}
+
+.produto-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--sombra-hover);
+  border-color: var(--cor-borda);
+}
+
+.produto-card img {
+  width: 100%;
+  aspect-ratio: 1 / 1; /* Garante que seja sempre quadrado */
+  object-fit: cover;
+  background-color: #f3f4f6; /* Placeholder cinza enquanto carrega */
+}
+
+/* Container para o texto dentro do card */
+.card-info {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.produto-card h3 {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+  color: var(--cor-texto-titulo);
+}
+
+.produto-card .preco {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--cor-primaria);
+  margin-bottom: 1rem;
+}
+
+.btn-detalhes {
+  margin-top: auto; /* Empurra o botão para o fundo */
+  background-color: transparent;
+  border: 1px solid var(--cor-borda);
+  color: var(--cor-texto-titulo);
+  text-align: center;
+  padding: 0.5rem;
+  border-radius: var(--raio-borda);
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.btn-detalhes:hover {
+  border-color: var(--cor-primaria);
+  background-color: var(--cor-primaria);
+  color: white;
+}
