@@ -36,32 +36,55 @@ export default function AdminDashboard() {
 
   return (
     <div className="admin-dashboard">
-      <h1>Gestão de Produtos</h1>
-      <Link to="/admin/produtos/novo" className="btn-novo">
-        Adicionar Novo Produto
-      </Link>
+      {/* Sidebar para navegação no painel de admin */}
+      <aside className="admin-sidebar">
+        <h2>Painel</h2>
+        <ul>
+          <li><Link to="/admin/dashboard" className="active">Produtos</Link></li>
+          <li><Link to="/admin/colecoes">Coleções</Link></li>
+          {/* Adicione outros links de navegação aqui (e.g., Pedidos, Usuários) */}
+        </ul>
+      </aside>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Preço</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {produtos.map((produto) => (
-            <tr key={produto._id}>
-              <td>{produto.productName}</td>
-              <td>{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(produto.price)}</td>
-              <td className="acoes">
-                <Link to={`/admin/produtos/editar/${produto._id}`} className="btn-editar">Editar</Link>
-                <button onClick={() => handleDelete(produto._id)} className="btn-apagar">Apagar</button>
-              </td>
+      {/* Conteúdo principal da página */}
+      <main className="admin-content">
+        <div className="admin-header">
+          <h1>Gestão de Produtos</h1>
+          <Link to="/admin/produtos/novo" className="btn-novo">
+            Adicionar Novo Produto
+          </Link>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Imagem</th>
+              <th>Nome</th>
+              <th>Preço</th>
+              <th>Ações</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {produtos.map((produto) => (
+              <tr key={produto._id}>
+                <td>
+                  <img 
+                    src={produto.imageUrls && produto.imageUrls.length > 0 ? produto.imageUrls[0] : 'https://via.placeholder.com/60'} 
+                    alt={produto.productName} 
+                    className="admin-product-image" 
+                  />
+                </td>
+                <td>{produto.productName}</td>
+                <td>{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(produto.price)}</td>
+                <td className="acoes">
+                  <Link to={`/admin/produtos/editar/${produto._id}`} className="btn-editar">Editar</Link>
+                  <button onClick={() => handleDelete(produto._id)} className="btn-apagar">Apagar</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </main>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Colecao = require('../models/Colecao');
+const mongoose = require('mongoose');
+const Colecao = mongoose.model('Colecao');
 const { protect, admin } = require('../middleware/authMiddleware');
 
 // @desc    Listar todas as coleções

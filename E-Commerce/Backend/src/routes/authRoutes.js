@@ -1,11 +1,13 @@
 const express = require('express');
-const User = require('../models/User.js');
+const mongoose = require('mongoose');
+const User = mongoose.model('User');
 const generateToken = require('../utils/generateToken.js');
 const asyncHandler = require('express-async-handler');
 const { protect } = require('../middleware/authMiddleware.js');
 const crypto = require('crypto');
 const sendEmail = require('../utils/sendEmail');
 const router = express.Router();
+const bcrypt = require('bcryptjs'); // Importa o bcryptjs
 
 // @desc    Registrar um novo usuário
 // @route   POST /api/auth/register
@@ -20,20 +22,22 @@ router.post('/register', asyncHandler(async (req, res) => {
     throw new Error('Usuário já existe');
   }
 
+  // O hook 'pre-save' no modelo User.js irá criptografar a senha automaticamente
   const user = await User.create({
     email,
-    password,
+    password, // Passa a senha em texto puro, o modelo cuida da criptografia
     // Por padrão, um novo usuário não é admin
     isAdmin: false,
   });
 
   if (user) {
     res.status(201).json({
-      _id: user._id,
-      email: user.email,
-      isAdmin: user.isAdmin,
       token: generateToken(user._id),
-      user: { isAdmin: user.isAdmin } // Adicionado para corresponder à expectativa do frontend
+      user: {
+        _id: user._id,
+        email: user.email,
+        isAdmin: user.isAdmin
+      }
     });
   } else {
     res.status(400);
@@ -51,11 +55,12 @@ router.post('/login', asyncHandler(async (req, res) => {
 
   if (user && (await user.matchPassword(password))) {
     res.json({
-      _id: user._id,
-      email: user.email,
-      isAdmin: user.isAdmin,
       token: generateToken(user._id),
-      user: { isAdmin: user.isAdmin } // Adicionado para corresponder à expectativa do frontend
+      user: {
+        _id: user._id,
+        email: user.email,
+        isAdmin: user.isAdmin
+      }
     });
   } else {
     res.status(401); // Unauthorized
@@ -134,11 +139,15 @@ router.put('/reset-password/:token', async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: 'Token inválido ou expirado.' });
     }
-    // 2. Definir a nova senha e limpar os campos do token
-    user.password = req.body.password;
+    // 2. Criptografar a nova senha
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
+    // 3. Definir a nova senha (já criptografada) e limpar os campos do token
+    user.password = hashedPassword;
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
-    // 4. Salvar (O nosso hook pre-save em User.js irá AUTOMATICAMENTE fazer o hash)
+    // 4. Salvar o usuário com a nova senha criptografada
     await user.save();
     res.status(200).json({ message: 'Senha redefinida com sucesso!' });
   } catch (err) {

@@ -1,11 +1,14 @@
 import React from 'react';
 import { useCarrinho } from '../context/CarrinhoContext.jsx';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Importa useNavigate para redirecionamento
+import { useAuth } from '../context/AuthContext.jsx'; // Importa o hook de autenticação
 import './CarrinhoPage.css';
 
 export default function CarrinhoPage() {
   const { state, removerItem } = useCarrinho();
-
+  const { isAuthenticated } = useAuth(); // Pega o estado de autenticação
+  const navigate = useNavigate(); // Hook para navegar programaticamente
+  
   const calcularTotal = () => {
     return state.items.reduce((total, item) => {
       // Agora o preço é um número, então a conversão não é mais necessária
@@ -14,6 +17,17 @@ export default function CarrinhoPage() {
   };
 
   const valorTotal = calcularTotal();
+
+  // Função que decide para onde o usuário vai ao clicar em "Finalizar Compra"
+  const handleFinalizarCompra = () => {
+    if (isAuthenticated) {
+      // Se estiver logado, vai para o checkout
+      navigate('/checkout');
+    } else {
+      // Se não estiver logado, vai para a página de registro
+      navigate('/register');
+    }
+  };
 
   return (
     <div className="carrinho-page">
@@ -58,9 +72,9 @@ export default function CarrinhoPage() {
             <div className="total-compra">
               Total: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valorTotal)}
             </div>
-            <Link to="/checkout" className="btn-finalizar">
+            <button onClick={handleFinalizarCompra} className="btn-finalizar">
               Finalizar Compra
-            </Link>
+            </button>
           </div>
         </>
       )}

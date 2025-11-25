@@ -1,0 +1,295 @@
+/* c/Users/kevin/OneDrive/Área de Trabalho/E-commerce/E-Commerce/Frontend/src/pages/admin/AdminProdutoForm.css */
+
+.admin-produto-form-container {
+  padding: 2rem;
+  background-color: #f9f9f9;
+  max-width: 1200px;
+  margin: 2rem auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.admin-produto-form-container h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.admin-produto-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+/* Coluna da esquerda */
+.form-fields {
+  flex: 2;
+  min-width: 300px;
+}
+
+/* Coluna da direita */
+.form-options {
+  flex: 1;
+  min-width: 250px;
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.form-group input::placeholder {
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="number"]:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.form-group textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.category-selection-wrapper {
+  display: flex;
+  align-items: center; /* Garante alinhamento vertical */
+  gap: 0.5rem;
+}
+
+.category-selection-wrapper select {
+  flex-grow: 1;
+  margin: 0; /* Remove margens padrão que podem desalinhá-lo */
+}
+
+.btn-create-category {
+  padding: 0.75rem 1rem; /* Ajusta o padding para corresponder à altura do select */
+  background-color: transparent;
+  color: #007bff;
+  border: 1px solid #007bff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  line-height: 1; /* Garante que o texto não cause altura extra */
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-create-category:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+/* Estilo para o toggle do combo */
+.combo-toggle label {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.combo-toggle input[type="checkbox"] {
+  margin-right: 0.75rem;
+  width: 18px;
+  height: 18px;
+}
+
+/* Estilo para a seleção de produtos do combo */
+.combo-product-selection h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.product-list {
+  max-height: 350px;
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 0.5rem;
+}
+
+.product-item label {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.product-item label:hover {
+  background-color: #f0f0f0;
+}
+
+.product-item input[type="checkbox"] {
+  margin-right: 0.75rem;
+  width: 16px;
+  height: 16px;
+}
+
+/* Estilo para inputs de ficheiro */
+input[type="file"] {
+  font-size: 0.9rem;
+}
+
+.file-info, .upload-status {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.5rem;
+  background-color: #e9ecef;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.image-preview-list {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+.image-preview-single {
+  margin-top: 1rem;
+}
+
+.image-preview-single p {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.image-preview-single img {
+  max-width: 150px;
+  height: auto;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+/* Botão Salvar */
+.btn-salvar {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  margin: 2rem auto 0;
+  padding: 0.8rem 1.5rem;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-salvar:hover:not(:disabled) {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+.btn-salvar:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+
+/* Estilos para o Modal */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 450px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.btn-modal-confirm,
+.btn-modal-cancel {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-modal-confirm {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-modal-confirm:hover {
+  background-color: #0056b3;
+}
+
+.btn-modal-cancel {
+  background-color: #e9ecef;
+  color: #333;
+  border: 1px solid #ced4da;
+}
+
+.btn-modal-cancel:hover {
+  background-color: #d6d8db;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

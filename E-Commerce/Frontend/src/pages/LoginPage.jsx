@@ -3,6 +3,9 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext'; // 1. Importar o useAuth
 import './LoginPage.css'; // Importa o CSS que criamos
 
+// Importa a URL da API a partir das variáveis de ambiente
+const API_URL = import.meta.env.VITE_API_URL;
+
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -15,24 +18,20 @@ export default function LoginPage() {
     setError(''); // Limpa erros anteriores
 
     try {
-      // 3. Usar a função de login do contexto. Ela já trata o token e o estado.
-      const { user } = await login(email, password);
+      // 3. Chamar a função de login do AuthContext, passando as credenciais.
+      // O AuthContext é o único responsável por fazer a chamada de API.
+      const data = await login(email, password);
 
       // 4. Redirecionamento inteligente com base no perfil do usuário
-      if (user.isAdmin) {
+      // Acessa o 'user' diretamente do objeto retornado pelo login.
+      if (data.user.isAdmin) {
         navigate('/admin/dashboard');
       } else {
         navigate('/perfil');
       }
     } catch (error) {
       console.error('Erro ao fazer login:', error);
-      // Melhora a mensagem de erro para o usuário
-      if (error.message && error.message.includes('401')) {
-        setError('E-mail ou senha inválidos. Por favor, tente novamente.');
-      } else {
-        // Para outros tipos de erro (ex: falha de rede)
-        setError(error.message || 'Falha no login. Verifique suas credenciais.');
-      }
+      setError(error.message || 'Falha na comunicação com o servidor. Tente novamente.');
     }
   };
 

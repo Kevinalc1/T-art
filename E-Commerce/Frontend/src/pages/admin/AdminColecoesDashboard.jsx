@@ -44,30 +44,49 @@ export default function AdminColecoesDashboard() {
 
   return (
     <div className="admin-dashboard">
-      <h1>Gestão de Coleções</h1>
-      <Link to="/admin/colecoes/nova" className="btn-novo">
-        Adicionar Nova Coleção
-      </Link>
+      {/* Sidebar para navegação consistente no painel de admin */}
+      <aside className="admin-sidebar">
+        <h2>Painel</h2>
+        <ul>
+          <li><Link to="/admin/dashboard">Produtos</Link></li>
+          <li><Link to="/admin/colecoes" className="active">Coleções</Link></li>
+          {/* Adicione outros links de navegação aqui */}
+        </ul>
+      </aside>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {colecoes.map((colecao) => (
-            <tr key={colecao._id}>
-              <td>{colecao.name}</td>
-              <td className="acoes">
-                <Link to={`/admin/colecoes/editar/${colecao._id}`} className="btn-editar">Editar</Link>
-                <button onClick={() => handleDelete(colecao._id)} className="btn-apagar">Apagar</button>
-              </td>
+      {/* Conteúdo principal da página */}
+      <main className="admin-content">
+        <div className="admin-header">
+          <h1>Gestão de Coleções</h1>
+          <Link to="/admin/colecoes/nova" className="btn-novo">
+            Adicionar Nova Coleção
+          </Link>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Imagem</th>
+              <th>Nome da Coleção</th>
+              <th>Ações</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {colecoes.map((colecao) => (
+              <tr key={colecao._id}>
+                <td>
+                  <img src={colecao.coverImage || 'https://via.placeholder.com/60'} alt={colecao.name} className="admin-product-image" />
+                </td>
+                <td>{colecao.name}</td>
+                <td className="acoes">
+                  <Link to={`/admin/colecoes/editar/${colecao._id}`} className="btn-editar">Editar</Link>
+                  <button onClick={() => handleDelete(colecao._id)} className="btn-apagar">Apagar</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </main>
     </div>
   );
 }

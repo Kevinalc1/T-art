@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './AdminProdutoForm.css'; // Reutilizando o CSS do formulário de produto
+import './AdminColecaoForm.css'; // Usando um CSS dedicado para a página de coleções
 
 export default function AdminColecaoForm() {
   const { id } = useParams();
@@ -17,6 +17,7 @@ export default function AdminColecaoForm() {
   // Estados para seleção de produtos
   const [allProducts, setAllProducts] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Estado de carregamento
   const [uploading, setUploading] = useState(false);
@@ -116,62 +117,83 @@ export default function AdminColecaoForm() {
     }
   };
 
+  // Filtra os produtos com base no termo de busca
+  const filteredProducts = allProducts.filter(product =>
+    product.productName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div className="admin-form-container">
+    <div className="admin-colecao-form-container">
       <h1>{isEditing ? 'Editar Coleção' : 'Adicionar Nova Coleção'}</h1>
-      <form onSubmit={handleSubmit} className="admin-form">
-        <label htmlFor="name">Nome da Coleção</label>
-        <input
-          type="text"
-          id="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
+      <form onSubmit={handleSubmit} className="admin-colecao-form">
+        <div className="form-fields">
+          <div className="form-group">
+            <label htmlFor="name">Nome da Coleção</label>
+            <input
+              type="text"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </div>
 
-        <label htmlFor="description">Descrição</label>
-        <textarea
-          id="description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        ></textarea>
+          <div className="form-group">
+            <label htmlFor="description">Descrição</label>
+            <textarea
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            ></textarea>
+          </div>
 
-        <div>
-          <label htmlFor="coverImage">Imagem de Capa</label>
-          <input
-            type="file"
-            id="coverImage"
-            onChange={(e) => setCoverImageFile(e.target.files[0])}
-          />
-          {isEditing && existingCoverImage && !coverImageFile && (
-            <div>
-              <p>Imagem atual:</p>
-              <img src={existingCoverImage} alt="Capa atual" width="100" />
-            </div>
-          )}
+          <div className="form-group">
+            <label htmlFor="coverImage">Imagem de Capa</label>
+            <input
+              type="file"
+              id="coverImage"
+              onChange={(e) => setCoverImageFile(e.target.files[0])}
+            />
+            {isEditing && existingCoverImage && !coverImageFile && (
+              <div className="image-preview">
+                <p>Imagem atual:</p>
+                <img src={existingCoverImage} alt="Capa atual" />
+              </div>
+            )}
+          </div>
         </div>
 
-        <div className="lista-produtos-combo">
+        <div className="product-selection-container">
           <h3>Produtos</h3>
           <p>Selecione os produtos que fazem parte desta coleção:</p>
-          {allProducts.map(product => (
-            <div key={product._id}>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={selectedProducts.includes(product._id)}
-                  onChange={() => handleProductSelect(product._id)}
-                />
-                {product.productName}
-              </label>
-            </div>
-          ))}
+          <div className="product-search-wrapper">
+            <input
+              type="text"
+              placeholder="Buscar produtos..."
+              className="product-search-input"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div className="product-list">
+            {filteredProducts.map(product => (
+              <div key={product._id} className="product-item">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={selectedProducts.includes(product._id)}
+                    onChange={() => handleProductSelect(product._id)}
+                  />
+                  {product.productName}
+                </label>
+              </div>
+            ))}
+          </div>
         </div>
-
-        <button type="submit" className="btn-salvar" disabled={uploading}>
-          {uploading ? 'A Salvar...' : 'Salvar Coleção'}
-        </button>
       </form>
+      <button type="submit" form="admin-colecao-form" className="btn-salvar" disabled={uploading} onClick={handleSubmit}>
+        {uploading ? 'A Salvar...' : (isEditing ? 'Atualizar Coleção' : 'Salvar Coleção')}
+      </button>
     </div>
   );
 }

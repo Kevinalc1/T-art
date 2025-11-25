@@ -2,14 +2,15 @@ const express = require('express');
 const router = express.Router();
 const { protect, admin } = require('../middleware/authMiddleware.js');
 const mongoose = require('mongoose');
-const Produto = require('../models/Produto.js');
+const Produto = mongoose.model('Produto');
 
 // @desc    Buscar todos os produtos
 // @route   GET /api/produtos
 // @access  Public
 router.get('/', async (req, res) => {
   try {
-    const produtos = await Produto.find();
+    // Alteração crucial: Adicionado .populate() para incluir os dados da categoria na lista de produtos.
+    const produtos = await Produto.find({}).populate('category', 'name');
     res.json(produtos);
   } catch (error) {
     res.status(500).json({ message: 'Erro ao buscar produtos', error });
@@ -26,7 +27,9 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ message: 'Produto não encontrado (ID inválido)' });
     }
 
-    const produto = await Produto.findById(req.params.id).populate('comboProducts');
+    const produto = await Produto.findById(req.params.id)
+      .populate('category', 'name') // Popula o campo categoria, trazendo apenas o nome
+      .populate('comboProducts');
     if (!produto) {
       return res.status(404).json({ message: 'Produto não encontrado' });
     }
@@ -39,7 +42,7 @@ router.get('/:id', async (req, res) => {
 // @desc    Criar um novo produto
 // @route   POST /api/produtos
 // @access  Private
-router.post('/', protect, async (req, res) => {
+router.post('/', protect, admin, async (req, res) => {
   try {
     // Atualizado para incluir todos os campos possíveis do formulário
     const {
@@ -50,7 +53,14 @@ router.post('/', protect, async (req, res) => {
       downloadUrl,
       isCombo,
       comboProducts,
+      category, // Adicionado o campo categoria
     } = req.body;
+
+    // --- VALIDAÇÃO ADICIONADA AQUI ---
+    if (isCombo === false && !downloadUrl) {
+      return res.status(400).json({ message: 'O campo "Ficheiro da Arte (Download)" é obrigatório para produtos que não são combos.' });
+    }
+
     const novoProduto = new Produto({
       productName,
       description,
@@ -59,20 +69,32 @@ router.post('/', protect, async (req, res) => {
       downloadUrl,
       isCombo,
       comboProducts,
+      category, // Adicionado o campo categoria
     });
     await novoProduto.save();
     res.status(201).json(novoProduto);
   } catch (error) {
-    res.status(400).json({ message: 'Erro ao criar produto', error });
+    console.error('Erro ao criar produto:', error);
+    res.status(400).json({ 
+      message: error.message || 'Erro ao criar produto' 
+    });
   }
 });
 
 // @desc    Atualizar um produto
 // @route   PUT /api/produtos/:id
 // @access  Private
-router.put('/:id', protect, async (req, res) => {
+router.put('/:id', protect, admin, async (req, res) => {
   try {
     const { id } = req.params;
+    const { isCombo, downloadUrl } = req.body;
+
+    // --- VALIDAÇÃO ADICIONADA AQUI ---
+    // Verifica se o campo `isCombo` foi enviado e é `false`, e se o `downloadUrl` está ausente.
+    if (isCombo === false && !downloadUrl) {
+      return res.status(400).json({ message: 'O campo "Ficheiro da Arte (Download)" é obrigatório para produtos que não são combos.' });
+    }
+
     const produtoAtualizado = await Produto.findByIdAndUpdate(id, req.body, {
       new: true,
       runValidators: true,
@@ -82,7 +104,10 @@ router.put('/:id', protect, async (req, res) => {
     }
     res.json(produtoAtualizado);
   } catch (error) {
-    res.status(400).json({ message: 'Erro ao atualizar produto', error });
+    console.error('Erro ao atualizar produto:', error);
+    res.status(400).json({ 
+      message: error.message || 'Erro ao atualizar produto' 
+    });
   }
 });
 

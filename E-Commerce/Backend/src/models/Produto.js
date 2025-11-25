@@ -13,16 +13,17 @@ const produtoSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category', // Referência ao modelo de Categoria
+    },
     imageUrls: {
       type: [String], // Define como um array de Strings
       required: true, // Garante que o array em si seja fornecido
     },
     downloadUrl: {
       type: String,
-      // Torna este campo obrigatório APENAS se 'isCombo' for falso.
-      required: function () { 
-        return !this.isCombo;
-      },
+      // A validação será feita na rota para evitar complexidade no schema.
     },
     isCombo: { 
       type: Boolean,

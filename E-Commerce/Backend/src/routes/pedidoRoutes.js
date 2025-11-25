@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const { protect } = require('../middleware/authMiddleware.js');
-const Pedido = require('../models/Pedido.js');
+const Pedido = mongoose.model('Pedido');
 
 // @desc    Buscar os pedidos do usuário logado
 // @route   GET /api/pedidos/meus-pedidos
