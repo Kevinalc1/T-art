@@ -63,8 +63,8 @@ export default function AdminColecaoForm() {
     setUploading(true);
 
     let coverImageUrl = existingCoverImage;
-    const cloudName = 'dd1prhitf'; // SEU CLOUD NAME
-    const preset = 'cristianoalc_preset'; // SEU PRESET
+    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+    const preset = import.meta.env.VITE_CLOUDINARY_PRESET;
 
     // 1. Upload da imagem de capa, se uma nova foi selecionada
     if (coverImageFile) {
@@ -79,7 +79,8 @@ export default function AdminColecaoForm() {
       } catch (err) {
         console.error('Erro no upload da imagem de capa:', err);
         setUploading(false);
-        alert('Erro ao fazer upload da imagem.');
+        const cloudError = err.response?.data?.error?.message || err.message;
+        alert(`Erro ao fazer upload da imagem: ${cloudError}`);
         return;
       }
     }

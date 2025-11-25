@@ -60,7 +60,7 @@ export default function AdminProdutoForm() {
             category: data.category ? data.category._id : '',
             imageUrls: data.imageUrls || [],
             // Garante que o downloadUrl não seja undefined, o que pode causar problemas com inputs não controlados
-            downloadUrl: data.downloadUrl || '', 
+            downloadUrl: data.downloadUrl || '',
             isCombo: data.isCombo || false,
             comboProducts: data.comboProducts || [],
           });
@@ -85,8 +85,8 @@ export default function AdminProdutoForm() {
 
   const handleComboToggle = (e) => {
     const isChecked = e.target.checked;
-    setFormData(prevData => ({ 
-      ...prevData, 
+    setFormData(prevData => ({
+      ...prevData,
       isCombo: isChecked,
       // Limpa os produtos do combo se o usuário desmarcar a opção
       comboProducts: isChecked ? prevData.comboProducts : [],
@@ -137,92 +137,99 @@ export default function AdminProdutoForm() {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  
-  let newDownloadUrl = formData.downloadUrl;
-  let newImageUrls = formData.imageUrls || [];
-  const cloudName = 'dd1prhitf'; // O SEU CLOUD NAME 
-  const preset = 'cristianoalc_preset'; // O SEU PRESET
+    e.preventDefault();
 
-  // 1. Upload do Ficheiro de Download (se mudou E NÃO for um combo)
-  if (file && !formData.isCombo) {
-    setUploading(true); 
-    const data = new FormData(); 
-    data.append('file', file); 
-    data.append('upload_preset', preset); 
-    data.append('cloud_name', cloudName);
+    let newDownloadUrl = formData.downloadUrl;
+    let newImageUrls = formData.imageUrls || [];
+    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+    const preset = import.meta.env.VITE_CLOUDINARY_PRESET;
 
-    try {
-      const res = await axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, data);
-      newDownloadUrl = res.data.secure_url;
-      setUploading(false);
-    } catch (err) {
-      console.error('Erro no upload do downloadUrl:', err);
-      setUploading(false);
-      alert('Erro ao fazer upload do ficheiro de download.');
-      return;
-    }
-  }
-
-  // 2. Upload das Imagens da Galeria (se mudou) 
-  if (galleryFiles && galleryFiles.length > 0) { 
-    setGalleryUploading(true); 
-    const uploadPromises = [];
-
-    for (let i = 0; i < galleryFiles.length; i++) {
+    // 1. Upload do Ficheiro de Download (se mudou E NÃO for um combo)
+    if (file && !formData.isCombo) {
+      setUploading(true);
       const data = new FormData();
-      data.append('file', galleryFiles[i]);
-      data.append('upload_preset', preset);
-      data.append('cloud_name', cloudName);
-      uploadPromises.push(axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, data));
-    }
-    try { 
-      const responses = await Promise.all(uploadPromises); 
-      newImageUrls = responses.map(res => res.data.secure_url); // Substitui a galeria 
-      setGalleryUploading(false); 
-    } catch (err) { 
-      console.error('Erro no upload da galeria:', err); 
-      setGalleryUploading(false); 
-      alert('Erro ao fazer upload das imagens da galeria.'); 
-      return; 
-    }
-  }
-  // 3. Enviar para o NOSSO Backend 
-  const token = localStorage.getItem('userToken'); // Token já foi pego acima, mas repetimos por clareza
-  const url = id ? `/api/produtos/${id}` : '/api/produtos'; 
-  const method = id ? 'PUT' : 'POST';
+      data.append('file', file);
 
-  // Prepara os dados para o backend
-  const dataToSend = {
-    ...formData,
-    category: formData.category,
-    // Garante que comboProducts contenha apenas IDs, e não objetos completos
-    comboProducts: formData.comboProducts.map(p => typeof p === 'object' ? p._id : p),
-    price: parseFloat(formData.price),
-    imageUrls: newImageUrls,
-    // Se NÃO for um combo, envie o downloadUrl. Se for, o backend não precisa dele.
-    downloadUrl: !formData.isCombo ? newDownloadUrl : undefined,
+      try {
+        // Alterado para usar o endpoint local de upload
+        const res = await axios.post('http://localhost:4000/api/upload', data, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        // O backend retorna { filePath: '/uploads/nome-do-arquivo.ext' }
+        // Precisamos garantir que a URL completa seja salva ou que o frontend saiba lidar com caminho relativo.
+        // Aqui vamos salvar a URL completa para facilitar.
+        newDownloadUrl = `http://localhost:4000${res.data.filePath}`;
+        setUploading(false);
+      } catch (err) {
+        console.error('Erro no upload do downloadUrl:', err);
+        setUploading(false);
+        const errorMsg = err.response?.data?.message || err.message;
+        alert(`Erro ao fazer upload do ficheiro de download: ${errorMsg}`);
+        return;
+      }
+    }
+
+    // 2. Upload das Imagens da Galeria (se mudou) 
+    if (galleryFiles && galleryFiles.length > 0) {
+      setGalleryUploading(true);
+      const uploadPromises = [];
+
+      for (let i = 0; i < galleryFiles.length; i++) {
+        const data = new FormData();
+        data.append('file', galleryFiles[i]);
+        data.append('upload_preset', preset);
+        data.append('cloud_name', cloudName);
+        uploadPromises.push(axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, data));
+      }
+      try {
+        const responses = await Promise.all(uploadPromises);
+        newImageUrls = responses.map(res => res.data.secure_url); // Substitui a galeria 
+        setGalleryUploading(false);
+      } catch (err) {
+        console.error('Erro no upload da galeria:', err);
+        setGalleryUploading(false);
+        alert('Erro ao fazer upload das imagens da galeria.');
+        return;
+      }
+    }
+    // 3. Enviar para o NOSSO Backend 
+    const token = localStorage.getItem('userToken'); // Token já foi pego acima, mas repetimos por clareza
+    const url = id ? `/api/produtos/${id}` : '/api/produtos';
+    const method = id ? 'PUT' : 'POST';
+
+    // Prepara os dados para o backend
+    const dataToSend = {
+      ...formData,
+      category: formData.category,
+      // Garante que comboProducts contenha apenas IDs, e não objetos completos
+      comboProducts: formData.comboProducts.map(p => typeof p === 'object' ? p._id : p),
+      price: parseFloat(formData.price),
+      imageUrls: newImageUrls,
+      // Se NÃO for um combo, envie o downloadUrl. Se for, o backend não precisa dele.
+      downloadUrl: !formData.isCombo ? newDownloadUrl : undefined,
+    };
+
+    setUploading(true); // Garante que o botão mostre "A Salvar..."
+    try {
+      await axios({
+        method: method,
+        url: `http://localhost:4000${url}`, // Use a sua variável de ambiente aqui 
+        data: dataToSend,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      navigate('/admin/dashboard');
+    } catch (err) {
+      console.error('Erro ao salvar o produto:', err);
+      alert(err.response?.data?.message || 'Erro ao salvar o produto no banco de dados.');
+      setUploading(false); // Libera o botão em caso de erro
+    }
   };
-
-  setUploading(true); // Garante que o botão mostre "A Salvar..."
-  try { 
-    await axios({ 
-      method: method, 
-      url: `http://localhost:4000${url}`, // Use a sua variável de ambiente aqui 
-      data: dataToSend,
-      headers: { 
-        'Content-Type': 'application/json', 
-        'Authorization': `Bearer ${token}` 
-      } 
-    });
-
-    navigate('/admin/dashboard');
-  } catch (err) { 
-    console.error('Erro ao salvar o produto:', err); 
-    alert(err.response?.data?.message || 'Erro ao salvar o produto no banco de dados.'); 
-    setUploading(false); // Libera o botão em caso de erro
-  } 
-};
 
   if (loading) return <p>A carregar formulário...</p>;
 
@@ -250,10 +257,10 @@ export default function AdminProdutoForm() {
           <div className="form-group">
             <label htmlFor="category">Categoria</label>
             <div className="category-selection-wrapper">
-              <select 
-                id="category" 
-                name="category" 
-                value={formData.category} 
+              <select
+                id="category"
+                name="category"
+                value={formData.category}
                 onChange={handleChange}
               >
                 <option value="">-- Selecione uma categoria --</option>

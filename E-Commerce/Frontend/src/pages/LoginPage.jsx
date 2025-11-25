@@ -41,32 +41,32 @@ export default function LoginPage() {
       {/* Card do formulário */}
       <form onSubmit={handleSubmit} className="login-form">
         <h1>Login</h1>
-        
+
         {/* Mensagem de Erro */}
         {error && <p className="error-message">{error}</p>}
-        
+
         <div className="form-group">
           <label htmlFor="email">Email</label>
-          <input 
-            type="email" 
-            id="email" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
-            required 
+          <input
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
           />
         </div>
 
         <div className="form-group">
           <label htmlFor="password">Senha</label>
-          <input 
-            type="password" 
-            id="password" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
-            required 
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
           />
         </div>
-        
+
         <button type="submit" className="btn-login">
           Entrar
         </button>

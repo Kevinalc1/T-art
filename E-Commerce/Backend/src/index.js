@@ -31,7 +31,7 @@ require('./models/Produto');
 require('./models/Pedido');
 require('./models/User');
 require('./models/Colecao');
- 
+
 // --- IMPORTAÇÃO DE ROTAS ---
 // Ordem ajustada para carregar dependências mais simples primeiro
 const authRoutes = require('./routes/authRoutes');
@@ -198,6 +198,14 @@ app.use('/api/categorias', categoryRoutes);
 
 // Rotas de Pedidos
 app.use('/api/pedidos', pedidoRoutes);
+
+// Rotas de Upload
+const uploadRoutes = require('./routes/uploadRoutes');
+app.use('/api/upload', uploadRoutes);
+
+// Servir arquivos estáticos da pasta uploads
+const path = require('path');
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // --- MIDDLEWARE DE TRATAMENTO DE ERROS ---
 // Deve ser adicionado DEPOIS de todas as suas rotas.
