@@ -1,14 +1,17 @@
 .main-header {
-  background-color: var(--cor-card); /* Branco */
-  border-bottom: 1px solid var(--cor-borda); /* Linha sutil em vez de sombra pesada */
+  background-color: var(--cor-card);
+  /* Branco */
+  border-bottom: 1px solid var(--cor-borda);
+  /* Linha sutil em vez de sombra pesada */
   padding: 1rem 0;
-  position: sticky; /* Fixa no topo */
+  position: sticky;
+  /* Fixa no topo */
   top: 0;
   z-index: 100;
 }
 
 /* Container interno para alinhar o conteúdo no centro */
-.main-header > div {
+.header-container {
   max-width: var(--largura-maxima);
   margin: 0 auto;
   padding: 0 1.5rem;
@@ -21,13 +24,28 @@
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--cor-primaria);
-  letter-spacing: -0.03em; /* Letras mais juntas (estilo moderno) */
+  letter-spacing: -0.03em;
+  /* Letras mais juntas (estilo moderno) */
+  margin-left: 1rem;
+  /* Afasta um pouco da margem esquerda conforme solicitado */
 }
 
-.nav-e-icon {
+.icons-area {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
+}
+
+.icon-link {
+  color: var(--cor-texto-corpo);
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s ease;
+}
+
+.icon-link:hover {
+  color: var(--cor-primaria);
 }
 
 nav {
@@ -39,26 +57,25 @@ nav a {
   font-size: 0.95rem;
   color: var(--cor-texto-corpo);
   font-weight: 500;
-  transition: color 0.2s ease; /* Transição suave de cor */
+  transition: color 0.2s ease;
+  /* Transição suave de cor */
 }
 
 nav a:hover {
-  color: var(--cor-primaria); /* Fica preto no hover */
+  color: var(--cor-primaria);
+  /* Fica preto no hover */
 }
 
 /* Estilo para o link da página ativa (usando NavLink do react-router-dom) */
 nav a.active {
-  color: var(--cor-acento); /* Usa a cor de destaque azul */
-}
-
-/* Estilo para o botão de logout para que pareça um link */
-.nav-logout {
-  cursor: pointer;
+  color: var(--cor-acento);
+  /* Usa a cor de destaque azul */
 }
 
 /* Responsividade Básica */
 @media (max-width: 768px) {
-  .nav-e-icon nav {
-    display: none; /* Esconde menu no mobile por enquanto (simplificado) */
+  nav {
+    display: none;
+    /* Esconde menu no mobile por enquanto (simplificado) */
   }
 }
