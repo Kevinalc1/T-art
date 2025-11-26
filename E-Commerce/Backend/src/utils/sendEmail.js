@@ -20,14 +20,21 @@ const transporter = nodemailer.createTransport({
  * @param {string} options.html - O corpo do e-mail em formato HTML.
  */
 const sendEmail = async ({ to, subject, html }) => {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.error('ERRO: Variáveis de ambiente EMAIL_USER ou EMAIL_PASS não definidas.');
+    throw new Error('Configuração de e-mail incompleta.');
+  }
+
   try {
+    console.log(`Tentando enviar email para: ${to}`);
+    console.log(`Usando conta: ${process.env.EMAIL_USER}`);
+
     const info = await transporter.sendMail({ from: process.env.EMAIL_USER, to, subject, html });
     console.log('Email enviado com sucesso para:', to);
-    console.log('Message ID:', info.messageId); // Log extra para confirmação
+    console.log('Message ID:', info.messageId);
   } catch (error) {
     console.error('Erro ao enviar email:', error);
-    // Lançar o erro permite que a função que chamou saiba que falhou
-    throw new Error('Falha no envio do e-mail.');
+    throw error;
   }
 };
 

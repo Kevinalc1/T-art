@@ -45,7 +45,6 @@ const sendEmail = require('./utils/sendEmail');
 // Conectar ao banco de dados
 connectDB();
 
-// REMOVIDO: const mockProdutos = require('./data/mockProdutos');
 // 3. Definir porta e inicializar app
 const PORT = 4000;
 const app = express();
@@ -63,20 +62,33 @@ async function prepararItensPedidoEEmail(cartItems) {
 
   const pedidoItems = [];
   let emailHtmlLinks = '';
+  const baseUrl = process.env.BASE_URL || 'http://localhost:4000';
 
   for (const item of cartItems) {
     const produto = await Produto.findById(item.id);
     if (produto) {
+      let downloadLink = produto.downloadUrl;
+      // Se o link for relativo (começa com /), adiciona a URL base
+      if (downloadLink && downloadLink.startsWith('/')) {
+        downloadLink = `${baseUrl}${downloadLink}`;
+      }
+
+      // Use the first image as the thumbnail
+      const imageUrl = produto.imageUrls && produto.imageUrls.length > 0 ? produto.imageUrls[0] : '';
+
       pedidoItems.push({
         productName: produto.productName,
         price: produto.price,
         quantidade: item.quantidade,
-        downloadUrl: produto.downloadUrl, // Adiciona o link de download ao item do pedido
+        downloadUrl: produto.downloadUrl,
       });
+
       emailHtmlLinks += `
         <div style="margin-bottom: 15px; padding: 10px; border: 1px solid #eee; border-radius: 5px;">
           <strong>${produto.productName}</strong><br>
-          <a href="${produto.downloadUrl}">Clique aqui para baixar</a>
+          ${imageUrl ? `<img src="${imageUrl}" alt="${produto.productName}" style="max-width: 200px; height: auto; margin: 10px 0; display: block;">` : ''}
+          <p>Arquivo para Download (CDR/Arte):</p>
+          <a href="${downloadLink}" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Baixar Arquivo</a>
         </div>
       `;
     }
@@ -172,12 +184,8 @@ app.post('/api/checkout/webhook', express.raw({ type: 'application/json' }), asy
 });
 
 // 4. Configurar middleware
-app.use(cors({
-  origin: 'http://localhost:5173', // Permite requisições apenas do seu frontend
-  credentials: true, // Permite o envio de cookies e cabeçalhos de autorização
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos HTTP permitidos
-  allowedHeaders: ['Content-Type', 'Authorization'], // Cabeçalhos permitidos
-}));
+// Nota: O CORS já foi configurado acima, mas se precisar de configuração específica para outras rotas, pode ajustar.
+// app.use(cors(...)); // Removido para evitar duplicidade, já que foi definido antes do webhook.
 
 app.use(express.json());
 
@@ -206,6 +214,20 @@ app.use('/api/upload', uploadRoutes);
 // Servir arquivos estáticos da pasta uploads
 const path = require('path');
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+// Rota de Teste de Email (Temporária)
+app.get('/api/test-email', async (req, res) => {
+  try {
+    await sendEmail({
+      to: 'kevin.alc1@gmail.com',
+      subject: 'Teste de Envio de Email',
+      html: '<h1>Isso é um teste</h1><p>Se você recebeu isso, o envio de email está funcionando.</p>'
+    });
+    res.send('Email de teste enviado com sucesso!');
+  } catch (error) {
+    res.status(500).send(`Erro ao enviar email: ${error.message}`);
+  }
+});
 
 // --- MIDDLEWARE DE TRATAMENTO DE ERROS ---
 // Deve ser adicionado DEPOIS de todas as suas rotas.
