@@ -36,17 +36,6 @@ export default function AdminDashboard() {
 
   return (
     <div className="admin-dashboard">
-      {/* Sidebar para navegação no painel de admin */}
-      <aside className="admin-sidebar">
-        <h2>Painel</h2>
-        <ul>
-          <li><Link to="/admin/dashboard" className="active">Produtos</Link></li>
-          <li><Link to="/admin/colecoes">Coleções</Link></li>
-          {/* Adicione outros links de navegação aqui (e.g., Pedidos, Usuários) */}
-        </ul>
-      </aside>
-
-      {/* Conteúdo principal da página */}
       <main className="admin-content">
         <div className="admin-header">
           <h1>Gestão de Produtos</h1>
@@ -68,10 +57,10 @@ export default function AdminDashboard() {
             {produtos.map((produto) => (
               <tr key={produto._id}>
                 <td>
-                  <img 
-                    src={produto.imageUrls && produto.imageUrls.length > 0 ? produto.imageUrls[0] : 'https://via.placeholder.com/60'} 
-                    alt={produto.productName} 
-                    className="admin-product-image" 
+                  <img
+                    src={produto.imageUrls && produto.imageUrls.length > 0 ? produto.imageUrls[0] : 'https://via.placeholder.com/60'}
+                    alt={produto.productName}
+                    className="admin-product-image"
                   />
                 </td>
                 <td>{produto.productName}</td>

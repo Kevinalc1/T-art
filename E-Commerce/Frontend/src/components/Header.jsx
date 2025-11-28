@@ -3,10 +3,10 @@ import { Link, NavLink } from 'react-router-dom'; // Importa NavLink
 import './Header.css';
 import CartIcon from './CartIcon.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
-import { FaUser } from 'react-icons/fa';
+import { FaUser, FaSignOutAlt } from 'react-icons/fa';
 
 export default function Header() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   return (
     <header className="main-header">
@@ -17,12 +17,6 @@ export default function Header() {
           <NavLink to="/">Início</NavLink>
           <NavLink to="/loja">Loja</NavLink>
           <NavLink to="/colecoes">Coleções</NavLink>
-          {user && user.isAdmin && (
-            <>
-              <NavLink to="/admin/dashboard">Admin</NavLink>
-              <NavLink to="/admin/colecoes">Gerir Coleções</NavLink>
-            </>
-          )}
         </nav>
 
         <div className="icons-area">
@@ -30,6 +24,11 @@ export default function Header() {
             <FaUser />
           </Link>
           <CartIcon />
+          {user && (
+            <button onClick={logout} className="icon-link logout-btn" aria-label="Sair">
+              <FaSignOutAlt />
+            </button>
+          )}
         </div>
       </div>
     </header>

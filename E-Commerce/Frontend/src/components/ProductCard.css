@@ -1,9 +1,11 @@
 .produto-card {
   background-color: var(--cor-card);
   border-radius: var(--raio-borda);
-  overflow: hidden; /* Para a imagem não sair das bordas */
+  overflow: hidden;
+  /* Para a imagem não sair das bordas */
   transition: transform 0.2s, box-shadow 0.2s;
-  border: 1px solid transparent; /* Prepara para o hover */
+  border: 1px solid transparent;
+  /* Prepara para o hover */
   display: flex;
   flex-direction: column;
 }
@@ -16,9 +18,11 @@
 
 .produto-card img {
   width: 100%;
-  aspect-ratio: 1 / 1; /* Garante que seja sempre quadrado */
+  aspect-ratio: 1 / 1;
+  /* Garante que seja sempre quadrado */
   object-fit: cover;
-  background-color: #f3f4f6; /* Placeholder cinza enquanto carrega */
+  background-color: #f3f4f6;
+  /* Placeholder cinza enquanto carrega */
 }
 
 /* Container para o texto dentro do card */
@@ -42,20 +46,95 @@
   margin-bottom: 1rem;
 }
 
-.btn-detalhes {
-  margin-top: auto; /* Empurra o botão para o fundo */
-  background-color: transparent;
-  border: 1px solid var(--cor-borda);
-  color: var(--cor-texto-titulo);
-  text-align: center;
-  padding: 0.5rem;
-  border-radius: var(--raio-borda);
+/* Botões base */
+.btn-detalhes,
+.btn-acao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
   font-size: 0.9rem;
-  transition: all 0.2s;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  border: 1px solid transparent;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+/* Botão Ver Detalhes (largura total) */
+.btn-detalhes {
+  width: 100%;
+  margin-top: auto;
+  background-color: var(--cor-secundaria);
+  color: rgb(2, 2, 2);
+  border-color: var(--cor-primaria);
+  margin-bottom: 0.5rem;
 }
 
 .btn-detalhes:hover {
-  border-color: var(--cor-primaria);
+  background-color: var(--cor-acento);
+  border-color: var(--cor-acento);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Container dos botões pequenos */
+.acoes-botoes-pequenos {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+/* Botões pequenos base */
+.btn-pequeno {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  border: 1px solid transparent;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+/* Botão Carrinho pequeno (ícone) */
+.btn-carrinho-pequeno {
   background-color: var(--cor-primaria);
   color: white;
+  border-color: var(--cor-primaria);
+  flex: 0 0 auto;
+  width: 2.5rem;
+  font-size: 1rem;
+}
+
+.btn-carrinho-pequeno:hover {
+  background-color: var(--cor-acento);
+  border-color: var(--cor-acento);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Botão Comprar pequeno */
+.btn-comprar-pequeno {
+  background-color: var(--cor-primaria);
+  color: white;
+  border-color: var(--cor-primaria);
+  flex: 1;
+}
+
+.btn-comprar-pequeno:hover {
+  background-color: var(--cor-acento);
+  border-color: var(--cor-acento);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }

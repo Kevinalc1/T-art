@@ -44,17 +44,6 @@ export default function AdminColecoesDashboard() {
 
   return (
     <div className="admin-dashboard">
-      {/* Sidebar para navegação consistente no painel de admin */}
-      <aside className="admin-sidebar">
-        <h2>Painel</h2>
-        <ul>
-          <li><Link to="/admin/dashboard">Produtos</Link></li>
-          <li><Link to="/admin/colecoes" className="active">Coleções</Link></li>
-          {/* Adicione outros links de navegação aqui */}
-        </ul>
-      </aside>
-
-      {/* Conteúdo principal da página */}
       <main className="admin-content">
         <div className="admin-header">
           <h1>Gestão de Coleções</h1>

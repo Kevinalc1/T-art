@@ -1,10 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useCarrinho } from '../context/CarrinhoContext';
+import { BsCart3 } from 'react-icons/bs';
+import { toast } from 'react-toastify';
 import './ProductCard.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function ProductCard({ produto }) {
+  const { adicionarItem } = useCarrinho();
+  const navigate = useNavigate();
+
   if (!produto) return null;
 
   let thumbnailUrl = 'https://dummyimage.com/300x300/cccccc/000000.png&text=Sem+Imagem';
@@ -21,6 +27,23 @@ export default function ProductCard({ produto }) {
     }
   }
 
+  const handleComprarAgora = () => {
+    adicionarItem(produto);
+    navigate('/checkout');
+  };
+
+  const handleAdicionarAoCarrinho = () => {
+    adicionarItem(produto);
+    toast.success('Produto adicionado ao carrinho!', {
+      position: "bottom-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  };
+
   return (
     <div className="produto-card">
       <img src={thumbnailUrl} alt={produto.productName} />
@@ -30,6 +53,15 @@ export default function ProductCard({ produto }) {
           {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(produto.price)}
         </p>
         <Link to={`/produto/${produto._id}`} className="btn-detalhes">Ver Detalhes</Link>
+
+        <div className="acoes-botoes-pequenos">
+          <button onClick={handleAdicionarAoCarrinho} className="btn-pequeno btn-carrinho-pequeno">
+            <BsCart3 />
+          </button>
+          <button onClick={handleComprarAgora} className="btn-pequeno btn-comprar-pequeno">
+            Comprar
+          </button>
+        </div>
       </div>
     </div>
   );

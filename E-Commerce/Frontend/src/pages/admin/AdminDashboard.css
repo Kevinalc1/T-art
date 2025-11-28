@@ -1,18 +1,10 @@
-/* Estilo para o container principal do painel de administração */
-.admin-dashboard {
-  display: flex;
-  min-height: 100vh;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background-color: #f8f9fa;
-}
-
 /* Estilo para a barra lateral (sidebar) */
 .admin-sidebar {
   width: 260px;
   background-color: #ffffff;
   color: #fff;
   padding: 20px;
-  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .admin-sidebar h2 {
@@ -84,10 +76,12 @@
   background-color: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   border-radius: 8px;
-  overflow: hidden; /* Garante que o border-radius seja aplicado nas bordas da tabela */
+  overflow: hidden;
+  /* Garante que o border-radius seja aplicado nas bordas da tabela */
 }
 
-.admin-content th, .admin-content td {
+.admin-content th,
+.admin-content td {
   padding: 15px;
   text-align: left;
   border-bottom: 1px solid #dee2e6;
@@ -121,7 +115,9 @@
   gap: 10px;
 }
 
-.btn-novo, .btn-editar, .btn-apagar {
+.btn-novo,
+.btn-editar,
+.btn-apagar {
   padding: 8px 16px;
   border: none;
   border-radius: 5px;
@@ -158,4 +154,32 @@
 
 .btn-apagar:hover {
   background-color: #c82333;
+}
+
+.dashboard-stats {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  padding: 1.5rem;
+  border-radius: 8px;
+  flex: 1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.stat-card h3 {
+  margin-top: 0;
+  font-size: 1rem;
+  color: #666;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #007bff;
+  margin: 0.5rem 0 0 0;
 }

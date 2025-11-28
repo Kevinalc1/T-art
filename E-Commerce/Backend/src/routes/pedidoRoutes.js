@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const { protect } = require('../middleware/authMiddleware.js');
+const { protect, admin } = require('../middleware/authMiddleware.js');
 const Pedido = mongoose.model('Pedido');
 
 // @desc    Buscar os pedidos do usuário logado
@@ -14,6 +14,19 @@ router.get('/meus-pedidos', protect, async (req, res) => {
     res.json(pedidos);
   } catch (error) {
     console.error('Erro ao buscar pedidos do usuário:', error);
+    res.status(500).json({ message: 'Erro no servidor ao buscar pedidos.' });
+  }
+});
+
+// @desc    Buscar TODOS os pedidos (Admin)
+// @route   GET /api/pedidos/todos
+// @access  Private/Admin
+router.get('/todos', protect, admin, async (req, res) => {
+  try {
+    const pedidos = await Pedido.find({}).sort({ createdAt: -1 });
+    res.json(pedidos);
+  } catch (error) {
+    console.error('Erro ao buscar todos os pedidos:', error);
     res.status(500).json({ message: 'Erro no servidor ao buscar pedidos.' });
   }
 });
