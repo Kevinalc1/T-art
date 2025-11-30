@@ -25,16 +25,23 @@ const produtoSchema = new mongoose.Schema(
       type: String,
       // A validação será feita na rota para evitar complexidade no schema.
     },
-    isCombo: { 
+    isCombo: {
       type: Boolean,
       default: false,
     },
-    comboProducts: [ 
-      { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Produto' 
+    comboProducts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Produto'
       },
-    ], 
+    ],
+    technicalSpecs: {
+      dpi: { type: Number, default: 300 },
+      format: { type: String, default: 'CMYK' },
+      isVector: { type: Boolean, default: false }
+    },
+    version: { type: String, default: '1.0' },
+    lastUpdated: { type: Date, default: Date.now }
   },
   { timestamps: true } // Adiciona os campos createdAt e updatedAt automaticamente
 );

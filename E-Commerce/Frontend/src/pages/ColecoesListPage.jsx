@@ -7,11 +7,11 @@ export default function ColecoesListPage() {
   const [colecoes, setColecoes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   useEffect(() => {
     const fetchColecoes = async () => {
       try {
-        const { data } = await axios.get('http://localhost:4000/api/colecoes');
+        const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/colecoes`);
         setColecoes(data);
       } catch (err) {
         setError('Erro ao carregar as coleções.');
@@ -23,15 +23,15 @@ export default function ColecoesListPage() {
 
     fetchColecoes();
   }, []);
-  
+
   if (loading) return <p>A carregar coleções...</p>;
   if (error) return <p>{error}</p>;
-  
+
   return (
     <div className="colecoes-list-page">
       <h1>Nossas Coleções</h1>
       <div className="colecoes-grid">
-        {colecoes.length > 0 ? ( 
+        {colecoes.length > 0 ? (
           colecoes.map((colecao) => (
             <Link to={`/colecoes/${colecao._id}`} key={colecao._id} className="colecao-card">
               <img src={colecao.coverImage} alt={colecao.name} />

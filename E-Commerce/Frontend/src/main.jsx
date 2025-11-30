@@ -34,6 +34,10 @@ import ClientProtectedRoute from './components/ClientProtectedRoute.jsx'; // Ant
 import AdminProtectedRoute from './components/AdminProtectedRoute.jsx'; // Novo para admin
 import RequestResetPage from './pages/RequestResetPage.jsx';
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
+import LibraryTab from './components/Profile/LibraryTab.jsx';
+import CollectionsTab from './components/Profile/CollectionsTab.jsx';
+import SecurityTab from './components/Profile/SecurityTab.jsx';
+import SupportTab from './components/Profile/SupportTab.jsx';
 
 
 
@@ -94,10 +98,22 @@ const router = createBrowserRouter([
             children: [
               {
                 index: true,
-                element: <ProfileHome />, // Redireciona condicionalmente
+                element: <LibraryTab />, // Default: Minha Biblioteca
               },
               {
-                path: 'configuracoes', // Acessível para todos logados
+                path: 'projetos',
+                element: <CollectionsTab />,
+              },
+              {
+                path: 'seguranca',
+                element: <SecurityTab />,
+              },
+              {
+                path: 'suporte',
+                element: <SupportTab />,
+              },
+              {
+                path: 'configuracoes', // Mantendo por compatibilidade ou redirecionar
                 element: <ConfiguracoesPage />,
               },
               // Rotas de Admin aninhadas no Dashboard

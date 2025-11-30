@@ -4,8 +4,10 @@
   justify-content: center;
   align-items: center;
   padding: 4rem 2rem;
-  min-height: 80vh; /* Garante que o container ocupe boa parte da tela */
-  background-color: #f9f9f9; /* Fundo suave para a página */
+  min-height: 80vh;
+  /* Garante que o container ocupe boa parte da tela */
+  background-color: #f9f9f9;
+  /* Fundo suave para a página */
   font-family: sans-serif;
 }
 
@@ -77,19 +79,84 @@
 
 /* Links para registro e recuperação de senha */
 .login-links {
-  text-align: center;
   margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: center;
 }
 
 .login-links a {
-  color: var(--cor-acento);
+  color: #666;
   text-decoration: none;
-  margin: 0 0.5rem;
-  transition: text-decoration 0.3s ease;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
 }
 
 .login-links a:hover {
-  text-decoration: underline;
+  color: #000;
+}
+
+/* Social Login Styles */
+.social-login-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 1.5rem 0;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.social-login-divider::before,
+.social-login-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #ddd;
+}
+
+.social-login-divider span {
+  padding: 0 10px;
+}
+
+.social-login-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-social {
+  padding: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  color: white;
+  font-weight: 500;
+}
+
+.btn-google {
+  background-color: #db4437;
+}
+
+.btn-google:hover {
+  background-color: #c1351d;
+}
+
+.btn-facebook {
+  background-color: #4267B2;
+}
+
+.btn-facebook:hover {
+  background-color: #365899;
+}
+
+.btn-apple {
+  background-color: #000;
+}
+
+.btn-apple:hover {
+  background-color: #333;
 }
 
 /* Mensagem de erro */

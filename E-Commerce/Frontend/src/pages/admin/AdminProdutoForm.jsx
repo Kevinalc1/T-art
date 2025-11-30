@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './AdminProdutoForm.css';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 export default function AdminProdutoForm() {
   const { id } = useParams(); // Pega o 'id' da URL, se existir
@@ -31,7 +32,7 @@ export default function AdminProdutoForm() {
 
   // Efeito para buscar todos os produtos para o seletor de combo
   useEffect(() => {
-    axios.get('http://localhost:4000/api/produtos')
+    axios.get(`${import.meta.env.VITE_API_URL}/api/produtos`)
       .then((res) => {
         setAllProducts(res.data);
       })
@@ -40,7 +41,7 @@ export default function AdminProdutoForm() {
 
   // Efeito para buscar todas as categorias existentes
   useEffect(() => {
-    axios.get('http://localhost:4000/api/categorias') // Assumindo que esta rota existe no seu backend
+    axios.get(`${import.meta.env.VITE_API_URL}/api/categorias`) // Assumindo que esta rota existe no seu backend
       .then(res => setAllCategories(res.data))
       .catch(error => console.error('Erro ao buscar categorias:', error));
   }, []);
@@ -49,7 +50,7 @@ export default function AdminProdutoForm() {
   useEffect(() => {
     setLoading(true);
     if (isEditing) {
-      axios.get(`http://localhost:4000/api/produtos/${id}`)
+      axios.get(`${import.meta.env.VITE_API_URL}/api/produtos/${id}`)
         .then((res) => {
           const data = res.data;
           setFormData({
@@ -107,13 +108,13 @@ export default function AdminProdutoForm() {
   // Função chamada ao confirmar a criação no modal
   const handleConfirmCreateCategory = async () => {
     if (!newCategoryNameInput || newCategoryNameInput.trim() === '') {
-      alert('Por favor, digite um nome para a categoria.');
+      toast.warn('Por favor, digite um nome para a categoria.');
       return;
     }
     try {
       const token = localStorage.getItem('userToken');
       const response = await axios.post(
-        'http://localhost:4000/api/categorias',
+        `${import.meta.env.VITE_API_URL}/api/categorias`,
         { name: newCategoryNameInput.trim() },
         { headers: { 'Authorization': `Bearer ${token}` } }
       );
@@ -128,11 +129,12 @@ export default function AdminProdutoForm() {
       // Fecha o modal e limpa o input
       setIsModalOpen(false);
       setNewCategoryNameInput('');
+      toast.success('Categoria criada com sucesso!');
     } catch (error) {
       console.error('Erro ao criar categoria:', error);
       // Garante que a mensagem específica do backend seja exibida.
-      const errorMessage = error.response?.data?.message || 'Não foi possível criar a nova categoria. Verifique o console para mais detalhes.';
-      alert(errorMessage);
+      const errorMessage = error.response?.data?.message || 'Não foi possível criar a nova categoria.';
+      toast.error(errorMessage);
     }
   };
 
@@ -152,7 +154,7 @@ export default function AdminProdutoForm() {
 
       try {
         // Alterado para usar o endpoint local de upload
-        const res = await axios.post('http://localhost:4000/api/upload', data, {
+        const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/upload`, data, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -160,13 +162,13 @@ export default function AdminProdutoForm() {
         // O backend retorna { filePath: '/uploads/nome-do-arquivo.ext' }
         // Precisamos garantir que a URL completa seja salva ou que o frontend saiba lidar com caminho relativo.
         // Aqui vamos salvar a URL completa para facilitar.
-        newDownloadUrl = `http://localhost:4000${res.data.filePath}`;
+        newDownloadUrl = `${import.meta.env.VITE_API_URL}${res.data.filePath}`;
         setUploading(false);
       } catch (err) {
         console.error('Erro no upload do downloadUrl:', err);
         setUploading(false);
         const errorMsg = err.response?.data?.message || err.message;
-        alert(`Erro ao fazer upload do ficheiro de download: ${errorMsg}`);
+        toast.error(`Erro ao fazer upload do ficheiro de download: ${errorMsg}`);
         return;
       }
     }
@@ -190,7 +192,7 @@ export default function AdminProdutoForm() {
       } catch (err) {
         console.error('Erro no upload da galeria:', err);
         setGalleryUploading(false);
-        alert('Erro ao fazer upload das imagens da galeria.');
+        toast.error('Erro ao fazer upload das imagens da galeria.');
         return;
       }
     }
@@ -215,7 +217,7 @@ export default function AdminProdutoForm() {
     try {
       await axios({
         method: method,
-        url: `http://localhost:4000${url}`, // Use a sua variável de ambiente aqui 
+        url: `${import.meta.env.VITE_API_URL}${url}`, // Use a sua variável de ambiente aqui 
         data: dataToSend,
         headers: {
           'Content-Type': 'application/json',
@@ -223,10 +225,12 @@ export default function AdminProdutoForm() {
         }
       });
 
+      toast.success(isEditing ? 'Produto atualizado com sucesso!' : 'Produto criado com sucesso!');
       navigate('/admin/dashboard');
     } catch (err) {
       console.error('Erro ao salvar o produto:', err);
-      alert(err.response?.data?.message || 'Erro ao salvar o produto no banco de dados.');
+      // Exibe a mensagem de erro estilizada vinda do backend (ex: categoria obrigatória)
+      toast.error(err.response?.data?.message || 'Erro ao salvar o produto no banco de dados.');
       setUploading(false); // Libera o botão em caso de erro
     }
   };

@@ -8,6 +8,14 @@ const crypto = require('crypto');
 const sendEmail = require('../utils/sendEmail');
 const router = express.Router();
 const bcrypt = require('bcryptjs'); // Importa o bcryptjs
+const passport = require('passport');
+
+// Helper to generate token and redirect
+const socialLoginCallback = (req, res) => {
+  const token = generateToken(req.user._id);
+  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+  res.redirect(`${frontendUrl}/login?token=${token}`);
+};
 
 // @desc    Registrar um novo usuário
 // @route   POST /api/auth/register
@@ -87,6 +95,34 @@ router.get('/perfil', protect, asyncHandler(async (req, res) => {
   }
 }));
 
+// @desc    Obter métodos de login vinculados
+// @route   GET /api/auth/linked-accounts
+// @access  Private
+router.get('/linked-accounts', protect, asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (!user) {
+    res.status(404);
+    throw new Error('Usuário não encontrado');
+  }
+
+  const linkedProviders = user.getLinkedProviders();
+  const allProviders = ['google', 'facebook', 'email'];
+  const availableProviders = allProviders.filter(p => !linkedProviders.includes(p));
+
+  res.json({
+    email: user.email,
+    linkedProviders: linkedProviders,
+    availableProviders: availableProviders,
+    details: {
+      hasGoogle: user.hasProvider('google'),
+      hasFacebook: user.hasProvider('facebook'),
+      hasEmailPassword: user.hasProvider('email')
+    }
+  });
+}));
+
+
 // @desc    Solicitar redefinição de senha
 // @route   POST /api/auth/request-reset
 // @access  Public
@@ -155,5 +191,23 @@ router.put('/reset-password/:token', async (req, res) => {
     res.status(500).json({ message: 'Erro do servidor' });
   }
 });
+
+// --- SOCIAL LOGIN ROUTES ---
+
+// Google
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+router.get('/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login', session: false }),
+  socialLoginCallback
+);
+
+// Facebook
+router.get('/facebook', passport.authenticate('facebook', { scope: ['email'] }));
+router.get('/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/login', session: false }),
+  socialLoginCallback
+);
+
+
 
 module.exports = router;

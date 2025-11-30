@@ -56,9 +56,18 @@ router.post('/', protect, admin, async (req, res) => {
       category, // Adicionado o campo categoria
     } = req.body;
 
-    // --- VALIDAÇÃO ADICIONADA AQUI ---
+    // --- VALIDAÇÃO DE CATEGORIA ---
+    if (!category || category === '' || category === 'null') {
+      return res.status(400).json({
+        message: 'Por favor, selecione uma categoria para o produto. Crie uma categoria primeiro se necessário.'
+      });
+    }
+
+    // --- VALIDAÇÃO DE DOWNLOAD URL ---
     if (isCombo === false && !downloadUrl) {
-      return res.status(400).json({ message: 'O campo "Ficheiro da Arte (Download)" é obrigatório para produtos que não são combos.' });
+      return res.status(400).json({
+        message: 'O campo "Ficheiro da Arte (Download)" é obrigatório para produtos que não são combos.'
+      });
     }
 
     const novoProduto = new Produto({
@@ -75,8 +84,16 @@ router.post('/', protect, admin, async (req, res) => {
     res.status(201).json(novoProduto);
   } catch (error) {
     console.error('Erro ao criar produto:', error);
-    res.status(400).json({ 
-      message: error.message || 'Erro ao criar produto' 
+
+    // Tratamento específico para erro de categoria
+    if (error.name === 'ValidationError' && error.errors?.category) {
+      return res.status(400).json({
+        message: 'Por favor, selecione uma categoria válida para o produto.'
+      });
+    }
+
+    res.status(400).json({
+      message: error.message || 'Erro ao criar produto'
     });
   }
 });
@@ -87,12 +104,20 @@ router.post('/', protect, admin, async (req, res) => {
 router.put('/:id', protect, admin, async (req, res) => {
   try {
     const { id } = req.params;
-    const { isCombo, downloadUrl } = req.body;
+    const { isCombo, downloadUrl, category } = req.body;
 
-    // --- VALIDAÇÃO ADICIONADA AQUI ---
-    // Verifica se o campo `isCombo` foi enviado e é `false`, e se o `downloadUrl` está ausente.
+    // --- VALIDAÇÃO DE CATEGORIA ---
+    if (category !== undefined && (!category || category === '' || category === 'null')) {
+      return res.status(400).json({
+        message: 'Por favor, selecione uma categoria para o produto.'
+      });
+    }
+
+    // --- VALIDAÇÃO DE DOWNLOAD URL ---
     if (isCombo === false && !downloadUrl) {
-      return res.status(400).json({ message: 'O campo "Ficheiro da Arte (Download)" é obrigatório para produtos que não são combos.' });
+      return res.status(400).json({
+        message: 'O campo "Ficheiro da Arte (Download)" é obrigatório para produtos que não são combos.'
+      });
     }
 
     const produtoAtualizado = await Produto.findByIdAndUpdate(id, req.body, {
@@ -105,8 +130,16 @@ router.put('/:id', protect, admin, async (req, res) => {
     res.json(produtoAtualizado);
   } catch (error) {
     console.error('Erro ao atualizar produto:', error);
-    res.status(400).json({ 
-      message: error.message || 'Erro ao atualizar produto' 
+
+    // Tratamento específico para erro de categoria
+    if (error.name === 'ValidationError' && error.errors?.category) {
+      return res.status(400).json({
+        message: 'Por favor, selecione uma categoria válida para o produto.'
+      });
+    }
+
+    res.status(400).json({
+      message: error.message || 'Erro ao atualizar produto'
     });
   }
 });

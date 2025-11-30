@@ -9,6 +9,7 @@ const pedidoSchema = new mongoose.Schema(
     items: [
       {
         productName: { type: String, required: true },
+        productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Produto' }, // Referência para permitir atualizações
         price: { type: Number, required: true },
         quantidade: { type: Number, required: true },
         downloadUrl: { type: String, required: true },

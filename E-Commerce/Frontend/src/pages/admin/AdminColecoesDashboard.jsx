@@ -10,7 +10,7 @@ export default function AdminColecoesDashboard() {
   useEffect(() => {
     const fetchColecoes = async () => {
       try {
-        const { data } = await axios.get('http://localhost:4000/api/colecoes');
+        const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/colecoes`);
         setColecoes(data);
       } catch (error) {
         console.error('Erro ao buscar coleções:', error);
@@ -29,7 +29,7 @@ export default function AdminColecoesDashboard() {
 
     try {
       const token = localStorage.getItem('userToken');
-      await axios.delete(`http://localhost:4000/api/colecoes/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/colecoes/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setColecoes(colecoes.filter((c) => c._id !== id));

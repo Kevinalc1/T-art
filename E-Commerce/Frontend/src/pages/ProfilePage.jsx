@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, Outlet, Link } from 'react-router-dom';
+import { NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import './ProfilePage.css';
 
@@ -16,7 +16,22 @@ export default function ProfilePage() {
               <>
                 <li>
                   <NavLink to="/perfil" end className={({ isActive }) => isActive ? "active" : ""}>
-                    Meus Pedidos
+                    Minha Biblioteca
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/perfil/projetos" className={({ isActive }) => isActive ? "active" : ""}>
+                    Favoritos e Projetos
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/perfil/seguranca" className={({ isActive }) => isActive ? "active" : ""}>
+                    Segurança
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/perfil/suporte" className={({ isActive }) => isActive ? "active" : ""}>
+                    Suporte
                   </NavLink>
                 </li>
                 <li>

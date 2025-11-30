@@ -1,11 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 // @desc    Criar uma sessão de checkout do Stripe
 // @route   POST /api/checkout/create-checkout-session
 // @access  Public
 router.post('/create-checkout-session', async (req, res) => {
+  const stripeKey = process.env.STRIPE_SECRET_KEY;
+  if (!stripeKey) {
+    console.error("CRITICAL ERROR: STRIPE_SECRET_KEY is missing.");
+    return res.status(500).json({ error: 'Erro de configuração do servidor.' });
+  }
+  const stripe = require('stripe')(stripeKey);
+
   const { items, userEmail, paymentMethod } = req.body;
 
   try {
@@ -34,8 +40,8 @@ router.post('/create-checkout-session', async (req, res) => {
       mode: 'payment',
       line_items: line_items,
       customer_email: userEmail,
-      success_url: `http://localhost:5173/confirmacao`,
-      cancel_url: `http://localhost:5173/carrinho`,
+      success_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/confirmacao`,
+      cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/carrinho`,
       // Adiciona os IDs dos produtos e quantidades como metadados
       metadata: {
         cartItems: JSON.stringify(items.map(item => ({

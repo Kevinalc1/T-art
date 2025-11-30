@@ -24,7 +24,7 @@ export default function AdminColecaoForm() {
 
   // Efeito para buscar todos os produtos disponíveis
   useEffect(() => {
-    axios.get('http://localhost:4000/api/produtos')
+    axios.get(`${import.meta.env.VITE_API_URL}/api/produtos`)
       .then(res => {
         setAllProducts(res.data);
       })
@@ -34,7 +34,7 @@ export default function AdminColecaoForm() {
   // Efeito para buscar dados da coleção em modo de edição
   useEffect(() => {
     if (isEditing) {
-      axios.get(`http://localhost:4000/api/colecoes/${id}`)
+      axios.get(`${import.meta.env.VITE_API_URL}/api/colecoes/${id}`)
         .then(res => {
           const { name, description, coverImage, products } = res.data;
           setName(name);
@@ -87,7 +87,7 @@ export default function AdminColecaoForm() {
 
     // 2. Preparar os dados e enviar para o nosso backend
     const token = localStorage.getItem('userToken');
-    const url = isEditing ? `http://localhost:4000/api/colecoes/${id}` : 'http://localhost:4000/api/colecoes';
+    const url = isEditing ? `${import.meta.env.VITE_API_URL}/api/colecoes/${id}` : `${import.meta.env.VITE_API_URL}/api/colecoes`;
     const method = isEditing ? 'put' : 'post';
 
     const colecaoData = {

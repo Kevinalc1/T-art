@@ -1,11 +1,13 @@
 .detalhe-produto-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 3rem; /* Mais espaço entre as colunas */
+  gap: 3rem;
+  /* Mais espaço entre as colunas */
   padding: 2rem 5%;
   max-width: 1200px;
   margin: 2rem auto;
-  background-color: #fff; /* Fundo branco para o card */
+  background-color: #fff;
+  /* Fundo branco para o card */
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
@@ -19,7 +21,8 @@
 .imagem-principal-galeria {
   width: 100%;
   height: auto;
-  aspect-ratio: 1 / 1; /* Mantém a imagem quadrada */
+  aspect-ratio: 1 / 1;
+  /* Mantém a imagem quadrada */
   object-fit: cover;
   border-radius: 8px;
   border: 1px solid #eee;
@@ -27,7 +30,8 @@
 
 .miniaturas-galeria {
   display: flex;
-  gap: 0.75rem; /* Mais espaço entre as miniaturas */
+  gap: 0.75rem;
+  /* Mais espaço entre as miniaturas */
   flex-wrap: wrap;
 }
 
@@ -35,7 +39,8 @@
   width: 80px;
   height: 80px;
   object-fit: cover;
-  border-radius: 8px; /* Bordas mais arredondadas */
+  border-radius: 8px;
+  /* Bordas mais arredondadas */
   cursor: pointer;
   border: 2px solid transparent;
   transition: all 0.3s ease;
@@ -54,10 +59,12 @@
 }
 
 .preco-detalhe {
-  font-size: 2.2rem;
-  font-weight: bold;
-  color: var(--cor-acento); /* Cor de destaque para o preço */
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--cor-acento);
+  /* Cor de destaque para o preço */
   margin: 1rem 0;
+  letter-spacing: -1px;
 }
 
 .coluna-info h3 {

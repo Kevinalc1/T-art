@@ -16,7 +16,7 @@ export default function ColecaoDetalhePage() {
     const fetchColecao = async () => {
       try {
         // A rota GET /api/colecoes/:id precisa existir no seu backend
-        const { data } = await axios.get(`http://localhost:4000/api/colecoes/${id}`);
+        const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/colecoes/${id}`);
         setColecao(data);
       } catch (err) {
         setError('Erro ao carregar os detalhes da coleção.');

@@ -7,7 +7,7 @@ export default function AdminDashboard() {
   const [produtos, setProdutos] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:4000/api/produtos')
+    fetch(`${import.meta.env.VITE_API_URL}/api/produtos`)
       .then((res) => res.json())
       .then((data) => setProdutos(data))
       .catch((error) => console.error('Erro ao buscar produtos:', error));
@@ -20,7 +20,7 @@ export default function AdminDashboard() {
 
     try {
       const token = localStorage.getItem('userToken');
-      await axios.delete(`http://localhost:4000/api/produtos/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/produtos/${id}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
