@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext.jsx'; // Importa o hook de auten
 import './CarrinhoPage.css';
 
 export default function CarrinhoPage() {
-  const { state, removerItem, adicionarItem, decrementarItem } = useCarrinho();
+  const { state, removerItem } = useCarrinho();
   const { isAuthenticated } = useAuth(); // Pega o estado de autenticação
   const navigate = useNavigate(); // Hook para navegar programaticamente
 
@@ -49,15 +49,6 @@ export default function CarrinhoPage() {
                   <div className="info-produto">
                     <h3>{item.productName}</h3>
                   </div>
-                  <p className="preco-unitario">
-                    {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.price)}
-                  </p>
-
-                  <div className="quantidade-controle">
-                    <button onClick={() => decrementarItem(item._id)} className="btn-qtd">-</button>
-                    <span className="quantidade-valor">{item.quantidade}</span>
-                    <button onClick={() => adicionarItem(item)} className="btn-qtd">+</button>
-                  </div>
 
                   <p className="subtotal">
                     {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(subtotal)}
@@ -72,7 +63,7 @@ export default function CarrinhoPage() {
 
           <div className="resumo-compra">
             <div className="total-compra">
-              Total: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valorTotal)}
+              {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valorTotal)}
             </div>
             <button onClick={handleFinalizarCompra} className="btn-finalizar">
               Finalizar Compra

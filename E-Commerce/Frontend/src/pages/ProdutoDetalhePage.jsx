@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useCarrinho } from '../context/CarrinhoContext.jsx';
 import './ProdutoDetalhePage.css';
@@ -8,7 +9,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 export default function ProdutoDetalhePage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { adicionarItem } = useCarrinho();
+  const { adicionarItem, state } = useCarrinho();
 
   const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState('');
@@ -35,18 +36,31 @@ export default function ProdutoDetalhePage() {
   }, [id]);
 
   const handleAdicionar = () => {
+    const itemNoCarrinho = state.items.find(item => item._id === product._id);
+
+    if (itemNoCarrinho) {
+      toast.error('Esse produto já foi adicionado ao carrinho, Finalize sua compra', {
+        style: { background: '#d32f2f', color: '#fff' }
+      });
+      return;
+    }
+
     adicionarItem({
       ...product,
       quantidade: quantidade,
     });
-    alert('Item adicionado ao carrinho!');
+    toast.success('Item adicionado ao carrinho!');
   };
 
   const handleComprarAgora = () => {
-    adicionarItem({
-      ...product,
-      quantidade: quantidade,
-    });
+    const itemNoCarrinho = state.items.find(item => item._id === product._id);
+
+    if (!itemNoCarrinho) {
+      adicionarItem({
+        ...product,
+        quantidade: quantidade,
+      });
+    }
     navigate('/checkout');
   };
 
@@ -102,19 +116,6 @@ export default function ProdutoDetalhePage() {
             </ul>
           </div>
         )}
-
-        {/* Quantity Selector */}
-        <div className="controle-quantidade">
-          <label htmlFor="quantidade">Quantidade:</label>
-          <input
-            type="number"
-            id="quantidade"
-            name="quantidade"
-            min="1"
-            value={quantidade}
-            onChange={(e) => setQuantidade(Number(e.target.value))}
-          />
-        </div>
 
         <div className="acoes-detalhe">
           <button className="btn-comprar" onClick={handleAdicionar}>Adicionar ao Carrinho</button>

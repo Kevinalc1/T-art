@@ -8,7 +8,7 @@ import './ProductCard.css';
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function ProductCard({ produto }) {
-  const { adicionarItem } = useCarrinho();
+  const { adicionarItem, state } = useCarrinho();
   const navigate = useNavigate();
 
   if (!produto) return null;
@@ -28,11 +28,24 @@ export default function ProductCard({ produto }) {
   }
 
   const handleComprarAgora = () => {
-    adicionarItem(produto);
+    const itemNoCarrinho = state.items.find(item => item._id === produto._id);
+
+    if (!itemNoCarrinho) {
+      adicionarItem(produto);
+    }
     navigate('/checkout');
   };
 
   const handleAdicionarAoCarrinho = () => {
+    const itemNoCarrinho = state.items.find(item => item._id === produto._id);
+
+    if (itemNoCarrinho) {
+      toast.error('Esse produto já foi adicionado ao carrinho, Finalize sua compra', {
+        style: { background: '#d32f2f', color: '#fff' }
+      });
+      return;
+    }
+
     adicionarItem(produto);
     toast.success('Produto adicionado ao carrinho!', {
       position: "bottom-right",

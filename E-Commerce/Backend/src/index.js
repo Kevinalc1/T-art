@@ -166,8 +166,10 @@ app.use('/api/checkout', checkoutRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 
+const hotlinkProtection = require('./middleware/hotlinkProtection');
+
 // Arquivos estáticos
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use('/uploads', hotlinkProtection, express.static(path.join(__dirname, '../uploads')));
 
 // Teste de Email
 app.get('/api/test-email', async (req, res) => {
