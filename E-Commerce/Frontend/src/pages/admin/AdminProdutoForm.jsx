@@ -226,7 +226,25 @@ export default function AdminProdutoForm() {
       });
 
       toast.success(isEditing ? 'Produto atualizado com sucesso!' : 'Produto criado com sucesso!');
-      navigate('/admin/dashboard');
+
+      if (isEditing) {
+        navigate('/admin/dashboard');
+      } else {
+        // Resetar o formulário para permitir nova adição
+        setFormData({
+          productName: '',
+          description: '',
+          price: '',
+          category: '',
+          imageUrls: [],
+          downloadUrl: '',
+          isCombo: false,
+          comboProducts: [],
+        });
+        setFile(null);
+        setGalleryFiles(null);
+        window.scrollTo(0, 0);
+      }
     } catch (err) {
       console.error('Erro ao salvar o produto:', err);
       // Exibe a mensagem de erro estilizada vinda do backend (ex: categoria obrigatória)

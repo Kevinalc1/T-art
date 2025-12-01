@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './AdminColecaoForm.css'; // Usando um CSS dedicado para a página de coleções
+import { toast } from 'react-toastify';
+import './AdminColecaoForm.css';
 
 export default function AdminColecaoForm() {
   const { id } = useParams();
@@ -80,7 +81,7 @@ export default function AdminColecaoForm() {
         console.error('Erro no upload da imagem de capa:', err);
         setUploading(false);
         const cloudError = err.response?.data?.error?.message || err.message;
-        alert(`Erro ao fazer upload da imagem: ${cloudError}`);
+        toast.error(`Erro ao fazer upload da imagem: ${cloudError}`);
         return;
       }
     }
@@ -109,12 +110,23 @@ export default function AdminColecaoForm() {
       });
 
       setUploading(false);
-      alert(`Coleção ${isEditing ? 'atualizada' : 'criada'} com sucesso!`);
-      navigate('/admin/colecoes'); // Navega para a página de gestão de coleções
+      toast.success(`Coleção ${isEditing ? 'atualizada' : 'criada'} com sucesso!`);
+
+      if (isEditing) {
+        navigate('/admin/colecoes');
+      } else {
+        // Resetar formulário para nova adição
+        setName('');
+        setDescription('');
+        setCoverImageFile(null);
+        setExistingCoverImage('');
+        setSelectedProducts([]);
+        setSearchTerm('');
+      }
     } catch (err) {
       console.error('Erro ao salvar a coleção:', err);
       setUploading(false);
-      alert('Erro ao salvar a coleção no banco de dados.');
+      toast.error('Erro ao salvar a coleção no banco de dados.');
     }
   };
 
