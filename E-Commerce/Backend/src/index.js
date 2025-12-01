@@ -41,6 +41,7 @@ const checkoutRoutes = require('./routes/checkoutRoutes');
 const pedidoRoutes = require('./routes/pedidoRoutes');
 const userRoutes = require('./routes/userRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
+const wishlistRoutes = require('./routes/wishlistRoutes');
 const sendEmail = require('./utils/sendEmail');
 
 // Conectar ao banco de dados
@@ -163,6 +164,7 @@ app.use('/api/colecoes', colecaoRoutes);
 app.use('/api/pedidos', pedidoRoutes);
 app.use('/api/checkout', checkoutRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/wishlist', wishlistRoutes);
 
 // Arquivos estáticos
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));

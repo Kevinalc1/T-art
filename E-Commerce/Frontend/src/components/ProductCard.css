@@ -1,19 +1,5 @@
 .produto-card {
   background-color: var(--cor-card);
-  border-radius: var(--raio-borda);
-  overflow: hidden;
-  /* Para a imagem não sair das bordas */
-  transition: transform 0.2s, box-shadow 0.2s;
-  border: 1px solid transparent;
-  /* Prepara para o hover */
-  display: flex;
-  flex-direction: column;
-}
-
-.produto-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--sombra-hover);
-  border-color: var(--cor-borda);
 }
 
 .produto-card img {

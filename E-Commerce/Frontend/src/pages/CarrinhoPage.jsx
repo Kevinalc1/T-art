@@ -8,7 +8,7 @@ export default function CarrinhoPage() {
   const { state, removerItem } = useCarrinho();
   const { isAuthenticated } = useAuth(); // Pega o estado de autenticação
   const navigate = useNavigate(); // Hook para navegar programaticamente
-  
+
   const calcularTotal = () => {
     return state.items.reduce((total, item) => {
       // Agora o preço é um número, então a conversão não é mais necessária
@@ -20,13 +20,9 @@ export default function CarrinhoPage() {
 
   // Função que decide para onde o usuário vai ao clicar em "Finalizar Compra"
   const handleFinalizarCompra = () => {
-    if (isAuthenticated) {
-      // Se estiver logado, vai para o checkout
-      navigate('/checkout');
-    } else {
-      // Se não estiver logado, vai para a página de registro
-      navigate('/register');
-    }
+    // Permite checkout como convidado (Guest Checkout)
+    // Não verificamos mais isAuthenticated aqui. O login é opcional.
+    navigate('/checkout');
   };
 
   return (
@@ -46,9 +42,9 @@ export default function CarrinhoPage() {
 
               return (
                 <div key={item._id} className="item-carrinho">
-                  <img 
-                    src={item.imageUrls && item.imageUrls.length > 0 ? item.imageUrls[0] : 'https://dummyimage.com/100x100/cccccc/000000.png&text=Sem+Img'} 
-                    alt={item.productName} 
+                  <img
+                    src={item.imageUrls && item.imageUrls.length > 0 ? item.imageUrls[0] : 'https://dummyimage.com/100x100/cccccc/000000.png&text=Sem+Img'}
+                    alt={item.productName}
                   />
                   <div className="info-produto">
                     <h3>{item.productName}</h3>

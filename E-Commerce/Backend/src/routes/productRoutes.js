@@ -9,7 +9,6 @@ const Produto = mongoose.model('Produto');
 // @access  Public
 router.get('/', async (req, res) => {
   try {
-    // Alteração crucial: Adicionado .populate() para incluir os dados da categoria na lista de produtos.
     const produtos = await Produto.find({}).populate('category', 'name');
     res.json(produtos);
   } catch (error) {
@@ -22,13 +21,12 @@ router.get('/', async (req, res) => {
 // @access  Public
 router.get('/:id', async (req, res) => {
   try {
-    // Adiciona uma verificação para ver se o ID é um ObjectId válido do MongoDB
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
       return res.status(404).json({ message: 'Produto não encontrado (ID inválido)' });
     }
 
     const produto = await Produto.findById(req.params.id)
-      .populate('category', 'name') // Popula o campo categoria, trazendo apenas o nome
+      .populate('category', 'name')
       .populate('comboProducts');
     if (!produto) {
       return res.status(404).json({ message: 'Produto não encontrado' });
@@ -44,7 +42,6 @@ router.get('/:id', async (req, res) => {
 // @access  Private
 router.post('/', protect, admin, async (req, res) => {
   try {
-    // Atualizado para incluir todos os campos possíveis do formulário
     const {
       productName,
       description,
@@ -53,17 +50,15 @@ router.post('/', protect, admin, async (req, res) => {
       downloadUrl,
       isCombo,
       comboProducts,
-      category, // Adicionado o campo categoria
+      category,
     } = req.body;
 
-    // --- VALIDAÇÃO DE CATEGORIA ---
     if (!category || category === '' || category === 'null') {
       return res.status(400).json({
         message: 'Por favor, selecione uma categoria para o produto. Crie uma categoria primeiro se necessário.'
       });
     }
 
-    // --- VALIDAÇÃO DE DOWNLOAD URL ---
     if (isCombo === false && !downloadUrl) {
       return res.status(400).json({
         message: 'O campo "Ficheiro da Arte (Download)" é obrigatório para produtos que não são combos.'
@@ -78,14 +73,13 @@ router.post('/', protect, admin, async (req, res) => {
       downloadUrl,
       isCombo,
       comboProducts,
-      category, // Adicionado o campo categoria
+      category,
     });
     await novoProduto.save();
     res.status(201).json(novoProduto);
   } catch (error) {
     console.error('Erro ao criar produto:', error);
 
-    // Tratamento específico para erro de categoria
     if (error.name === 'ValidationError' && error.errors?.category) {
       return res.status(400).json({
         message: 'Por favor, selecione uma categoria válida para o produto.'
@@ -106,14 +100,12 @@ router.put('/:id', protect, admin, async (req, res) => {
     const { id } = req.params;
     const { isCombo, downloadUrl, category } = req.body;
 
-    // --- VALIDAÇÃO DE CATEGORIA ---
     if (category !== undefined && (!category || category === '' || category === 'null')) {
       return res.status(400).json({
         message: 'Por favor, selecione uma categoria para o produto.'
       });
     }
 
-    // --- VALIDAÇÃO DE DOWNLOAD URL ---
     if (isCombo === false && !downloadUrl) {
       return res.status(400).json({
         message: 'O campo "Ficheiro da Arte (Download)" é obrigatório para produtos que não são combos.'
@@ -131,7 +123,6 @@ router.put('/:id', protect, admin, async (req, res) => {
   } catch (error) {
     console.error('Erro ao atualizar produto:', error);
 
-    // Tratamento específico para erro de categoria
     if (error.name === 'ValidationError' && error.errors?.category) {
       return res.status(400).json({
         message: 'Por favor, selecione uma categoria válida para o produto.'

@@ -4,24 +4,21 @@ import { useCarrinho } from '../context/CarrinhoContext.jsx';
 import './ProdutoDetalhePage.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
+
 export default function ProdutoDetalhePage() {
   const { id } = useParams();
-  const [product, setProduct] = useState(null);
-  const [selectedImage, setSelectedImage] = useState('');
-  const [quantidade, setQuantidade] = useState(1); // Estado para a quantidade
   const { adicionarItem } = useCarrinho();
 
+  const [product, setProduct] = useState(null);
+  const [selectedImage, setSelectedImage] = useState('');
+  const [quantidade, setQuantidade] = useState(1);
+
   useEffect(() => {
-    // Adiciona uma verificação para garantir que o ID existe antes de fazer a requisição.
-    // Se o ID for undefined, a função retorna e não executa o fetch.
-    if (!id) {
-      return;
-    }
+    if (!id) return;
+
     fetch(`${API_URL}/api/produtos/${id}`)
       .then(res => {
-        if (!res.ok) {
-          throw new Error('Produto não encontrado');
-        }
+        if (!res.ok) throw new Error('Produto não encontrado');
         return res.json();
       })
       .then(data => {
@@ -32,25 +29,20 @@ export default function ProdutoDetalhePage() {
       })
       .catch(error => {
         console.error("Erro ao buscar o produto:", error);
-        setProduct({ notFound: true }); // Marca que não encontrou
+        setProduct({ notFound: true });
       });
-  }, [id]); // Roda o efeito quando o 'id' da URL mudar
-
-  if (!product) {
-    return <h1>Carregando...</h1>;
-  }
-
-  if (product.notFound) {
-    return <h1>Produto não encontrado</h1>
-  }
+  }, [id]);
 
   const handleAdicionar = () => {
     adicionarItem({
       ...product,
-      quantidade: quantidade, // Usa a quantidade do estado
+      quantidade: quantidade,
     });
     alert('Item adicionado ao carrinho!');
   };
+
+  if (!product) return <h1>Carregando...</h1>;
+  if (product.notFound) return <h1>Produto não encontrado</h1>;
 
   return (
     <div className="detalhe-produto-container">
@@ -69,13 +61,15 @@ export default function ProdutoDetalhePage() {
               alt={`${product.productName} - miniatura ${index + 1}`}
               className={`miniatura-item ${url === selectedImage ? 'ativa' : ''}`}
               onClick={() => setSelectedImage(url)}
-              onMouseOver={() => setSelectedImage(url)} // Bônus: muda ao passar o mouse
+              onMouseOver={() => setSelectedImage(url)}
             />
           ))}
         </div>
       </div>
+
       <div className="coluna-info">
         <h1>{product.productName}</h1>
+
         <p className="preco-detalhe">
           {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(product.price)}
         </p>
@@ -92,22 +86,19 @@ export default function ProdutoDetalhePage() {
           <li>JPG (Alta Resolução)</li>
         </ul>
 
-        {/* Mostra os produtos incluídos se for um combo */}
+        {/* Combo Details */}
         {product.isCombo && product.comboProducts && product.comboProducts.length > 0 && (
           <div className="combo-detalhes-incluidos">
             <h3>Artes Incluídas neste Pacote:</h3>
             <ul>
               {product.comboProducts.map(subProd => (
-                <li key={subProd._id}>
-                  {/* Opcional: <img src={subProd.imageUrls[0]} width="50" /> */}
-                  {subProd.productName}
-                </li>
+                <li key={subProd._id}>{subProd.productName}</li>
               ))}
             </ul>
           </div>
         )}
 
-        {/* Seletor de Quantidade */}
+        {/* Quantity Selector */}
         <div className="controle-quantidade">
           <label htmlFor="quantidade">Quantidade:</label>
           <input

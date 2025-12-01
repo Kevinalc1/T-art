@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, NavLink } from 'react-router-dom'; // Importa NavLink
+import { Link, NavLink } from 'react-router-dom';
 import './Header.css';
 import CartIcon from './CartIcon.jsx';
 import { useAuth } from '../context/AuthContext.jsx';

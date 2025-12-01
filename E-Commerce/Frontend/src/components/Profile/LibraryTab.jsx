@@ -8,6 +8,8 @@ export default function LibraryTab() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const [searchTerm, setSearchTerm] = useState('');
+
     useEffect(() => {
         const fetchLibrary = async () => {
             try {
@@ -26,6 +28,10 @@ export default function LibraryTab() {
 
         fetchLibrary();
     }, []);
+
+    const filteredProducts = products.filter(product =>
+        product.productName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     const handleDownload = async (product, type) => {
         // Registra o download
@@ -57,11 +63,24 @@ export default function LibraryTab() {
     return (
         <div className="library-tab">
             <h2>Minha Biblioteca de Estampas</h2>
-            {products.length === 0 ? (
-                <p className="empty-state">Você ainda não possui estampas. Explore a loja!</p>
+
+            <div className="library-search">
+                <input
+                    type="text"
+                    placeholder="Buscar em meus downloads..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="search-input"
+                />
+            </div>
+
+            {filteredProducts.length === 0 ? (
+                <p className="empty-state">
+                    {searchTerm ? 'Nenhum produto encontrado para sua busca.' : 'Você ainda não possui estampas. Explore a loja!'}
+                </p>
             ) : (
                 <div className="library-grid">
-                    {products.map(product => (
+                    {filteredProducts.map(product => (
                         <div key={product._id} className="library-card">
                             <div className="card-thumb">
                                 <img src={product.imageUrls[0]} alt={product.productName} />

@@ -15,7 +15,8 @@ import CheckoutPage from './pages/CheckoutPage.jsx';
 import ConfirmacaoPage from './pages/ConfirmacaoPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 import { CarrinhoProvider } from './context/CarrinhoContext.jsx';
-import { AuthProvider } from './context/AuthContext.jsx'; // Ficheiro gerado anteriormente
+import { AuthProvider } from './context/AuthContext.jsx';
+import { WishlistProvider } from './context/WishlistContext.jsx';
 
 // Páginas de Administração
 import AdminDashboard from './pages/admin/AdminDashboard.jsx';
@@ -35,9 +36,10 @@ import AdminProtectedRoute from './components/AdminProtectedRoute.jsx'; // Novo 
 import RequestResetPage from './pages/RequestResetPage.jsx';
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
 import LibraryTab from './components/Profile/LibraryTab.jsx';
-import CollectionsTab from './components/Profile/CollectionsTab.jsx';
+
 import SecurityTab from './components/Profile/SecurityTab.jsx';
 import SupportTab from './components/Profile/SupportTab.jsx';
+import WishlistPage from './pages/WishlistPage.jsx';
 
 
 
@@ -88,6 +90,7 @@ const router = createBrowserRouter([
         path: '/register',
         element: <RegisterPage />,
       },
+
       // Rotas protegidas para Clientes (precisam de login)
       {
         element: <ClientProtectedRoute />, // Verifica se HÁ token
@@ -100,10 +103,7 @@ const router = createBrowserRouter([
                 index: true,
                 element: <LibraryTab />, // Default: Minha Biblioteca
               },
-              {
-                path: 'projetos',
-                element: <CollectionsTab />,
-              },
+
               {
                 path: 'seguranca',
                 element: <SecurityTab />,
@@ -180,8 +180,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <AuthProvider>
       <CarrinhoProvider>
-        <RouterProvider router={router} />
-        <ToastContainer />
+        <WishlistProvider>
+          <RouterProvider router={router} />
+          <ToastContainer />
+        </WishlistProvider>
       </CarrinhoProvider>
     </AuthProvider>
   </React.StrictMode>

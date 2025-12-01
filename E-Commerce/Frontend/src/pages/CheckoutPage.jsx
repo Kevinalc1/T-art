@@ -1,18 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCarrinho } from '../context/CarrinhoContext.jsx';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.jsx';
 import './CheckoutPage.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function CheckoutPage() {
   const { state } = useCarrinho();
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
     nome: '',
     email: '',
     confirmarEmail: '',
   });
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        email: user.email,
+        confirmarEmail: user.email
+      }));
+    }
+  }, [user]);
 
   const calcularTotal = () => {
     return state.items.reduce((total, item) => {
@@ -81,9 +93,9 @@ export default function CheckoutPage() {
         {/* Coluna do Formulário */}
         <div className="coluna-form">
           <h2>Seus Dados</h2>
-          <input type="text" name="nome" placeholder="Nome Completo" value={formData.nome} onChange={handleChange} required/>
-          <input type="email" name="email" placeholder="E-mail" value={formData.email} onChange={handleChange} required/>
-          <input type="email" name="confirmarEmail" placeholder="Confirme seu E-mail" value={formData.confirmarEmail} onChange={handleChange} required/>
+          <input type="text" name="nome" placeholder="Nome Completo" value={formData.nome} onChange={handleChange} required />
+          <input type="email" name="email" placeholder="E-mail" value={formData.email} onChange={handleChange} required />
+          <input type="email" name="confirmarEmail" placeholder="Confirme seu E-mail" value={formData.confirmarEmail} onChange={handleChange} required />
         </div>
 
         {/* Coluna do Resumo */}
