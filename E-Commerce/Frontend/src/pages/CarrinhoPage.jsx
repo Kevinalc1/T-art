@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext.jsx'; // Importa o hook de auten
 import './CarrinhoPage.css';
 
 export default function CarrinhoPage() {
-  const { state, removerItem } = useCarrinho();
+  const { state, removerItem, adicionarItem, decrementarItem } = useCarrinho();
   const { isAuthenticated } = useAuth(); // Pega o estado de autenticação
   const navigate = useNavigate(); // Hook para navegar programaticamente
 
@@ -52,7 +52,13 @@ export default function CarrinhoPage() {
                   <p className="preco-unitario">
                     {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.price)}
                   </p>
-                  <p className="quantidade">{item.quantidade}</p>
+
+                  <div className="quantidade-controle">
+                    <button onClick={() => decrementarItem(item._id)} className="btn-qtd">-</button>
+                    <span className="quantidade-valor">{item.quantidade}</span>
+                    <button onClick={() => adicionarItem(item)} className="btn-qtd">+</button>
+                  </div>
+
                   <p className="subtotal">
                     {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(subtotal)}
                   </p>

@@ -28,6 +28,22 @@ function carrinhoReducer(state, action) {
       }
       return { ...state, items: novosItens };
     }
+    case 'DECREMENT_ITEM': {
+      const id = action.payload;
+      const itemExistente = state.items.find((item) => item._id === id);
+
+      if (itemExistente && itemExistente.quantidade > 1) {
+        // Se quantidade > 1, decrementa
+        const novosItens = state.items.map((item) =>
+          item._id === id ? { ...item, quantidade: item.quantidade - 1 } : item
+        );
+        return { ...state, items: novosItens };
+      } else {
+        // Se quantidade === 1, remove o item
+        const novosItens = state.items.filter((item) => item._id !== id);
+        return { ...state, items: novosItens };
+      }
+    }
     case 'REMOVE_ITEM': {
       const novosItens = state.items.filter(
         (item) => item._id !== action.payload
@@ -58,10 +74,11 @@ export function CarrinhoProvider({ children }) {
   }, [state.items]);
 
   const adicionarItem = (item) => dispatch({ type: 'ADD_ITEM', payload: item });
+  const decrementarItem = (id) => dispatch({ type: 'DECREMENT_ITEM', payload: id });
   const removerItem = (id) => dispatch({ type: 'REMOVE_ITEM', payload: id });
   const limparCarrinho = () => dispatch({ type: 'CLEAR_CART' });
 
-  const value = { state, dispatch, adicionarItem, removerItem, limparCarrinho }; // Exportando dispatch
+  const value = { state, dispatch, adicionarItem, decrementarItem, removerItem, limparCarrinho }; // Exportando dispatch
 
   return <CarrinhoContext.Provider value={value}>{children}</CarrinhoContext.Provider>;
 }

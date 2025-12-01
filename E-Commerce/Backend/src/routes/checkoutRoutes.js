@@ -11,8 +11,10 @@ router.post('/create-checkout-session', async (req, res) => {
     return res.status(500).json({ error: 'Erro de configuração do servidor.' });
   }
   const stripe = require('stripe')(stripeKey);
+  console.log('Stripe Key Loaded:', stripeKey ? `${stripeKey.substring(0, 8)}...${stripeKey.substring(stripeKey.length - 4)}` : 'None');
 
   const { items, userEmail, paymentMethod } = req.body;
+  console.log('Recebido pedido de checkout:', { userEmail, paymentMethod, itemsCount: items?.length });
 
   try {
     // Validação: Garante que 'items' é um array e não está vazio.
@@ -69,7 +71,7 @@ router.post('/create-checkout-session', async (req, res) => {
     res.json({ url: session.url });
   } catch (error) {
     console.error('Erro ao criar sessão do Stripe:', error);
-    res.status(500).json({ error: 'Não foi possível iniciar o pagamento.' });
+    res.status(500).json({ error: 'Não foi possível iniciar o pagamento.', details: error.message });
   }
 });
 

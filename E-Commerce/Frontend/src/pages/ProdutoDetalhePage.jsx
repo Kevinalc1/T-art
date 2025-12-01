@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useCarrinho } from '../context/CarrinhoContext.jsx';
 import './ProdutoDetalhePage.css';
 
@@ -7,6 +7,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 export default function ProdutoDetalhePage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { adicionarItem } = useCarrinho();
 
   const [product, setProduct] = useState(null);
@@ -39,6 +40,14 @@ export default function ProdutoDetalhePage() {
       quantidade: quantidade,
     });
     alert('Item adicionado ao carrinho!');
+  };
+
+  const handleComprarAgora = () => {
+    adicionarItem({
+      ...product,
+      quantidade: quantidade,
+    });
+    navigate('/checkout');
   };
 
   if (!product) return <h1>Carregando...</h1>;
@@ -74,11 +83,7 @@ export default function ProdutoDetalhePage() {
           {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(product.price)}
         </p>
         <h3>Descrição</h3>
-        <p>
-          Arte digital exclusiva para estamparia. Com este design, você pode
-          criar camisetas, canecas, quadros e muito mais. A qualidade da
-          imagem garante um resultado final incrível.
-        </p>
+        <p>{product.description || 'Sem descrição disponível.'}</p>
         <h3>Arquivos Inclusos</h3>
         <ul>
           <li>PNG (Fundo Transparente)</li>
@@ -111,7 +116,10 @@ export default function ProdutoDetalhePage() {
           />
         </div>
 
-        <button className="btn-comprar" onClick={handleAdicionar}>Adicionar ao Carrinho</button>
+        <div className="acoes-detalhe">
+          <button className="btn-comprar" onClick={handleAdicionar}>Adicionar ao Carrinho</button>
+          <button className="btn-comprar-agora" onClick={handleComprarAgora}>Comprar Agora</button>
+        </div>
       </div>
     </div>
   );

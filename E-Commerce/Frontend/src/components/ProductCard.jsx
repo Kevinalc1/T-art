@@ -46,7 +46,9 @@ export default function ProductCard({ produto }) {
 
   return (
     <div className="produto-card">
-      <img src={thumbnailUrl} alt={produto.productName} />
+      <Link to={`/produto/${produto._id}`}>
+        <img src={thumbnailUrl} alt={produto.productName} />
+      </Link>
       <div className="card-info">
         <h3>{produto.productName}</h3>
         <p className="price">
