@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCarrinho } from '../context/CarrinhoContext';
+import { useCurrency } from '../context/CurrencyContext';
 import { BsCart3 } from 'react-icons/bs';
 import { toast } from 'react-toastify';
 import './ProductCard.css';
@@ -9,6 +10,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 export default function ProductCard({ produto }) {
   const { adicionarItem, state } = useCarrinho();
+  const { formatPrice } = useCurrency();
   const navigate = useNavigate();
 
   if (!produto) return null;
@@ -65,7 +67,7 @@ export default function ProductCard({ produto }) {
       <div className="card-info">
         <h3>{produto.productName}</h3>
         <p className="price">
-          {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(produto.price)}
+          {formatPrice(produto.price)}
         </p>
         <Link to={`/produto/${produto._id}`} className="btn-detalhes">Ver Detalhes</Link>
 

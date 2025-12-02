@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useCarrinho } from '../context/CarrinhoContext.jsx';
+import { useCurrency } from '../context/CurrencyContext.jsx';
 import './ProdutoDetalhePage.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -10,6 +11,7 @@ export default function ProdutoDetalhePage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { adicionarItem, state } = useCarrinho();
+  const { formatPrice } = useCurrency();
 
   const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState('');
@@ -94,7 +96,7 @@ export default function ProdutoDetalhePage() {
         <h1>{product.productName}</h1>
 
         <p className="preco-detalhe">
-          {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(product.price)}
+          {formatPrice(product.price)}
         </p>
         <h3>Descrição</h3>
         <p>{product.description || 'Sem descrição disponível.'}</p>

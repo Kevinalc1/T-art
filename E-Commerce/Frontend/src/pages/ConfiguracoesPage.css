@@ -1,0 +1,122 @@
+.configuracoes-content {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.configuracoes-content h1 {
+    color: var(--cor-primaria);
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    color: var(--cor-texto-corpo);
+    font-size: 1rem;
+    margin-bottom: 2rem;
+}
+
+.config-section {
+    background-color: white;
+    border: 1px solid var(--cor-borda);
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.config-section h2 {
+    color: var(--cor-texto-titulo);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.section-description {
+    color: var(--cor-texto-corpo);
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+}
+
+.section-description strong {
+    color: var(--cor-acento);
+}
+
+.config-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--cor-texto-corpo);
+    margin-bottom: 0.5rem;
+}
+
+.form-group input {
+    padding: 0.75rem;
+    border: 1px solid var(--cor-borda);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--cor-acento);
+    box-shadow: 0 0 0 3px rgba(152, 126, 75, 0.1);
+}
+
+.btn-save {
+    background-color: var(--cor-acento);
+    color: white;
+    padding: 0.875rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    align-self: flex-start;
+}
+
+.btn-save:hover:not(:disabled) {
+    background-color: var(--cor-acento-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(152, 126, 75, 0.3);
+}
+
+.btn-save:disabled {
+    background-color: var(--cor-texto-leve);
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .configuracoes-content {
+        padding: 1rem;
+    }
+
+    .config-section {
+        padding: 1.5rem;
+    }
+
+    .configuracoes-content h1 {
+        font-size: 1.75rem;
+    }
+
+    .config-section h2 {
+        font-size: 1.25rem;
+    }
+
+    .btn-save {
+        width: 100%;
+    }
+}

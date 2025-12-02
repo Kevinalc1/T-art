@@ -5,7 +5,8 @@
   align-items: center;
   min-height: 80vh;
   padding: 4rem 2rem;
-  background-color: #f9f9f9; /* Fundo suave para a página */
+  background-color: #f9f9f9;
+  /* Fundo suave para a página */
   font-family: sans-serif;
 }
 
@@ -59,7 +60,8 @@
   padding: 1rem;
   border: none;
   border-radius: 8px;
-  background-color: var(--cor-acento); /* Usando a cor de destaque padrão */
+  background-color: var(--cor-acento);
+  /* Usando a cor de destaque padrão */
   color: white;
   font-size: 1.1rem;
   font-weight: bold;
@@ -70,7 +72,8 @@
 }
 
 .btn-register:hover {
-  background-color: #0056b3; /* Cor mais escura no hover */
+  background-color: var(--cor-acento-hover);
+  /* Cor mais escura no hover */
   transform: scale(1.02);
 }
 

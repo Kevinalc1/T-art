@@ -115,7 +115,7 @@
 }
 
 .btn-comprar:hover {
-  background-color: #0056b3;
+  background-color: var(--cor-acento-hover);
   transform: scale(1.02);
 }
 

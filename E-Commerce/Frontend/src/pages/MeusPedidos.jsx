@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
+import { useCurrency } from '../context/CurrencyContext.jsx';
 import './ProfilePage.css'; // Reusing existing styles for now
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -9,6 +10,7 @@ export default function MeusPedidos() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { token } = useAuth();
+    const { formatPrice } = useCurrency();
 
     useEffect(() => {
         const fetchPedidos = async () => {
@@ -56,7 +58,7 @@ export default function MeusPedidos() {
                             <div key={pedido._id} className="pedido">
                                 <div className="pedido-header">
                                     <span>Pedido de {formatarData(pedido.createdAt)}</span>
-                                    <span>Total: <strong>{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(pedido.totalPrice)}</strong></span>
+                                    <span>Total: <strong>{formatPrice(pedido.totalPrice)}</strong></span>
                                 </div>
                                 <div className="pedido-body">
                                     {pedido.items.map((item, index) => (

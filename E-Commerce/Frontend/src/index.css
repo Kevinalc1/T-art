@@ -17,12 +17,12 @@
   /* Cinza claro para detalhes */
 
   --cor-primaria: #133853;
-  /* azul elegante (Botões/Ações) */
-  --cor-primaria-hover: #333333;
+  /* Azul elegante (Cor primária) */
+  --cor-primaria-hover: #0d2838;
 
-  /* Cor de Destaque (Azul) para botões principais e links */
-  --cor-acento: #133853;
-  --cor-acento-hover: rgb(0, 123, 255);
+  /* Cor de Destaque (Dourado) para botões principais e links */
+  --cor-acento: #987E4B;
+  --cor-acento-hover: #7a6539;
 
   --cor-borda: #e5e7eb;
   /* Linhas sutis */

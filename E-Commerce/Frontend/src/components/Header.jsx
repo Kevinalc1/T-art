@@ -4,6 +4,7 @@ import './Header.css';
 import CartIcon from './CartIcon.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { FaUser, FaSignOutAlt } from 'react-icons/fa';
+import CurrencySwitcher from './CurrencySwitcher.jsx';
 
 export default function Header() {
   const { user, logout } = useAuth();
@@ -35,6 +36,7 @@ export default function Header() {
         </nav>
 
         <div className="icons-area">
+          <CurrencySwitcher />
           <Link to={user ? "/perfil" : "/login"} className="icon-link">
             <FaUser />
           </Link>

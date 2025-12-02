@@ -1,0 +1,26 @@
+.currency-switcher {
+    margin-left: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.currency-select {
+    background-color: transparent;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    color: inherit;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.currency-select:hover {
+    border-color: #aaa;
+}
+
+.currency-select option {
+    background-color: #fff;
+    color: #333;
+}

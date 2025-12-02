@@ -28,6 +28,8 @@ require('./models/Produto');
 require('./models/Pedido');
 require('./models/User');
 require('./models/Colecao');
+require('./models/Banner');
+require('./models/TransactionLog');
 
 // Importar configuração do Passport APÓS os modelos
 require('./config/passport');
@@ -42,6 +44,8 @@ const pedidoRoutes = require('./routes/pedidoRoutes');
 const userRoutes = require('./routes/userRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const wishlistRoutes = require('./routes/wishlistRoutes');
+const bannerRoutes = require('./routes/bannerRoutes');
+const transactionLogRoutes = require('./routes/transactionLogRoutes');
 const sendEmail = require('./utils/sendEmail');
 
 // Conectar ao banco de dados
@@ -89,6 +93,8 @@ async function prepararItensPedidoEEmail(cartItems) {
 
 async function criarPedido(session, pedidoItems) {
   const Pedido = mongoose.model('Pedido');
+  const TransactionLog = mongoose.model('TransactionLog');
+
   const novoPedido = new Pedido({
     userEmail: session.customer_email,
     items: pedidoItems,
@@ -99,6 +105,30 @@ async function criarPedido(session, pedidoItems) {
   });
   await novoPedido.save();
   console.log(`Pedido ${novoPedido._id} criado com sucesso para ${session.customer_email}.`);
+
+  // Criar log de transação
+  try {
+    await TransactionLog.create({
+      type: 'PAYMENT',
+      amount: session.amount_total / 100,
+      currency: session.currency.toUpperCase(),
+      orderId: novoPedido._id,
+      userEmail: session.customer_email,
+      stripeSessionId: session.id,
+      stripeTransactionId: session.payment_intent,
+      paymentMethod: session.payment_method_types?.[0] || 'card',
+      status: 'completed',
+      description: `Pagamento recebido - Pedido #${novoPedido._id}`,
+      metadata: {
+        itemsCount: pedidoItems.length,
+        paymentStatus: session.payment_status,
+      },
+      createdBy: 'system',
+    });
+    console.log(`Log de transação criado para pedido ${novoPedido._id}`);
+  } catch (error) {
+    console.error('Erro ao criar log de transação:', error);
+  }
 }
 
 // --- MIDDLEWARES ---
@@ -165,6 +195,8 @@ app.use('/api/pedidos', pedidoRoutes);
 app.use('/api/checkout', checkoutRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/wishlist', wishlistRoutes);
+app.use('/api/banners', bannerRoutes);
+app.use('/api/transaction-logs', transactionLogRoutes);
 
 const hotlinkProtection = require('./middleware/hotlinkProtection');
 

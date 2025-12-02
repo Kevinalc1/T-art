@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useCarrinho } from '../context/CarrinhoContext.jsx';
+import { useCurrency } from '../context/CurrencyContext.jsx';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import './CheckoutPage.css';
@@ -8,6 +9,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 export default function CheckoutPage() {
   const { state } = useCarrinho();
+  const { formatPrice } = useCurrency();
   const { user } = useAuth();
   const [formData, setFormData] = useState({
     nome: '',
@@ -104,11 +106,11 @@ export default function CheckoutPage() {
           {state.items.map((item) => (
             <div key={item._id} className="resumo-item">
               <span>{`${item.productName} (x${item.quantidade})`}</span>
-              <span>{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.price * item.quantidade)}</span>
+              <span>{formatPrice(item.price * item.quantidade)}</span>
             </div>
           ))}
           <div className="total-final">
-            Total: <strong>{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valorTotal)}</strong>
+            Total: <strong>{formatPrice(valorTotal)}</strong>
           </div>
           <h3>Pagamento</h3>
           <p className="pagamento-info">Você será redirecionado para um ambiente seguro para finalizar o pagamento.</p>

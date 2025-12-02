@@ -1,11 +1,13 @@
 import React from 'react';
 import { useCarrinho } from '../context/CarrinhoContext.jsx';
+import { useCurrency } from '../context/CurrencyContext.jsx';
 import { useNavigate } from 'react-router-dom'; // Importa useNavigate para redirecionamento
 import { useAuth } from '../context/AuthContext.jsx'; // Importa o hook de autenticação
 import './CarrinhoPage.css';
 
 export default function CarrinhoPage() {
   const { state, removerItem } = useCarrinho();
+  const { formatPrice } = useCurrency();
   const { isAuthenticated } = useAuth(); // Pega o estado de autenticação
   const navigate = useNavigate(); // Hook para navegar programaticamente
 
@@ -51,7 +53,7 @@ export default function CarrinhoPage() {
                   </div>
 
                   <p className="subtotal">
-                    {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(subtotal)}
+                    {formatPrice(subtotal)}
                   </p>
                   <div className="acoes">
                     <button onClick={() => removerItem(item._id)} className="btn-remover">Remover</button>
@@ -63,7 +65,7 @@ export default function CarrinhoPage() {
 
           <div className="resumo-compra">
             <div className="total-compra">
-              {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valorTotal)}
+              {formatPrice(valorTotal)}
             </div>
             <button onClick={handleFinalizarCompra} className="btn-finalizar">
               Finalizar Compra

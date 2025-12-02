@@ -129,4 +129,95 @@ router.post('/downloads', protect, asyncHandler(async (req, res) => {
     res.status(201).json({ message: 'Download registrado' });
 }));
 
+// @desc    Excluir a própria conta
+// @route   DELETE /api/users/me
+// @access  Private
+router.delete('/me', protect, asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id);
+
+    if (user) {
+        await user.deleteOne();
+        res.json({ message: 'Conta excluída com sucesso' });
+    } else {
+        res.status(404);
+        throw new Error('Usuário não encontrado');
+    }
+}));
+
+// @desc    Atualizar email do usuário
+// @route   PUT /api/users/update-email
+// @access  Private
+router.put('/update-email', protect, asyncHandler(async (req, res) => {
+    const { newEmail, password } = req.body;
+
+    if (!newEmail || !password) {
+        res.status(400);
+        throw new Error('Email e senha são obrigatórios');
+    }
+
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+        res.status(404);
+        throw new Error('Usuário não encontrado');
+    }
+
+    // Verificar se a senha está correta
+    const isPasswordValid = await user.comparePassword(password);
+    if (!isPasswordValid) {
+        res.status(401);
+        throw new Error('Senha incorreta');
+    }
+
+    // Verificar se o novo email já está em uso
+    const emailExists = await User.findOne({ email: newEmail });
+    if (emailExists) {
+        res.status(400);
+        throw new Error('Este email já está em uso');
+    }
+
+    // Atualizar email
+    user.email = newEmail;
+    await user.save();
+
+    res.json({ message: 'Email atualizado com sucesso', email: user.email });
+}));
+
+// @desc    Atualizar senha do usuário
+// @route   PUT /api/users/update-password
+// @access  Private
+router.put('/update-password', protect, asyncHandler(async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+        res.status(400);
+        throw new Error('Senha atual e nova senha são obrigatórias');
+    }
+
+    if (newPassword.length < 6) {
+        res.status(400);
+        throw new Error('A nova senha deve ter pelo menos 6 caracteres');
+    }
+
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+        res.status(404);
+        throw new Error('Usuário não encontrado');
+    }
+
+    // Verificar se a senha atual está correta
+    const isPasswordValid = await user.comparePassword(currentPassword);
+    if (!isPasswordValid) {
+        res.status(401);
+        throw new Error('Senha atual incorreta');
+    }
+
+    // Atualizar senha
+    user.password = newPassword;
+    await user.save();
+
+    res.json({ message: 'Senha atualizada com sucesso' });
+}));
+
 module.exports = router;

@@ -23,6 +23,9 @@ import AdminDashboard from './pages/admin/AdminDashboard.jsx';
 import AdminProdutoForm from './pages/admin/AdminProdutoForm.jsx';
 import AdminColecoesDashboard from './pages/admin/AdminColecoesDashboard.jsx';
 import AdminColecaoForm from './pages/admin/AdminColecaoForm.jsx';
+import AdminBannerDashboard from './pages/admin/AdminBannerDashboard.jsx';
+import AdminBannerForm from './pages/admin/AdminBannerForm.jsx';
+import AdminAuditDashboard from './pages/admin/AdminAuditDashboard.jsx';
 import ColecoesListPage from './pages/ColecoesListPage.jsx';
 import ColecaoDetalhePage from './pages/ColecaoDetalhePage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
@@ -128,6 +131,14 @@ const router = createBrowserRouter([
                     path: 'colecoes',
                     element: <AdminColecoesDashboard />,
                   },
+                  {
+                    path: 'banners',
+                    element: <AdminBannerDashboard />,
+                  },
+                  {
+                    path: 'auditoria',
+                    element: <AdminAuditDashboard />,
+                  },
                 ],
               },
             ],
@@ -163,6 +174,14 @@ const router = createBrowserRouter([
           {
             path: 'colecoes/editar/:id',
             element: <AdminColecaoForm />,
+          },
+          {
+            path: 'banners/novo',
+            element: <AdminBannerForm />,
+          },
+          {
+            path: 'banners/editar/:id',
+            element: <AdminBannerForm />,
           },
         ],
       },

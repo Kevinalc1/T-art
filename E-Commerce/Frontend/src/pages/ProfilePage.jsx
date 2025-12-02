@@ -54,6 +54,16 @@ export default function ProfilePage() {
                   </NavLink>
                 </li>
                 <li>
+                  <NavLink to="/perfil/banners" className={({ isActive }) => isActive ? "active" : ""}>
+                    Banners
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/perfil/auditoria" className={({ isActive }) => isActive ? "active" : ""}>
+                    Auditoria Financeira
+                  </NavLink>
+                </li>
+                <li>
                   <NavLink to="/perfil/configuracoes" className={({ isActive }) => isActive ? "active" : ""}>
                     Configurações
                   </NavLink>

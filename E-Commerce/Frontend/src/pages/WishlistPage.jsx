@@ -2,12 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useWishlist } from '../context/WishlistContext';
 import { useCarrinho } from '../context/CarrinhoContext';
+import { useCurrency } from '../context/CurrencyContext';
 import WishlistButton from '../components/WishlistButton';
 import './WishlistPage.css';
 
 export default function WishlistPage() {
     const { wishlistItems, loading } = useWishlist();
     const { adicionarItem } = useCarrinho();
+    const { formatPrice } = useCurrency();
 
     const handleAddToCart = (product) => {
         adicionarItem({
@@ -67,10 +69,7 @@ export default function WishlistPage() {
                             </Link>
 
                             <p className="wishlist-item-price">
-                                {new Intl.NumberFormat('pt-BR', {
-                                    style: 'currency',
-                                    currency: 'BRL'
-                                }).format(product.price)}
+                                {formatPrice(product.price)}
                             </p>
 
                             <button
