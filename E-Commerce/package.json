@@ -1,0 +1,13 @@
+{
+    "name": "ecommerce-root",
+    "version": "1.0.0",
+    "description": "Root package to run both frontend and backend",
+    "scripts": {
+        "client": "npm run dev --prefix Frontend",
+        "server": "npm run dev --prefix Backend",
+        "dev": "concurrently \"npm run server\" \"npm run client\""
+    },
+    "devDependencies": {
+        "concurrently": "^8.2.2"
+    }
+}

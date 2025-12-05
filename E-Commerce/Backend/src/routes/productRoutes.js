@@ -48,6 +48,7 @@ router.post('/', protect, admin, async (req, res) => {
       price,
       imageUrls,
       downloadUrl,
+      downloadUrls,
       isCombo,
       comboProducts,
       category,
@@ -59,7 +60,7 @@ router.post('/', protect, admin, async (req, res) => {
       });
     }
 
-    if (isCombo === false && !downloadUrl) {
+    if (isCombo === false && (!downloadUrl && (!downloadUrls || downloadUrls.length === 0))) {
       return res.status(400).json({
         message: 'O campo "Ficheiro da Arte (Download)" é obrigatório para produtos que não são combos.'
       });
@@ -71,6 +72,7 @@ router.post('/', protect, admin, async (req, res) => {
       price,
       imageUrls,
       downloadUrl,
+      downloadUrls,
       isCombo,
       comboProducts,
       category,
@@ -98,7 +100,7 @@ router.post('/', protect, admin, async (req, res) => {
 router.put('/:id', protect, admin, async (req, res) => {
   try {
     const { id } = req.params;
-    const { isCombo, downloadUrl, category } = req.body;
+    const { isCombo, downloadUrl, downloadUrls, category } = req.body;
 
     if (category !== undefined && (!category || category === '' || category === 'null')) {
       return res.status(400).json({
@@ -106,7 +108,7 @@ router.put('/:id', protect, admin, async (req, res) => {
       });
     }
 
-    if (isCombo === false && !downloadUrl) {
+    if (isCombo === false && (!downloadUrl && (!downloadUrls || downloadUrls.length === 0))) {
       return res.status(400).json({
         message: 'O campo "Ficheiro da Arte (Download)" é obrigatório para produtos que não são combos.'
       });

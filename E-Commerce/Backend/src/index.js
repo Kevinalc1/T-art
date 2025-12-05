@@ -30,6 +30,7 @@ require('./models/User');
 require('./models/Colecao');
 require('./models/Banner');
 require('./models/TransactionLog');
+require('./models/AdSlot');
 
 // Importar configuração do Passport APÓS os modelos
 require('./config/passport');
@@ -46,6 +47,7 @@ const uploadRoutes = require('./routes/uploadRoutes');
 const wishlistRoutes = require('./routes/wishlistRoutes');
 const bannerRoutes = require('./routes/bannerRoutes');
 const transactionLogRoutes = require('./routes/transactionLogRoutes');
+const adSlotRoutes = require('./routes/adSlotRoutes');
 const sendEmail = require('./utils/sendEmail');
 
 // Conectar ao banco de dados
@@ -132,8 +134,18 @@ async function criarPedido(session, pedidoItems) {
 }
 
 // --- MIDDLEWARES ---
+const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:5173,http://192.168.18.220:5173').split(',');
+
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://192.168.18.220:5173'],
+  origin: function (origin, callback) {
+    // Permitir requisições sem origin (como mobile apps ou curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.includes('*')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
@@ -197,6 +209,7 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/banners', bannerRoutes);
 app.use('/api/transaction-logs', transactionLogRoutes);
+app.use('/api/ad-slots', adSlotRoutes);
 
 const hotlinkProtection = require('./middleware/hotlinkProtection');
 

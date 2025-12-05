@@ -1,5 +1,8 @@
 .produto-card {
   background-color: var(--cor-card);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .produto-card img {
