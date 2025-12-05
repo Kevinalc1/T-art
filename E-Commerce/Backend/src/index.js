@@ -142,9 +142,19 @@ app.use(cors({
   origin: function (origin, callback) {
     // Permitir requisições sem origin (como mobile apps ou curl)
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.includes('*')) {
+
+    // Normalização: remover barra final se existir para comparação
+    const normalizedOrigin = origin.endsWith('/') ? origin.slice(0, -1) : origin;
+
+    const isAllowed = allowedOrigins.some(allowed => {
+      const normalizedAllowed = allowed.endsWith('/') ? allowed.slice(0, -1) : allowed;
+      return normalizedAllowed === normalizedOrigin;
+    });
+
+    if (isAllowed || allowedOrigins.includes('*')) {
       callback(null, true);
     } else {
+      console.error(`[CORS ERROR] A origem '${origin}' (normalizada: '${normalizedOrigin}') foi bloqueada. Lista permitida:`, allowedOrigins);
       callback(new Error('Not allowed by CORS'));
     }
   },

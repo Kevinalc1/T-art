@@ -18,7 +18,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="footer-bottom">
-        <p>&copy; {new Date().getFullYear()} T-art. Todos os direitos reservados.</p>
+        <p>&copy; {new Date().getFullYear()} K&A. Todos os direitos reservados.</p>
       </div>
     </footer>
   );
