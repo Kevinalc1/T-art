@@ -134,7 +134,9 @@ async function criarPedido(session, pedidoItems) {
 }
 
 // --- MIDDLEWARES ---
-const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:5173,http://192.168.18.220:5173').split(',');
+const envOrigins = (process.env.FRONTEND_URL || '').split(',');
+const defaultOrigins = ['http://localhost:5173', 'http://192.168.18.220:5173'];
+const allowedOrigins = [...new Set([...envOrigins, ...defaultOrigins])].filter(Boolean);
 
 app.use(cors({
   origin: function (origin, callback) {
