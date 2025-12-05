@@ -134,7 +134,7 @@ async function criarPedido(session, pedidoItems) {
 }
 
 // --- MIDDLEWARES ---
-const envOrigins = (process.env.FRONTEND_URL || '').split(',');
+const envOrigins = (process.env.FRONTEND_URL || '').split(',').map(origin => origin.trim());
 const defaultOrigins = ['http://localhost:5173', 'http://192.168.18.220:5173'];
 const allowedOrigins = [...new Set([...envOrigins, ...defaultOrigins])].filter(Boolean);
 
