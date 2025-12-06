@@ -55,6 +55,7 @@ connectDB();
 
 const PORT = 4000;
 const app = express();
+app.set('trust proxy', 1);
 
 // --- Funções Auxiliares para o Webhook ---
 async function prepararItensPedidoEEmail(cartItems) {
