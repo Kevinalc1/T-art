@@ -101,11 +101,18 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
   };
 
+  // --- NOVA FUNÇÃO: LOGIN VIA REDE SOCIAL ---
+  const loginWithToken = (newToken) => {
+    localStorage.setItem('userToken', newToken);
+    setToken(newToken);
+  };
+
   // Valor a ser passado para os componentes filhos
   const value = {
     user,
     token,
     login,
+    loginWithToken,
     register,
     logout,
     isAuthenticated: !!token, // Um booleano prático para verificar se está logado

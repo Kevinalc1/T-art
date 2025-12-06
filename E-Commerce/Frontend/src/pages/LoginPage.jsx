@@ -12,7 +12,7 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, setToken } = useAuth();
+  const { login, loginWithToken } = useAuth();
 
   // Check for token in URL (from social login callback)
   useEffect(() => {
@@ -23,8 +23,7 @@ export default function LoginPage() {
       console.log("Token encontrado via Social Login!", token);
 
       try {
-        localStorage.setItem('userToken', token); // Salva com a chave correta 'userToken'
-        setToken(token); // Atualiza o contexto
+        loginWithToken(token);
         toast.success('Login realizado com sucesso!');
         navigate('/'); // Redireciona para a Home
       } catch (error) {
@@ -32,7 +31,7 @@ export default function LoginPage() {
         toast.error('Erro ao autenticar.');
       }
     }
-  }, [location, setToken, navigate]);
+  }, [location, loginWithToken, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
