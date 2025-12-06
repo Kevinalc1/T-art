@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { toast } from 'react-toastify';
 import './LoginPage.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -11,21 +12,27 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, setToken } = useAuth(); // Assumindo que setToken existe ou login pode ser usado
+  const { login, setToken } = useAuth();
 
   // Check for token in URL (from social login callback)
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const token = params.get('token');
+
     if (token) {
-      localStorage.setItem('token', token);
-      // Force reload or update context to set user
-      // Idealmente, useAuth deveria ter um método para setar o token e buscar o user
-      // Como não tenho certeza da implementação do AuthContext, vou recarregar a página para pegar o token do localStorage
-      // Mas antes, vou tentar navegar para home
-      window.location.href = '/';
+      console.log("Token encontrado via Social Login!", token);
+
+      try {
+        localStorage.setItem('userToken', token); // Salva com a chave correta 'userToken'
+        setToken(token); // Atualiza o contexto
+        toast.success('Login realizado com sucesso!');
+        navigate('/'); // Redireciona para a Home
+      } catch (error) {
+        console.error("Erro ao processar token", error);
+        toast.error('Erro ao autenticar.');
+      }
     }
-  }, [location]);
+  }, [location, setToken, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
