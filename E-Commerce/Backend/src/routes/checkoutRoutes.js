@@ -53,17 +53,17 @@ router.post('/create-checkout-session', async (req, res) => {
       },
     };
 
-    // Adiciona lógica condicional para o método de pagamento
-    if (paymentMethod === 'pix') {
-      sessionOptions.payment_method_types = ['pix'];
-      // Para PIX no Brasil, o Stripe exige o CPF/CNPJ do cliente
-      sessionOptions.billing_address_collection = 'required';
-      sessionOptions.payment_method_options = {
-        pix: { expires_after_seconds: 3600 }, // PIX expira em 1 hora
-      };
-    } else { // Padrão é 'card'
-      sessionOptions.payment_method_types = ['card'];
-    }
+    // MODO NOVO (AUTOMÁTICO) - Que mostra tudo no painel principal
+    // Para PIX no Brasil, o Stripe pode exigir o CPF/CNPJ do cliente, o modo automatico gerencia isso melhor.
+    sessionOptions.automatic_payment_methods = {
+      enabled: true,
+    };
+
+    // Removemos payment_method_types pois ele conflita com automatic_payment_methods
+    // sessionOptions.payment_method_types = ['card', 'pix']; 
+
+    // Se quiser garantir que peça endereço/CPF se necessário:
+    // sessionOptions.billing_address_collection = 'auto'; // ou 'required'
 
     const session = await stripe.checkout.sessions.create(sessionOptions);
 

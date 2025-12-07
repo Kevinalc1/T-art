@@ -124,6 +124,25 @@ npm run dev
 -   **Perfil do Usuário**: Histórico de pedidos e configurações de conta.
 -   **Multimoeda**: Suporte para alternar moedas (BRL, USD, EUR, etc).
 
+## 📦 Tipos de Produtos Oferecidos
+
+A plataforma é especializada na venda de **Ativos Digitais para Designers e Gráficas**:
+
+1.  **Artes Prontas para Impressão**:
+    *   Arquivos de alta resolução (300 DPI, CMYK) prontos para enviar para a gráfica.
+    *   Exemplos: Cartões de visita, Panfletos, Banners.
+2.  **Vetores Editáveis**:
+    *   Arquivos fonte (AI, EPS, SVG) que permitem edição completa.
+3.  **Fontes Tipográficas**:
+    *   Arquivos de fonte para uso comercial ou pessoal.
+4.  **Combos e Pacotes**:
+    *   Coleções de artes e recursos vendidos em conjunto com desconto.
+
+Cada produto oferece:
+*   **Entrega Automática**: Link de download liberado imediatamente após o pagamento.
+*   **Especificações Técnicas**: Detalhes claros sobre formato, cores e resolução.
+*   **Galeria de Mockups**: Visualização realista de como a arte ficará impressa.
+
 ## 🤝 Contribuição
 
 1.  Faça um Fork do projeto.
