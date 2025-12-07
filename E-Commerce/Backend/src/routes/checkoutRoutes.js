@@ -44,7 +44,15 @@ router.post('/create-checkout-session', async (req, res) => {
       customer_email: userEmail,
       success_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/confirmacao`,
       cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/carrinho`,
-      // Adiciona os IDs dos produtos e quantidades como metadados
+
+      // 1. OBRIGATÓRIO PARA PIX: Coletar endereço (valida que é BR)
+      billing_address_collection: 'required',
+
+      // 2. MODO MANUAL (FORÇADO):
+      // Removemos 'automatic_payment_methods' para o painel não esconder o PIX
+      payment_method_types: ['card', 'pix'],
+
+      // Metadados
       metadata: {
         cartItems: JSON.stringify(items.map(item => ({
           id: item._id, // O ID do produto no MongoDB
@@ -52,18 +60,6 @@ router.post('/create-checkout-session', async (req, res) => {
         })))
       },
     };
-
-    // MODO NOVO (AUTOMÁTICO) - Que mostra tudo no painel principal
-    // Para PIX no Brasil, o Stripe pode exigir o CPF/CNPJ do cliente, o modo automatico gerencia isso melhor.
-    sessionOptions.automatic_payment_methods = {
-      enabled: true,
-    };
-
-    // Removemos payment_method_types pois ele conflita com automatic_payment_methods
-    // sessionOptions.payment_method_types = ['card', 'pix']; 
-
-    // Se quiser garantir que peça endereço/CPF se necessário:
-    // sessionOptions.billing_address_collection = 'auto'; // ou 'required'
 
     const session = await stripe.checkout.sessions.create(sessionOptions);
 
