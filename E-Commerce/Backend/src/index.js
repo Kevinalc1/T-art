@@ -136,33 +136,26 @@ async function criarPedido(session, pedidoItems) {
 }
 
 // --- MIDDLEWARES ---
-const envOrigins = (process.env.FRONTEND_URL || '').split(',').map(origin => origin.trim());
-const defaultOrigins = ['http://localhost:5173', 'http://192.168.18.220:5173'];
-const allowedOrigins = [...new Set([...envOrigins, ...defaultOrigins])].filter(Boolean);
-
 app.use(cors({
-  origin: function (origin, callback) {
-    // Permitir requisições sem origin (como mobile apps ou curl)
+  origin: (origin, callback) => {
+    // Permite requisições sem origem (como mobile apps ou curl)
     if (!origin) return callback(null, true);
 
-    // Normalização: remover barra final se existir para comparação
-    const normalizedOrigin = origin.endsWith('/') ? origin.slice(0, -1) : origin;
+    const allowedOrigins = [
+      'https://gens-five.vercel.app',
+      'http://localhost:5173',
+      'http://192.168.18.220:5173'
+    ];
 
-    const isAllowed = allowedOrigins.some(allowed => {
-      const normalizedAllowed = allowed.endsWith('/') ? allowed.slice(0, -1) : allowed;
-      return normalizedAllowed === normalizedOrigin;
-    });
-
-    if (isAllowed || allowedOrigins.includes('*')) {
+    // Verifica se está na lista OU se é um deploy de preview da Vercel (.vercel.app)
+    if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('.vercel.app')) {
       callback(null, true);
     } else {
-      console.error(`[CORS ERROR] A origem '${origin}' (normalizada: '${normalizedOrigin}') foi bloqueada. Lista permitida:`, allowedOrigins);
+      console.log('Origem bloqueada pelo CORS:', origin); // Ajuda a debugar
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 }));
 
 app.use(passport.initialize());
