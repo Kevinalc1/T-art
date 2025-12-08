@@ -138,20 +138,22 @@ async function criarPedido(session, pedidoItems) {
 // --- MIDDLEWARES ---
 app.use(cors({
   origin: (origin, callback) => {
-    // Permite requisições sem origem (como mobile apps ou curl)
+    // Permite conexões sem origem (como Postman, Apps Mobile ou servidor-para-servidor)
     if (!origin) return callback(null, true);
 
     const allowedOrigins = [
-      'https://gens-five.vercel.app',
-      'http://localhost:5173',
-      'http://192.168.18.220:5173'
+      'https://gens-five.vercel.app',       // Sua URL oficial
+      'http://localhost:5173',              // Seu Vite Local
+      'http://192.168.18.220:5173',         // Seu teste na rede (celular)
+      'https://gens-backend.onrender.com'   // O próprio backend
     ];
 
-    // Verifica se está na lista OU se é um deploy de preview da Vercel (.vercel.app)
+    // LÓGICA MÁGICA:
+    // Aceita se estiver na lista ACIMA -OU- se o site terminar com ".vercel.app"
     if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('.vercel.app')) {
       callback(null, true);
     } else {
-      console.log('Origem bloqueada pelo CORS:', origin); // Ajuda a debugar
+      console.log('Bloqueado pelo CORS:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },

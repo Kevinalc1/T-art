@@ -29,11 +29,10 @@ router.post('/create-pix-payment', async (req, res) => {
                 email: userEmail,
                 identification: {
                     type: 'CPF',
-                    number: userDoc // Ex: '12345678909'
+                    number: userDoc
                 }
             },
-            // Notificação (Webhook) - Ajustar URL conforme seu ambiente
-            notification_url: `${process.env.BASE_URL || 'http://localhost:4000'}/api/pix/webhook`
+            notification_url: 'https://gens-backend.onrender.com/api/webhook/mercadopago'
         };
 
         const result = await payment.create({ body });
