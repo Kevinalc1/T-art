@@ -32,7 +32,11 @@ router.post('/create-pix-payment', async (req, res) => {
                     number: userDoc
                 }
             },
-            notification_url: 'https://gens-backend.onrender.com/api/webhook/mercadopago'
+            notification_url: 'https://gens-backend.onrender.com/api/webhook/mercadopago',
+            metadata: {
+                user_email: userEmail,
+                items: items.map(i => ({ id: i._id, name: i.productName }))
+            }
         };
 
         const result = await payment.create({ body });
@@ -51,14 +55,51 @@ router.post('/create-pix-payment', async (req, res) => {
     }
 });
 
+const { enviarEmailDownload } = require('../utils/sendEmail');
+
 // @route   POST /api/pix/webhook
 router.post('/webhook', async (req, res) => {
-    // Implementação básica para receber notificações
-    // Aqui você deve validar a notificação e atualizar o status do pedido no seu banco
     const { type, data } = req.body;
     console.log('Webhook Mercado Pago Recebido:', type, data);
 
-    // TODO: Buscar o pedido pelo ID do pagamento (data.id) e atualizar para 'pago'
+    if (type === 'payment') {
+        try {
+            const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
+            const payment = new Payment(client);
+
+            // Consultar status real
+            const paymentInfo = await payment.get({ id: data.id });
+            const status = paymentInfo.status;
+
+            console.log(`Status do Pagamento Pix ${data.id}: ${status}`);
+
+            if (status === 'approved') {
+                const metadata = paymentInfo.metadata || {};
+                const userEmail = metadata.user_email || paymentInfo.payer.email;
+                const items = metadata.items || []; // Array de { id, name }
+
+                console.log(`Pagamento Pix Aprovado para ${userEmail}. Processando ${items.length} itens.`);
+
+                for (const item of items) {
+                    // Busca link no mapa
+                    const link = PRODUCT_LINKS[item.id] || PRODUCT_LINKS['default'];
+
+                    if (link) {
+                        try {
+                            await enviarEmailDownload(userEmail, item.name, link);
+                            console.log(`Link enviado para ${userEmail} (Produto: ${item.name})`);
+                        } catch (emailErr) {
+                            console.error(`Falha no envio de email para ${userEmail}:`, emailErr.message);
+                        }
+                    } else {
+                        console.error(`ERRO CRÍTICO: Produto ${item.id} (${item.name}) sem link cadastrado!`);
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Erro ao processar webhook Pix:', error);
+        }
+    }
 
     res.status(200).send('OK');
 });

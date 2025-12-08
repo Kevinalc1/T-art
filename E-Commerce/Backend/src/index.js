@@ -49,7 +49,7 @@ const bannerRoutes = require('./routes/bannerRoutes');
 const transactionLogRoutes = require('./routes/transactionLogRoutes');
 const adSlotRoutes = require('./routes/adSlotRoutes');
 const pixRoutes = require('./routes/pixRoutes');
-const sendEmail = require('./utils/sendEmail');
+const { sendEmail, enviarEmailDownload } = require('./utils/sendEmail');
 
 // Conectar ao banco de dados
 connectDB();
@@ -181,6 +181,31 @@ app.post('/api/checkout/webhook', express.raw({ type: 'application/json' }), asy
       const cartItems = JSON.parse(session.metadata.cartItems);
       const { pedidoItems, emailHtmlLinks } = await prepararItensPedidoEEmail(cartItems);
       await criarPedido(session, pedidoItems);
+
+      // --- AUTOMAÇÃO DE ENTREGA (Links Cloudinary) ---
+      console.log('Pagamento Stripe Confirmado. Processando envio de links...');
+      try {
+        const cartItems = JSON.parse(session.metadata.cartItems);
+        const Produto = mongoose.model('Produto');
+
+        for (const item of cartItems) {
+          try {
+            const produtoDb = await Produto.findById(item.id);
+
+            if (produtoDb && produtoDb.downloadUrl) {
+              await enviarEmailDownload(session.customer_details.email, produtoDb.productName, produtoDb.downloadUrl);
+              console.log(`Link enviado (Stripe) para ${session.customer_details.email} - Produto: ${produtoDb.productName}`);
+            } else {
+              console.error(`ERRO: Produto ${item.id} não encontrado ou sem downloadUrl.`);
+            }
+          } catch (innerError) {
+            console.error(`Erro ao buscar produto ${item.id}:`, innerError);
+          }
+        }
+      } catch (emailError) {
+        console.error('Falha ao enviar e-mails transacionais (Stripe):', emailError);
+      }
+      // -----------------------------------------------
 
       const emailCompletoHtml = `
         <h1>Obrigado pela sua compra!</h1>
