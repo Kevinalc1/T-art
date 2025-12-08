@@ -213,12 +213,12 @@ app.post('/api/checkout/webhook', express.raw({ type: 'application/json' }), asy
         <p>Abaixo estão os links para download dos seus produtos:</p>
         ${emailHtmlLinks}
         <p>Qualquer dúvida, basta responder a este e-mail.</p>
-        <p>Atenciosamente,<br>T-art</p>
+        <p>Atenciosamente,<br>Gens</p>
       `;
 
       await sendEmail({
         to: session.customer_email,
-        subject: 'Seu Pedido e Links de Download - T-art',
+        subject: 'Seu Pedido e Links de Download - Gens',
         html: emailCompletoHtml
       });
     } catch (error) {

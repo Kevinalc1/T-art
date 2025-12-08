@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCarrinho } from '../context/CarrinhoContext.jsx';
 import { useCurrency } from '../context/CurrencyContext.jsx';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import './CheckoutPage.css';
 
@@ -11,13 +11,15 @@ export default function CheckoutPage() {
   const { state } = useCarrinho();
   const { formatPrice } = useCurrency();
   const { user } = useAuth();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     nome: '',
     email: '',
     confirmarEmail: '',
+    userDoc: '' // Added userDoc to formData
   });
   const [loading, setLoading] = useState(false);
-
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('card');
   const [pixData, setPixData] = useState(null);
 
@@ -30,6 +32,35 @@ export default function CheckoutPage() {
       }));
     }
   }, [user]);
+
+  // Polling para checar status do Pix
+  useEffect(() => {
+    let interval;
+
+    if (pixData && pixData.id) {
+      interval = setInterval(async () => {
+        try {
+          const response = await fetch(`${API_URL}/api/pix/status/${pixData.id}`);
+          if (response.ok) {
+            const data = await response.json();
+            console.log('Status Pix:', data.status);
+
+            if (data.status === 'approved') {
+              clearInterval(interval);
+              alert('Pagamento aprovado! Redirecionando...');
+              navigate('/perfil');
+            }
+          }
+        } catch (error) {
+          console.error('Erro ao verificar status:', error);
+        }
+      }, 5000); // Checa a cada 5 segundos
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [pixData, navigate]);
 
   const calcularTotal = () => {
     return state.items.reduce((total, item) => {
@@ -70,7 +101,7 @@ export default function CheckoutPage() {
         bodyData.paymentMethod = 'card';
       } else {
         endpoint = `${API_URL}/api/pix/create-pix-payment`;
-        bodyData.userDoc = formData.userDoc; // Remove pontuação se necessário: formData.userDoc.replace(/\D/g, '')
+        bodyData.userDoc = formData.userDoc.replace(/\D/g, ''); // Remove pontuação
       }
 
       const response = await fetch(endpoint, {
@@ -156,7 +187,7 @@ export default function CheckoutPage() {
                 type="text"
                 name="userDoc"
                 placeholder="CPF (apenas números)"
-                value={formData.userDoc || ''}
+                value={formData.userDoc}
                 onChange={handleChange}
                 required
               />

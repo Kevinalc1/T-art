@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { MercadoPagoConfig, Payment } = require('mercadopago');
+const { enviarEmailDownload } = require('../utils/sendEmail');
+const Produto = require('../models/Produto');
 
 // @route   POST /api/pix/create-pix-payment
 router.post('/create-pix-payment', async (req, res) => {
@@ -32,11 +34,11 @@ router.post('/create-pix-payment', async (req, res) => {
                     number: userDoc
                 }
             },
-            notification_url: 'https://gens-backend.onrender.com/api/webhook/mercadopago',
             metadata: {
                 user_email: userEmail,
                 items: items.map(i => ({ id: i._id, name: i.productName }))
-            }
+            },
+            notification_url: 'https://gens-backend.onrender.com/api/pix/webhook'
         };
 
         const result = await payment.create({ body });
@@ -55,7 +57,30 @@ router.post('/create-pix-payment', async (req, res) => {
     }
 });
 
-const { enviarEmailDownload } = require('../utils/sendEmail');
+// @route   GET /api/pix/status/:id
+router.get('/status/:id', async (req, res) => {
+    const { id } = req.params;
+
+    if (!process.env.MP_ACCESS_TOKEN) {
+        return res.status(500).json({ error: 'Configuração inválida' });
+    }
+
+    try {
+        const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
+        const payment = new Payment(client);
+
+        const paymentInfo = await payment.get({ id });
+
+        res.json({
+            id: paymentInfo.id,
+            status: paymentInfo.status,
+            status_detail: paymentInfo.status_detail
+        });
+    } catch (error) {
+        console.error('Erro ao consultar status Pix:', error);
+        res.status(500).json({ error: 'Erro ao consultar pagamento' });
+    }
+});
 
 // @route   POST /api/pix/webhook
 router.post('/webhook', async (req, res) => {
@@ -76,23 +101,22 @@ router.post('/webhook', async (req, res) => {
             if (status === 'approved') {
                 const metadata = paymentInfo.metadata || {};
                 const userEmail = metadata.user_email || paymentInfo.payer.email;
-                const items = metadata.items || []; // Array de { id, name }
+                const items = metadata.items || [];
 
                 console.log(`Pagamento Pix Aprovado para ${userEmail}. Processando ${items.length} itens.`);
 
                 for (const item of items) {
-                    // Busca link no mapa
-                    const link = PRODUCT_LINKS[item.id] || PRODUCT_LINKS['default'];
+                    try {
+                        const produtoDb = await Produto.findById(item.id);
 
-                    if (link) {
-                        try {
-                            await enviarEmailDownload(userEmail, item.name, link);
-                            console.log(`Link enviado para ${userEmail} (Produto: ${item.name})`);
-                        } catch (emailErr) {
-                            console.error(`Falha no envio de email para ${userEmail}:`, emailErr.message);
+                        if (produtoDb && produtoDb.downloadUrl) {
+                            await enviarEmailDownload(userEmail, produtoDb.productName, produtoDb.downloadUrl);
+                            console.log(`Link enviado para ${userEmail} (Produto: ${produtoDb.productName})`);
+                        } else {
+                            console.error(`ERRO: Produto ${item.id} não encontrado ou sem downloadUrl.`);
                         }
-                    } else {
-                        console.error(`ERRO CRÍTICO: Produto ${item.id} (${item.name}) sem link cadastrado!`);
+                    } catch (dbError) {
+                        console.error(`Erro ao buscar produto ${item.id}:`, dbError);
                     }
                 }
             }
