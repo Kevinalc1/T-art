@@ -48,9 +48,8 @@ router.post('/create-checkout-session', async (req, res) => {
       // 1. OBRIGATÓRIO PARA PIX: Coletar endereço (valida que é BR)
       billing_address_collection: 'required',
 
-      // 2. MODO MANUAL (FORÇADO):
-      // Removemos 'automatic_payment_methods' para o painel não esconder o PIX
-      payment_method_types: ['card', 'pix'],
+      // 2. CONFIGURAÇÃO HÍBRIDA: Apenas Cartão no Stripe (Pix via Mercado Pago)
+      payment_method_types: ['card'],
 
       // Metadados
       metadata: {

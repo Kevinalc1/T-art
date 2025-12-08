@@ -48,6 +48,7 @@ const wishlistRoutes = require('./routes/wishlistRoutes');
 const bannerRoutes = require('./routes/bannerRoutes');
 const transactionLogRoutes = require('./routes/transactionLogRoutes');
 const adSlotRoutes = require('./routes/adSlotRoutes');
+const pixRoutes = require('./routes/pixRoutes');
 const sendEmail = require('./utils/sendEmail');
 
 // Conectar ao banco de dados
@@ -223,6 +224,7 @@ app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/banners', bannerRoutes);
 app.use('/api/transaction-logs', transactionLogRoutes);
 app.use('/api/ad-slots', adSlotRoutes);
+app.use('/api/pix', pixRoutes);
 
 const hotlinkProtection = require('./middleware/hotlinkProtection');
 
