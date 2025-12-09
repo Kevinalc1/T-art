@@ -1,48 +1,292 @@
+/* Wrapper for centering */
+.confirmacao-wrapper {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    background: linear-gradient(135deg, var(--cor-fundo) 0%, #e8f0f5 100%);
+}
+
+/* Main Container */
 .confirmacao-container {
     max-width: 600px;
-    margin: 4rem auto;
-    padding: 2.5rem 3rem; /* Ajuste no padding */
+    width: 100%;
+    padding: 3rem 2.5rem;
     text-align: center;
-    background-color: #fff; /* Fundo branco para o card */
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Sombra mais sutil */
-    border: 1px solid #eee;
-    font-family: sans-serif;
+    background-color: var(--cor-card);
+    border-radius: 16px;
+    box-shadow: var(--sombra-hover);
+    border: 1px solid var(--cor-borda);
+    animation: slideUp 0.5s ease-out;
 }
 
-.confirmacao-container h1 {
-    color: #28a745; /* Cor verde para sucesso */
-    margin-bottom: 1.5rem;
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Success Icon Animation */
+.success-icon-wrapper {
+    margin-bottom: 2rem;
+}
+
+.success-checkmark {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+}
+
+.check-icon {
+    width: 80px;
+    height: 80px;
+    position: relative;
+    border-radius: 50%;
+    box-sizing: content-box;
+    border: 4px solid var(--cor-sucesso);
+}
+
+.icon-line {
+    height: 5px;
+    background-color: var(--cor-sucesso);
+    display: block;
+    border-radius: 2px;
+    position: absolute;
+    z-index: 10;
+}
+
+.icon-line.line-tip {
+    top: 46px;
+    left: 14px;
+    width: 25px;
+    transform: rotate(45deg);
+    animation: icon-line-tip 0.75s;
+}
+
+.icon-line.line-long {
+    top: 38px;
+    right: 8px;
+    width: 47px;
+    transform: rotate(-45deg);
+    animation: icon-line-long 0.75s;
+}
+
+.icon-circle {
+    top: -4px;
+    left: -4px;
+    z-index: 10;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    position: absolute;
+    box-sizing: content-box;
+    border: 4px solid rgba(16, 185, 129, 0.2);
+}
+
+.icon-fix {
+    top: 8px;
+    width: 5px;
+    left: 26px;
+    z-index: 1;
+    height: 85px;
+    position: absolute;
+    transform: rotate(-45deg);
+    background-color: var(--cor-card);
+}
+
+@keyframes icon-line-tip {
+    0% {
+        width: 0;
+        left: 1px;
+        top: 19px;
+    }
+
+    54% {
+        width: 0;
+        left: 1px;
+        top: 19px;
+    }
+
+    70% {
+        width: 50px;
+        left: -8px;
+        top: 37px;
+    }
+
+    84% {
+        width: 17px;
+        left: 21px;
+        top: 48px;
+    }
+
+    100% {
+        width: 25px;
+        left: 14px;
+        top: 46px;
+    }
+}
+
+@keyframes icon-line-long {
+    0% {
+        width: 0;
+        right: 46px;
+        top: 54px;
+    }
+
+    65% {
+        width: 0;
+        right: 46px;
+        top: 54px;
+    }
+
+    84% {
+        width: 55px;
+        right: 0px;
+        top: 35px;
+    }
+
+    100% {
+        width: 47px;
+        right: 8px;
+        top: 38px;
+    }
+}
+
+/* Typography */
+.confirmacao-titulo {
+    color: var(--cor-texto-titulo);
     font-size: 2.5rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
 }
 
-.confirmacao-container p {
+.confirmacao-subtitulo {
     font-size: 1.1rem;
-    color: #555; /* Cor de texto padrão */
-    margin-bottom: 1rem;
+    color: var(--cor-texto-corpo);
+    margin-bottom: 2rem;
     line-height: 1.6;
 }
 
-.icone-sucesso {
-    font-size: 5rem;
-    color: #28a745; /* Cor verde para sucesso */
+/* Info Card */
+.info-card {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border: 2px solid var(--cor-primaria);
+    border-radius: var(--raio-borda);
+    padding: 1.5rem;
     margin: 2rem 0;
-    line-height: 1;
+    display: flex;
+    gap: 1rem;
+    text-align: left;
+    animation: fadeIn 0.8s ease-out 0.3s both;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.info-icon {
+    font-size: 2.5rem;
+    flex-shrink: 0;
+}
+
+.info-content h3 {
+    color: var(--cor-primaria);
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.info-content p {
+    color: var(--cor-texto-corpo);
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+}
+
+.info-note {
+    font-size: 0.85rem !important;
+    color: var(--cor-texto-leve) !important;
+    font-style: italic;
+}
+
+/* Action Buttons */
+.confirmacao-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.btn-voltar-loja,
+.btn-ver-pedidos {
+    flex: 1;
+    min-width: 200px;
+    padding: 1rem 2rem;
+    border-radius: var(--raio-borda);
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    text-align: center;
 }
 
 .btn-voltar-loja {
-    display: inline-block;
-    margin-top: 1.5rem;
-    padding: 1rem 2rem;
-    background-color: var(--cor-primaria);
+    background-color: var(--cor-acento);
     color: white;
-    text-decoration: none;
-    border-radius: 8px; /* Bordas consistentes */
-    font-size: 1.1rem;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
 }
 
 .btn-voltar-loja:hover {
-    background-color: #333; /* Cor mais escura no hover */
+    background-color: var(--cor-acento-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--sombra-hover);
+}
+
+.btn-ver-pedidos {
+    background-color: transparent;
+    color: var(--cor-primaria);
+    border: 2px solid var(--cor-primaria);
+}
+
+.btn-ver-pedidos:hover {
+    background-color: var(--cor-primaria);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--sombra-hover);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .confirmacao-container {
+        padding: 2rem 1.5rem;
+    }
+
+    .confirmacao-titulo {
+        font-size: 2rem;
+    }
+
+    .info-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .confirmacao-actions {
+        flex-direction: column;
+    }
+
+    .btn-voltar-loja,
+    .btn-ver-pedidos {
+        min-width: 100%;
+    }
 }

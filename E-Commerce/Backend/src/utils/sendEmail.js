@@ -9,14 +9,14 @@ const PRODUCT_LINKS = {
 };
 
 // --- CONFIGURAÇÃO DO TRANSPORTADOR ---
-// Forçando configurações para Gmail (SSL/465)
+// Alterado para Port 587 (STARTTLS) para melhor compatibilidade com Render/Cloud
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
-  port: 465,
-  secure: true, // true para 465, false para outras portas
+  port: 587,
+  secure: false, // true para 465, false para outras portas (587)
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS || process.env.EMAIL_PASSWORD // Suporte para ambas as variaveis
+    pass: process.env.EMAIL_PASS || process.env.EMAIL_PASSWORD
   }
 });
 
@@ -26,7 +26,7 @@ transporter.verify((error, success) => {
     console.error('❌ ERRO CRÍTICO: Não foi possível conectar ao Gmail. Verifique EMAIL_USER/PASS.');
     console.error('Detalhes do erro:', error);
   } else {
-    console.log('✅ Conexão SMTP com Gmail estabelecida com sucesso.');
+    console.log('✅ Conexão SMTP (587) com Gmail estabelecida com sucesso.');
   }
 });
 
@@ -73,7 +73,9 @@ const enviarEmailDownload = async (email, nomeProduto, linkCloudinary, productId
   }
 
   try {
-    console.log(`📩 Iniciando envio de e-mail de download para: ${email}`);
+    console.log(`📩 Iniciando envio de e-mail de download para: [${email}]`);
+    // Log seguro do link original
+    console.log(`ℹ️ Link Original recebido: ${linkCloudinary ? linkCloudinary : 'NULO/INDEFINIDO'}`);
 
     let finalLink = linkCloudinary;
 
@@ -81,16 +83,19 @@ const enviarEmailDownload = async (email, nomeProduto, linkCloudinary, productId
     if (productId) {
       console.log(`🔍 Buscando link para o produto ID: ${productId}`);
       if (PRODUCT_LINKS[productId]) {
-        console.log('✅ Link encontrado no MAPA (substituindo o original).');
+        console.log(`✅ Link encontrado no MAPA: ${PRODUCT_LINKS[productId]}`);
         finalLink = PRODUCT_LINKS[productId];
       } else {
         console.log('⚠️ ID não encontrado no mapa manual. Usando link original.');
       }
     }
 
-    if (!finalLink) {
-      console.warn('⚠️ AVISO: Nenhum link de download disponível para este produto. Enviando e-mail de contato.');
-      finalLink = "#"; // Evita quebra, mas idealmente deveria ser tratado
+    // Verifica se finalLink é válido
+    if (!finalLink || finalLink === 'undefined' || finalLink === 'null') {
+      console.warn('⚠️ AVISO: Link final inválido. O usuário receberá um botão quebrado.');
+      finalLink = "#";
+    } else {
+      console.log(`🔗 Link Final a ser enviado: ${finalLink}`);
     }
 
     const mailOptions = {
