@@ -48,7 +48,7 @@ export default function CheckoutPage() {
             if (data.status === 'approved') {
               clearInterval(interval);
               alert('Pagamento aprovado! Redirecionando...');
-              navigate('/perfil');
+              navigate('/confirmacao');
             }
           }
         } catch (error) {

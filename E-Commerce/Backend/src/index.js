@@ -207,20 +207,7 @@ app.post('/api/checkout/webhook', express.raw({ type: 'application/json' }), asy
       }
       // -----------------------------------------------
 
-      const emailCompletoHtml = `
-        <h1>Obrigado pela sua compra!</h1>
-        <p>Olá! Seu pagamento foi confirmado e seu pedido foi processado com sucesso.</p>
-        <p>Abaixo estão os links para download dos seus produtos:</p>
-        ${emailHtmlLinks}
-        <p>Qualquer dúvida, basta responder a este e-mail.</p>
-        <p>Atenciosamente,<br>Gens</p>
-      `;
-
-      await sendEmail({
-        to: session.customer_email,
-        subject: 'Seu Pedido e Links de Download - Gens',
-        html: emailCompletoHtml
-      });
+      // Email consolidado removido - emails individuais já são enviados acima via enviarEmailDownload()
     } catch (error) {
       console.error('Erro ao processar webhook:', error);
     }
