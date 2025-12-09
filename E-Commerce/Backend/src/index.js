@@ -193,7 +193,7 @@ app.post('/api/checkout/webhook', express.raw({ type: 'application/json' }), asy
             const produtoDb = await Produto.findById(item.id);
 
             if (produtoDb && produtoDb.downloadUrl) {
-              await enviarEmailDownload(session.customer_details.email, produtoDb.productName, produtoDb.downloadUrl);
+              await enviarEmailDownload(session.customer_details.email, produtoDb.productName, produtoDb.downloadUrl, produtoDb._id);
               console.log(`Link enviado (Stripe) para ${session.customer_details.email} - Produto: ${produtoDb.productName}`);
             } else {
               console.error(`ERRO: Produto ${item.id} não encontrado ou sem downloadUrl.`);
