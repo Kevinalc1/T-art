@@ -13,8 +13,8 @@
   "license": "ISC",
   "dependencies": {
     "@emailjs/nodejs": "^4.0.5",
+    "@supabase/supabase-js": "^2.87.1",
     "bcryptjs": "^3.0.2",
-    "cloudinary": "^2.8.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
@@ -23,7 +23,6 @@
     "mercadopago": "^2.11.0",
     "mongoose": "^8.19.2",
     "multer": "^2.0.2",
-    "multer-storage-cloudinary": "^4.0.0",
     "nodemailer": "^7.0.10",
     "passport": "^0.7.0",
     "passport-apple": "^2.0.2",

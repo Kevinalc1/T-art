@@ -1,41 +1,78 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
-const { cloudinary, imageStorage, fileStorage } = require('../config/cloudinary');
+const { uploadImage, uploadFile, uploadToSupabase } = require('../config/supabase');
 
-// Upload para IMAGENS (jpg, png, jpeg, webp)
-const uploadImage = multer({
-    storage: imageStorage,
-    limits: { fileSize: 10 * 1024 * 1024 } // Limite de 10MB para imagens
-});
-
-// Upload para ARQUIVOS (cdr, zip, pdf, ai, psd, etc)
-const uploadFile = multer({
-    storage: fileStorage,
-    limits: { fileSize: 100 * 1024 * 1024 } // Limite de 100MB para arquivos
-});
-
-// @desc    Upload de arquivo genérico para Cloudinary
-// @route   POST /api/upload
+// @desc    Upload de IMAGEM para Supabase Storage
+// @route   POST /api/upload/image
 // @access  Public
-router.post('/', uploadFile.single('file'), (req, res) => {
+router.post('/image', uploadImage.single('file'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ message: 'Nenhuma imagem enviada' });
+        }
+
+        console.log('📤 [Upload] Enviando imagem para Supabase...');
+
+        // Upload para Supabase
+        const fileUrl = await uploadToSupabase(
+            req.file.buffer,
+            req.file.originalname,
+            'produtos', // Nome do bucket
+            'images',   // Pasta dentro do bucket
+            req.file.mimetype
+        );
+
+        console.log('✅ [Upload] Imagem enviada com sucesso!');
+
+        res.send({
+            message: 'Upload de imagem realizado com sucesso',
+            filePath: fileUrl,
+            fileName: req.file.originalname
+        });
+    } catch (error) {
+        console.error('❌ [Upload] Erro ao enviar imagem:', error);
+        res.status(500).json({
+            message: 'Erro ao fazer upload da imagem',
+            error: error.message
+        });
+    }
+});
+
+// @desc    Upload de ARQUIVO (.cdr, .zip, etc) para Supabase Storage
+// @route   POST /api/upload (ou /api/upload/file)
+// @access  Public
+router.post(['/', '/file'], uploadFile.single('file'), async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ message: 'Nenhum arquivo enviado' });
         }
 
-        console.log('✅ [Upload] Arquivo enviado para Cloudinary:', req.file.path);
+        console.log('📤 [Upload] Enviando arquivo para Supabase...');
+        console.log(`📦 [Arquivo] Nome: ${req.file.originalname}`);
+        console.log(`📊 [Tamanho] ${(req.file.size / 1024 / 1024).toFixed(2)} MB`);
 
-        // Cloudinary retorna a URL completa em req.file.path
+        // Upload para Supabase
+        const fileUrl = await uploadToSupabase(
+            req.file.buffer,
+            req.file.originalname,
+            'produtos', // Nome do bucket
+            'files',    // Pasta dentro do bucket
+            req.file.mimetype
+        );
+
+        console.log('✅ [Upload] Arquivo enviado com sucesso!');
+
         res.send({
-            message: 'Upload realizado com sucesso',
-            filePath: req.file.path, // URL completa do Cloudinary
-            fileName: req.file.filename,
-            publicId: req.file.filename
+            message: 'Upload de arquivo realizado com sucesso',
+            filePath: fileUrl,
+            fileName: req.file.originalname
         });
     } catch (error) {
-        console.error('❌ [Upload] Erro no upload:', error);
-        res.status(500).json({ message: 'Erro ao fazer upload do arquivo' });
+        console.error('❌ [Upload] Erro ao enviar arquivo:', error);
+        res.status(500).json({
+            message: 'Erro ao fazer upload do arquivo',
+            error: error.message
+        });
     }
 });
 

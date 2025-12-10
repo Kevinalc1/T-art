@@ -53,7 +53,7 @@ router.get('/:token', async (req, res) => {
         console.log('📦 [Download] Produto ID:', downloadToken.productId);
         console.log('🔗 [Download] Redirecionando para:', downloadToken.downloadUrl);
 
-        // Redirecionar para o arquivo no Cloudinary
+        // Redirecionar para o arquivo de download
         return res.redirect(downloadToken.downloadUrl);
 
     } catch (error) {

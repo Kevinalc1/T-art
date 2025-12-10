@@ -60,24 +60,24 @@ const sendEmail = async ({ to, subject, html }) => {
 };
 
 /**
- * Envia e-mail com link de download do produto.
+ * Envia e-mail de download para o cliente
  * @param {string} email - Email do cliente
  * @param {string} nomeProduto - Nome do produto
- * @param {string} linkCloudinary - URL do arquivo no Cloudinary
- * @param {string} productId - ID do produto (MongoDB)
+ * @param {string} linkDownload - URL do arquivo de download
+ * @param {string} productId - ID do produto no MongoDB
  * @param {string} orderId - ID do pedido (opcional)
  * @param {string} nomeCliente - Nome do cliente (opcional)
  */
-const enviarEmailDownload = async (email, nomeProduto, linkCloudinary, productId, orderId = null, nomeCliente = null) => {
+const enviarEmailDownload = async (email, nomeProduto, linkDownload, productId, orderId = null, nomeCliente = null) => {
     if (!emailjsConfigured) {
         console.error('❌ [EmailJS] ERRO: EmailJS não configurado.');
         throw new Error('EmailJS não está configurado.');
     }
 
     // --- MAPA DE PRODUTOS (Fallback/Override) ---
-    // Adicione aqui IDs do MongoDB e seus respectivos links do Cloudinary
+    // Adicione aqui IDs do MongoDB e seus respectivos links de download
     const PRODUCT_LINKS = {
-        // Exemplo: '6755e1a3cc767566d5af1234': 'https://res.cloudinary.com/.../arquivo.zip',
+        // Exemplo: '6755e1a3cc767566d5af1234': 'https://storage.supabase.co/.../arquivo.zip',
     };
 
     try {
@@ -89,10 +89,10 @@ const enviarEmailDownload = async (email, nomeProduto, linkCloudinary, productId
         console.log(`📦 [Produto] Nome: ${nomeProduto}`);
         console.log(`🆔 [Produto] ID: ${productId}`);
         console.log(`🛒 [Pedido] ID: ${orderId || 'Não informado'}`);
-        console.log(`🔗 [Cloudinary] URL Original: ${linkCloudinary}`);
+        console.log(`🔗 [Storage] URL Original: ${linkDownload}`);
 
         // Buscar link no mapa (se existir)
-        let finalLink = linkCloudinary;
+        let finalLink = linkDownload;
         if (productId && PRODUCT_LINKS[productId]) {
             console.log(`✅ [Mapa] Link encontrado no PRODUCT_LINKS para ID ${productId}`);
             finalLink = PRODUCT_LINKS[productId];
@@ -123,9 +123,9 @@ const enviarEmailDownload = async (email, nomeProduto, linkCloudinary, productId
                         productImageUrl = `${backendUrl}${rawImageUrl.startsWith('/') ? '' : '/'}${rawImageUrl}`;
                         console.log(`🖼️ [Imagem] URL relativa convertida: ${productImageUrl}`);
                     } else {
-                        // URL já é absoluta (Cloudinary, etc)
+                        // URL já é absoluta (Supabase, etc)
                         productImageUrl = rawImageUrl;
-                        console.log(`🖼️ [Imagem] URL absoluta (Cloudinary): ${productImageUrl}`);
+                        console.log(`🖼️ [Imagem] URL absoluta (Supabase): ${productImageUrl}`);
                     }
                 } else {
                     console.warn('⚠️ [Imagem] Produto sem imagem cadastrada');

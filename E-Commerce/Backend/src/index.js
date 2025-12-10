@@ -183,7 +183,7 @@ app.post('/api/checkout/webhook', express.raw({ type: 'application/json' }), asy
       const { pedidoItems, emailHtmlLinks } = await prepararItensPedidoEEmail(cartItems);
       await criarPedido(session, pedidoItems);
 
-      // --- AUTOMAÇÃO DE ENTREGA (Links Cloudinary) ---
+      // --- AUTOMAÇÃO DE ENTREGA (Links de Download) ---
       console.log('Pagamento Stripe Confirmado. Processando envio de links...');
       try {
         const cartItems = JSON.parse(session.metadata.cartItems);
