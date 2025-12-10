@@ -106,19 +106,43 @@ const enviarEmailDownload = async (email, nomeProduto, linkCloudinary, productId
 
         console.log(`🔗 [Link Final] ${finalLink}`);
 
-        // Buscar produto do banco para obter imagem
+        // Buscar produto do banco para obter imagem e preço
         let productImageUrl = null;
+        let productPrice = 0;
         try {
             const Produto = require('../models/Produto');
             const produto = await Produto.findById(productId);
-            if (produto && produto.imageUrls && produto.imageUrls.length > 0) {
-                productImageUrl = produto.imageUrls[0];
-                console.log(`🖼️ [Imagem] URL encontrada: ${productImageUrl}`);
+            if (produto) {
+                // Buscar imagem
+                if (produto.imageUrls && produto.imageUrls.length > 0) {
+                    let rawImageUrl = produto.imageUrls[0];
+
+                    // Se for URL relativa (não começa com http/https), converter para absoluta
+                    if (!rawImageUrl.startsWith('http://') && !rawImageUrl.startsWith('https://')) {
+                        const backendUrl = process.env.BACKEND_URL || 'https://gens-backend.onrender.com';
+                        productImageUrl = `${backendUrl}${rawImageUrl.startsWith('/') ? '' : '/'}${rawImageUrl}`;
+                        console.log(`🖼️ [Imagem] URL relativa convertida: ${productImageUrl}`);
+                    } else {
+                        // URL já é absoluta (Cloudinary, etc)
+                        productImageUrl = rawImageUrl;
+                        console.log(`🖼️ [Imagem] URL absoluta (Cloudinary): ${productImageUrl}`);
+                    }
+                } else {
+                    console.warn('⚠️ [Imagem] Produto sem imagem cadastrada');
+                }
+
+                // Buscar preço
+                if (produto.price) {
+                    productPrice = produto.price;
+                    console.log(`💰 [Preço] Valor encontrado: R$ ${productPrice}`);
+                } else {
+                    console.warn('⚠️ [Preço] Produto sem preço cadastrado');
+                }
             } else {
-                console.warn('⚠️ [Imagem] Produto sem imagem cadastrada');
+                console.warn('⚠️ [Produto] Produto não encontrado no banco');
             }
         } catch (imgError) {
-            console.error('❌ [Imagem] Erro ao buscar imagem do produto:', imgError.message);
+            console.error('❌ [Produto] Erro ao buscar dados do produto:', imgError.message);
         }
 
         // Extrair nome do cliente do email (se não fornecido)
@@ -127,11 +151,17 @@ const enviarEmailDownload = async (email, nomeProduto, linkCloudinary, productId
         // Gerar Order ID (timestamp ou usar o fornecido)
         const generatedOrderId = orderId || `ORDER-${Date.now()}`;
 
+        // Formatar preço para o template
+        const precoFormatado = new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        }).format(productPrice);
+
         // Montar array de orders (formato esperado pelo template)
         const orders = [
             {
                 nome: nomeProduto,
-                preço: 'Pago',
+                preço: precoFormatado,
                 image_url: productImageUrl || 'https://via.placeholder.com/150?text=Sem+Imagem'
             }
         ];

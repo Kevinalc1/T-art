@@ -8,15 +8,27 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const storage = new CloudinaryStorage({
+// Storage para IMAGENS (jpg, png, jpeg, webp)
+const imageStorage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
-        folder: 't-art-products', // Nome da pasta no Cloudinary
+        folder: 't-art-products/images',
         allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+    },
+});
+
+// Storage para ARQUIVOS (cdr, zip, pdf, ai, psd, etc)
+const fileStorage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 't-art-products/files',
+        resource_type: 'raw', // Importante para arquivos não-imagem
+        allowed_formats: ['cdr', 'zip', 'rar', 'pdf', 'ai', 'psd', 'eps', 'svg'],
     },
 });
 
 module.exports = {
     cloudinary,
-    storage,
+    imageStorage,
+    fileStorage,
 };
