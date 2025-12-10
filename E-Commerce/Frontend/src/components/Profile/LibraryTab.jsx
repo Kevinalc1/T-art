@@ -14,12 +14,19 @@ export default function LibraryTab() {
         const fetchPedidos = async () => {
             try {
                 const token = localStorage.getItem('userToken');
+                console.log('🔍 [LibraryTab] Token:', token ? 'Existe' : 'Não encontrado');
+
                 const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/pedidos/meus-pedidos`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
+
+                console.log('📦 [LibraryTab] Pedidos recebidos:', data);
+                console.log('📊 [LibraryTab] Quantidade de pedidos:', data.length);
+
                 setPedidos(data);
             } catch (err) {
-                console.error('Erro ao buscar pedidos:', err);
+                console.error('❌ [LibraryTab] Erro ao buscar pedidos:', err);
+                console.error('❌ [LibraryTab] Erro completo:', err.response || err);
                 setError('Não foi possível carregar seus pedidos.');
             } finally {
                 setLoading(false);

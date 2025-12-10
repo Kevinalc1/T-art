@@ -105,19 +105,34 @@ router.post('/webhook', async (req, res) => {
 
                 console.log(`Pagamento Pix Aprovado para ${userEmail}. Processando ${items.length} itens.`);
 
+                // Criar array de itens do pedido
+                const pedidoItems = [];
+                let totalPrice = 0;
+
                 for (const item of items) {
                     try {
                         const produtoDb = await Produto.findById(item.id);
 
                         if (produtoDb && produtoDb.downloadUrl) {
+                            // Adicionar item ao pedido
+                            pedidoItems.push({
+                                productName: produtoDb.productName,
+                                productId: produtoDb._id,
+                                price: produtoDb.price,
+                                quantidade: item.quantidade || 1,
+                                downloadUrl: produtoDb.downloadUrl
+                            });
+
+                            totalPrice += produtoDb.price * (item.quantidade || 1);
+
                             // Enviar email com token seguro
                             await enviarEmailDownload(
                                 userEmail,
                                 produtoDb.productName,
                                 produtoDb.downloadUrl,
                                 produtoDb._id,
-                                data.id, // orderId (ID do pagamento)
-                                paymentInfo.payer?.first_name || null // Nome do cliente
+                                data.id,
+                                paymentInfo.payer?.first_name || null
                             );
                             console.log(`Link enviado para ${userEmail} (Produto: ${produtoDb.productName})`);
                         } else {
@@ -125,6 +140,25 @@ router.post('/webhook', async (req, res) => {
                         }
                     } catch (dbError) {
                         console.error(`Erro ao buscar produto ${item.id}:`, dbError);
+                    }
+                }
+
+                // Criar pedido no banco de dados
+                if (pedidoItems.length > 0) {
+                    try {
+                        const Pedido = require('../models/Pedido');
+                        const novoPedido = new Pedido({
+                            userEmail: userEmail,
+                            items: pedidoItems,
+                            totalPrice: totalPrice,
+                            stripeSessionId: `pix_${data.id}`,
+                            isPaid: true,
+                            paidAt: new Date()
+                        });
+                        await novoPedido.save();
+                        console.log(`✅ Pedido ${novoPedido._id} criado para ${userEmail} (Pix)`);
+                    } catch (pedidoError) {
+                        console.error('❌ Erro ao criar pedido:', pedidoError);
                     }
                 }
             }

@@ -106,6 +106,21 @@ const enviarEmailDownload = async (email, nomeProduto, linkCloudinary, productId
 
         console.log(`🔗 [Link Final] ${finalLink}`);
 
+        // Buscar produto do banco para obter imagem
+        let productImageUrl = null;
+        try {
+            const Produto = require('../models/Produto');
+            const produto = await Produto.findById(productId);
+            if (produto && produto.imageUrls && produto.imageUrls.length > 0) {
+                productImageUrl = produto.imageUrls[0];
+                console.log(`🖼️ [Imagem] URL encontrada: ${productImageUrl}`);
+            } else {
+                console.warn('⚠️ [Imagem] Produto sem imagem cadastrada');
+            }
+        } catch (imgError) {
+            console.error('❌ [Imagem] Erro ao buscar imagem do produto:', imgError.message);
+        }
+
         // Extrair nome do cliente do email (se não fornecido)
         const clientName = nomeCliente || email.split('@')[0];
 
@@ -116,7 +131,8 @@ const enviarEmailDownload = async (email, nomeProduto, linkCloudinary, productId
         const orders = [
             {
                 nome: nomeProduto,
-                preço: 'Pago'
+                preço: 'Pago',
+                image_url: productImageUrl || 'https://via.placeholder.com/150?text=Sem+Imagem'
             }
         ];
 

@@ -10,7 +10,9 @@ const Pedido = mongoose.model('Pedido');
 router.get('/meus-pedidos', protect, async (req, res) => {
   try {
     // req.user é populado pelo middleware 'protect' com os dados do usuário do token
+    console.log('🔍 [Meus Pedidos] Buscando pedidos para email:', req.user.email);
     const pedidos = await Pedido.find({ userEmail: req.user.email }).sort({ createdAt: -1 });
+    console.log('📦 [Meus Pedidos] Pedidos encontrados:', pedidos.length);
     res.json(pedidos);
   } catch (error) {
     console.error('Erro ao buscar pedidos do usuário:', error);
