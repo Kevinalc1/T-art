@@ -148,6 +148,132 @@ h2 {
     background-color: #e0e0e0;
 }
 
+/* Pedidos List */
+.pedidos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.pedido-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.pedido-header {
+    background: linear-gradient(135deg, #133853 0%, #1a4d6d 100%);
+    color: white;
+    padding: 20px;
+}
+
+.pedido-info h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+    color: white;
+}
+
+.pedido-meta {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.pedido-meta span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pedido-date {
+    opacity: 0.9;
+}
+
+.pedido-total strong {
+    color: #fff;
+    font-weight: 600;
+}
+
+.pedido-status {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.pedido-status.paid {
+    background: rgba(76, 175, 80, 0.2);
+    color: #4CAF50;
+}
+
+.pedido-status.pending {
+    background: rgba(255, 152, 0, 0.2);
+    color: #FF9800;
+}
+
+.pedido-items {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.pedido-items .library-card {
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    padding: 16px;
+    background: #fafafa;
+}
+
+.pedido-items .library-card:hover {
+    background: #f5f5f5;
+    border-color: #e0e0e0;
+}
+
+.pedido-items .card-content h4 {
+    font-size: 1rem;
+    margin-bottom: 12px;
+    color: #333;
+}
+
+.item-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.item-price {
+    font-weight: 600;
+    color: #133853;
+    font-size: 1.1rem;
+}
+
+.item-quantity {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.btn-download:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.btn-download:disabled:hover {
+    background-color: #ccc;
+}
+
+
 /* Collections Tab */
 .tab-header {
     display: flex;

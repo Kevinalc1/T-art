@@ -47,7 +47,7 @@ export default function CheckoutPage() {
 
             if (data.status === 'approved') {
               clearInterval(interval);
-              alert('Pagamento aprovado! Redirecionando...');
+              console.log('✅ Pagamento aprovado! Redirecionando para confirmação...');
               navigate('/confirmacao');
             }
           }

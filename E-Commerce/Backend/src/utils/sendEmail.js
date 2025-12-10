@@ -165,17 +165,33 @@ const enviarEmailDownload = async (email, nomeProduto, linkCloudinary, productId
         console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
         console.error(`📧 [Cliente] Email: ${email}`);
         console.error(`📦 [Produto] Nome: ${nomeProduto}`);
-        console.error(`🔴 [Erro] Mensagem: ${error.message}`);
 
-        // Log completo da resposta de erro para debug
+        // Tentar extrair mensagem de erro de diferentes estruturas
+        const errorMessage = error.message || error.text || error.toString() || 'Erro desconhecido';
+        console.error(`🔴 [Erro] Mensagem: ${errorMessage}`);
+
+        // Log do erro completo para debug
+        console.error(`📋 [Erro] Objeto completo:`, JSON.stringify(error, null, 2));
+
+        // Se houver resposta HTTP
         if (error.response) {
-            console.error(`📋 [Erro] Resposta completa:`, JSON.stringify(error.response, null, 2));
+            console.error(`📋 [Erro] Response Status:`, error.response.status);
+            console.error(`📋 [Erro] Response Data:`, JSON.stringify(error.response.data, null, 2));
         }
 
-        console.error(`📋 [Erro] Stack:`, error.stack);
+        // Se houver status
+        if (error.status) {
+            console.error(`📋 [Erro] Status Code:`, error.status);
+        }
+
+        // Stack trace se disponível
+        if (error.stack) {
+            console.error(`📋 [Erro] Stack:`, error.stack);
+        }
+
         console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
-        throw new Error(`Falha no envio de e-mail: ${error.message}`);
+        throw new Error(`Falha no envio de e-mail: ${errorMessage}`);
     }
 };
 
