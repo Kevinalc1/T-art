@@ -23,6 +23,8 @@ const hotlinkProtection = (req, res, next) => {
         const myDomains = [
             'localhost',
             '127.0.0.1',
+            'gens-five.vercel.app',           // Frontend Vercel
+            'gens-backend.onrender.com',      // Backend Render
             // Adicione seu domínio de produção aqui quando tiver um
             // 'meusite.com.br',
             // 'www.meusite.com.br'
