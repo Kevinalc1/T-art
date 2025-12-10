@@ -49,6 +49,7 @@ const bannerRoutes = require('./routes/bannerRoutes');
 const transactionLogRoutes = require('./routes/transactionLogRoutes');
 const adSlotRoutes = require('./routes/adSlotRoutes');
 const pixRoutes = require('./routes/pixRoutes');
+const downloadRoutes = require('./routes/downloadRoutes');
 const { sendEmail, enviarEmailDownload } = require('./utils/sendEmail');
 
 // Conectar ao banco de dados
@@ -193,7 +194,15 @@ app.post('/api/checkout/webhook', express.raw({ type: 'application/json' }), asy
             const produtoDb = await Produto.findById(item.id);
 
             if (produtoDb && produtoDb.downloadUrl) {
-              await enviarEmailDownload(session.customer_details.email, produtoDb.productName, produtoDb.downloadUrl, produtoDb._id);
+              // Enviar email com token seguro
+              await enviarEmailDownload(
+                session.customer_details.email,
+                produtoDb.productName,
+                produtoDb.downloadUrl,
+                produtoDb._id,
+                session.id, // orderId (Session ID do Stripe)
+                session.customer_details?.name || null // Nome do cliente
+              );
               console.log(`Link enviado (Stripe) para ${session.customer_details.email} - Produto: ${produtoDb.productName}`);
             } else {
               console.error(`ERRO: Produto ${item.id} não encontrado ou sem downloadUrl.`);
@@ -232,6 +241,7 @@ app.use('/api/banners', bannerRoutes);
 app.use('/api/transaction-logs', transactionLogRoutes);
 app.use('/api/ad-slots', adSlotRoutes);
 app.use('/api/pix', pixRoutes);
+app.use('/api/download', downloadRoutes);
 
 const hotlinkProtection = require('./middleware/hotlinkProtection');
 

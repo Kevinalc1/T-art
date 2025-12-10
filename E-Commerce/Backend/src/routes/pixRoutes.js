@@ -110,7 +110,15 @@ router.post('/webhook', async (req, res) => {
                         const produtoDb = await Produto.findById(item.id);
 
                         if (produtoDb && produtoDb.downloadUrl) {
-                            await enviarEmailDownload(userEmail, produtoDb.productName, produtoDb.downloadUrl, produtoDb._id);
+                            // Enviar email com token seguro
+                            await enviarEmailDownload(
+                                userEmail,
+                                produtoDb.productName,
+                                produtoDb.downloadUrl,
+                                produtoDb._id,
+                                data.id, // orderId (ID do pagamento)
+                                paymentInfo.payer?.first_name || null // Nome do cliente
+                            );
                             console.log(`Link enviado para ${userEmail} (Produto: ${produtoDb.productName})`);
                         } else {
                             console.error(`ERRO: Produto ${item.id} não encontrado ou sem downloadUrl.`);

@@ -1,0 +1,228 @@
+.download-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #133853 0%, #1a4d6d 100%);
+    padding: 20px;
+}
+
+.download-container {
+    max-width: 600px;
+    width: 100%;
+    background: white;
+    border-radius: 16px;
+    padding: 60px 40px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.download-status h1 {
+    font-size: 2rem;
+    margin-bottom: 16px;
+    color: #133853;
+}
+
+.download-status p {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 24px;
+}
+
+/* Loading State */
+.download-status.loading .spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid #e0e0e0;
+    border-top-color: #133853;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 24px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Success State */
+.download-status.success .icon-success {
+    width: 80px;
+    height: 80px;
+    background: #4CAF50;
+    color: white;
+    font-size: 3rem;
+    line-height: 80px;
+    border-radius: 50%;
+    margin: 0 auto 24px;
+    animation: scaleIn 0.5s ease-out;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+    }
+
+    to {
+        transform: scale(1);
+    }
+}
+
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background: #e0e0e0;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 24px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #4CAF50;
+    animation: progress 1s ease-out forwards;
+}
+
+@keyframes progress {
+    from {
+        width: 0%;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+/* Error State */
+.download-status.error .icon-error {
+    width: 80px;
+    height: 80px;
+    background: #f44336;
+    color: white;
+    font-size: 3rem;
+    line-height: 80px;
+    border-radius: 50%;
+    margin: 0 auto 24px;
+    animation: shake 0.5s ease-out;
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-10px);
+    }
+
+    75% {
+        transform: translateX(10px);
+    }
+}
+
+.error-message {
+    font-weight: 600;
+    color: #f44336;
+    font-size: 1.15rem;
+}
+
+.error-help {
+    background: #f5f5f5;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 24px 0;
+    text-align: left;
+}
+
+.error-help h3 {
+    font-size: 1.1rem;
+    color: #133853;
+    margin-bottom: 12px;
+}
+
+.error-help ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.error-help li {
+    padding: 8px 0;
+    color: #666;
+    position: relative;
+    padding-left: 24px;
+}
+
+.error-help li::before {
+    content: '•';
+    position: absolute;
+    left: 8px;
+    color: #f44336;
+    font-weight: bold;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+}
+
+.action-buttons button {
+    flex: 1;
+    min-width: 200px;
+    padding: 14px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: #133853;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #0f2a3e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(19, 56, 83, 0.3);
+}
+
+.btn-secondary {
+    background: #e0e0e0;
+    color: #333;
+}
+
+.btn-secondary:hover {
+    background: #d0d0d0;
+    transform: translateY(-2px);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .download-container {
+        padding: 40px 24px;
+    }
+
+    .download-status h1 {
+        font-size: 1.5rem;
+    }
+
+    .download-status p {
+        font-size: 1rem;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .action-buttons button {
+        min-width: 100%;
+    }
+}

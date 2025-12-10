@@ -43,6 +43,7 @@ import LibraryTab from './components/Profile/LibraryTab.jsx';
 import SecurityTab from './components/Profile/SecurityTab.jsx';
 import SupportTab from './components/Profile/SupportTab.jsx';
 import WishlistPage from './pages/WishlistPage.jsx';
+import DownloadPage from './pages/DownloadPage.jsx';
 
 
 
@@ -84,6 +85,10 @@ const router = createBrowserRouter([
       {
         path: '/confirmacao',
         element: <ConfirmacaoPage />,
+      },
+      {
+        path: '/download/:token',
+        element: <DownloadPage />,
       },
       {
         path: '/login',
