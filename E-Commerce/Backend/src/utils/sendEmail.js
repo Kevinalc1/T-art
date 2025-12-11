@@ -17,6 +17,17 @@ if (process.env.EMAILJS_SERVICE_ID && process.env.EMAILJS_PRIVATE_KEY) {
     console.error('  - FRONTEND_URL (URL do frontend para links de download)');
 }
 
+// 1. Mapeamento de Produtos (Simulação de Banco de Dados)
+const PRODUCT_REGISTRY = {
+    // Exemplo: 'ID_DO_PRODUTO': { link: 'URL_SUPABASE', nome: 'Nome Produto', imagem: 'URL_IMAGEM' }
+    '6755e1a3cc767566d5af1234': {
+        link: 'https://supabase.co/storage/v1/object/public/uploads/arquivo.zip',
+        nome: 'Pack de Artes Exclusivas',
+        imagem: 'https://minha-loja.com/imagem-produto.jpg'
+    },
+    // ADICIONE SEUS PRODUTOS AQUI (Substitua pelos dados reais depois)
+};
+
 /**
  * Envia um e-mail genérico usando EmailJS.
  */
@@ -28,7 +39,6 @@ const sendEmail = async ({ to, subject, html }) => {
     try {
         console.log(`📩 [EmailJS] Tentando enviar e-mail para ${to}...`);
 
-        // EmailJS usa templates, então vamos enviar os dados do template
         const templateParams = {
             to_email: to,
             subject: subject,
@@ -46,140 +56,85 @@ const sendEmail = async ({ to, subject, html }) => {
         );
 
         console.log(`✅ [EmailJS] E-mail enviado com sucesso!`);
-        console.log(`📧 [EmailJS] Status: ${response.status}`);
-        console.log(`🆔 [EmailJS] Message ID: ${response.text}`);
-
         return { success: true, messageId: response.text };
     } catch (error) {
-        console.error(`❌ [EmailJS] ERRO ao enviar e-mail`);
-        console.error(`📧 [EmailJS] Destinatário: ${to}`);
-        console.error(`🔴 [EmailJS] Erro: ${error.message}`);
-        console.error(`📋 [EmailJS] Stack:`, error.stack);
+        console.error(`❌ [EmailJS] ERRO ao enviar e-mail genérico:`, error);
         throw error;
     }
 };
 
 /**
- * Envia e-mail de download para o cliente
- * @param {string} email - Email do cliente
- * @param {string} nomeProduto - Nome do produto
- * @param {string} linkDownload - URL do arquivo de download
- * @param {string} productId - ID do produto no MongoDB
- * @param {string} orderId - ID do pedido (opcional)
- * @param {string} nomeCliente - Nome do cliente (opcional)
+ * Envia e-mail de download para o cliente com estrutura CORRIGIDA.
  */
-const enviarEmailDownload = async (email, nomeProduto, linkDownload, productId, orderId = null, nomeCliente = null) => {
+const enviarEmailDownload = async (email, nomeProduto, linkDownloadOriginal, productId, orderId = null, nomeCliente = null) => {
     if (!emailjsConfigured) {
-        console.error('❌ [EmailJS] ERRO: EmailJS não configurado.');
         throw new Error('EmailJS não está configurado.');
     }
 
-    // --- MAPA DE PRODUTOS (Fallback/Override) ---
-    // Adicione aqui IDs do MongoDB e seus respectivos links de download
-    const PRODUCT_LINKS = {
-        // Exemplo: '6755e1a3cc767566d5af1234': 'https://storage.supabase.co/.../arquivo.zip',
-    };
-
     try {
         console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        console.log('📩 [EmailJS] Iniciando envio de e-mail de download');
+        console.log('📩 [EmailJS] Iniciando envio de e-mail de download (Legacy Fix)');
         console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        console.log(`📧 [Cliente] Email: ${email}`);
-        console.log(`👤 [Cliente] Nome: ${nomeCliente || 'Não informado'}`);
-        console.log(`📦 [Produto] Nome: ${nomeProduto}`);
-        console.log(`🆔 [Produto] ID: ${productId}`);
-        console.log(`🛒 [Pedido] ID: ${orderId || 'Não informado'}`);
-        console.log(`🔗 [Storage] URL Original: ${linkDownload}`);
 
-        // Buscar link no mapa (se existir)
-        let finalLink = linkDownload;
-        if (productId && PRODUCT_LINKS[productId]) {
-            console.log(`✅ [Mapa] Link encontrado no PRODUCT_LINKS para ID ${productId}`);
-            finalLink = PRODUCT_LINKS[productId];
-        }
+        // --- 1. Resolução dos Dados (Usando PRODUCT_REGISTRY se disponível) ---
+        let finalLink = linkDownloadOriginal;
+        let finalName = nomeProduto;
+        let finalImage = 'https://via.placeholder.com/150?text=Sem+Imagem';
+        let finalPrice = "Pago"; // Valor fixo ou dinâmico se tiver
 
-        // Validar link final
-        if (!finalLink || finalLink === 'undefined' || finalLink === 'null') {
-            console.error('❌ [Validação] Link de download inválido!');
-            throw new Error('Link de download inválido. Entre em contato com o suporte.');
-        }
+        if (productId && PRODUCT_REGISTRY[productId]) {
+            console.log(`✅ [Registry] Produto encontrado no PRODUCT_REGISTRY: ${productId}`);
+            const produtoReg = PRODUCT_REGISTRY[productId];
+            finalLink = produtoReg.link;
+            finalName = produtoReg.nome;
+            finalImage = produtoReg.imagem;
+        } else {
+            console.warn(`⚠️ [Registry] Produto ${productId} não encontrado no registro, usando dados passados.`);
 
-        console.log(`🔗 [Link Final] ${finalLink}`);
-
-        // Buscar produto do banco para obter imagem e preço
-        let productImageUrl = null;
-        let productPrice = 0;
-        try {
-            const Produto = require('../models/Produto');
-            const produto = await Produto.findById(productId);
-            if (produto) {
-                // Buscar imagem
-                if (produto.imageUrls && produto.imageUrls.length > 0) {
-                    let rawImageUrl = produto.imageUrls[0];
-
-                    // Se for URL relativa (não começa com http/https), converter para absoluta
-                    if (!rawImageUrl.startsWith('http://') && !rawImageUrl.startsWith('https://')) {
-                        const backendUrl = process.env.BACKEND_URL || 'https://gens-backend.onrender.com';
-                        productImageUrl = `${backendUrl}${rawImageUrl.startsWith('/') ? '' : '/'}${rawImageUrl}`;
-                        console.log(`🖼️ [Imagem] URL relativa convertida: ${productImageUrl}`);
-                    } else {
-                        // URL já é absoluta (Supabase, etc)
-                        productImageUrl = rawImageUrl;
-                        console.log(`🖼️ [Imagem] URL absoluta (Supabase): ${productImageUrl}`);
-                    }
-                } else {
-                    console.warn('⚠️ [Imagem] Produto sem imagem cadastrada');
+            // Fallback: Tenta buscar imagem do banco se não estiver no registro estático
+            try {
+                const Produto = require('../models/Produto');
+                const produtoDb = await Produto.findById(productId);
+                if (produtoDb && produtoDb.imageUrls && produtoDb.imageUrls.length > 0) {
+                    finalImage = produtoDb.imageUrls[0];
                 }
-
-                // Buscar preço
-                if (produto.price) {
-                    productPrice = produto.price;
-                    console.log(`💰 [Preço] Valor encontrado: R$ ${productPrice}`);
-                } else {
-                    console.warn('⚠️ [Preço] Produto sem preço cadastrado');
-                }
-            } else {
-                console.warn('⚠️ [Produto] Produto não encontrado no banco');
+            } catch (err) {
+                console.warn('⚠️ [DB] Falha ao buscar imagem do banco:', err.message);
             }
-        } catch (imgError) {
-            console.error('❌ [Produto] Erro ao buscar dados do produto:', imgError.message);
         }
 
-        // Extrair nome do cliente do email (se não fornecido)
+        // --- 2. Preparação de Variáveis Simples ---
         const clientName = nomeCliente || email.split('@')[0];
+        const generatedOrderId = orderId || Date.now(); // ID único numérico ou string
 
-        // Gerar Order ID (timestamp ou usar o fornecido)
-        const generatedOrderId = orderId || `ORDER-${Date.now()}`;
+        // 3. Correção de URL: Garantir que é a URL pura (sem concatenações estranhas do passado)
+        // Se vier com prefixos errados como "meusite.comhttps...", tenta limpar
+        if (finalLink && finalLink.includes('http') && finalLink.indexOf('http') > 0) {
+            finalLink = finalLink.substring(finalLink.indexOf('http'));
+            console.log(`🔧 [URL Fix] Link corrigido para: ${finalLink}`);
+        }
 
-        // Formatar preço para o template
-        const precoFormatado = new Intl.NumberFormat('pt-BR', {
-            style: 'currency',
-            currency: 'BRL'
-        }).format(productPrice);
-
-        // Montar array de orders (formato esperado pelo template)
-        const orders = [
-            {
-                nome: nomeProduto,
-                preço: precoFormatado,
-                image_url: productImageUrl || 'https://via.placeholder.com/150?text=Sem+Imagem'
-            }
-        ];
-
-        // --- PARÂMETROS DO TEMPLATE (FORMATO CUSTOMIZADO) ---
+        // --- 4. Montagem do templateParams (ESTRUTURA OBRIGATÓRIA) ---
         const templateParams = {
+            // Variáveis simples
             nome_cliente: clientName,
-            link_download: finalLink,
-            order_id: generatedOrderId,
             email: email,
-            orders: orders
+            link_download: finalLink, // URL PURA
+            order_id: generatedOrderId,
+
+            // OBRIGATÓRIO: Array de objetos para o loop {{#orders}}
+            orders: [
+                {
+                    nome: finalName,
+                    preço: finalPrice,
+                    imagem_produto: finalImage // URL para tag <img src>
+                }
+            ]
         };
 
-        console.log('📋 [Template] Parâmetros montados:');
-        console.log(JSON.stringify(templateParams, null, 2));
-        console.log('📤 [EmailJS] Enviando e-mail...');
+        console.log('📋 [Template] Parâmetros Finais:', JSON.stringify(templateParams, null, 2));
 
-        // Enviar e-mail via EmailJS
+        // --- 5. Envio ---
         const response = await emailjs.send(
             process.env.EMAILJS_SERVICE_ID,
             process.env.EMAILJS_TEMPLATE_ID,
@@ -190,54 +145,12 @@ const enviarEmailDownload = async (email, nomeProduto, linkDownload, productId, 
             }
         );
 
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        console.log('✅ [EmailJS] E-MAIL ENVIADO COM SUCESSO!');
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        console.log(`📧 [EmailJS] Status: ${response.status}`);
-        console.log(`🆔 [EmailJS] Message ID: ${response.text}`);
-        console.log(`📦 [Produto] ${nomeProduto}`);
-        console.log(`🔗 [Link] ${finalLink}`);
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-
-        return {
-            success: true,
-            messageId: response.text,
-            orderId: generatedOrderId
-        };
+        console.log('✅ [EmailJS] E-MAIL DE DOWNLOAD ENVIADO COM SUCESSO!');
+        return { success: true, messageId: response.text };
 
     } catch (error) {
-        console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        console.error('❌ [EmailJS] ERRO FATAL AO ENVIAR E-MAIL');
-        console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        console.error(`📧 [Cliente] Email: ${email}`);
-        console.error(`📦 [Produto] Nome: ${nomeProduto}`);
-
-        // Tentar extrair mensagem de erro de diferentes estruturas
-        const errorMessage = error.message || error.text || error.toString() || 'Erro desconhecido';
-        console.error(`🔴 [Erro] Mensagem: ${errorMessage}`);
-
-        // Log do erro completo para debug
-        console.error(`📋 [Erro] Objeto completo:`, JSON.stringify(error, null, 2));
-
-        // Se houver resposta HTTP
-        if (error.response) {
-            console.error(`📋 [Erro] Response Status:`, error.response.status);
-            console.error(`📋 [Erro] Response Data:`, JSON.stringify(error.response.data, null, 2));
-        }
-
-        // Se houver status
-        if (error.status) {
-            console.error(`📋 [Erro] Status Code:`, error.status);
-        }
-
-        // Stack trace se disponível
-        if (error.stack) {
-            console.error(`📋 [Erro] Stack:`, error.stack);
-        }
-
-        console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-
-        throw new Error(`Falha no envio de e-mail: ${errorMessage}`);
+        console.error('❌ [EmailJS] ERRO FATAL AO ENVIAR E-MAIL DE DOWNLOAD:', error);
+        throw error;
     }
 };
 

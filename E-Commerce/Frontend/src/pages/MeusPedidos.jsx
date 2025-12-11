@@ -65,7 +65,7 @@ export default function MeusPedidos() {
                                         <div key={index} className="pedido-item">
                                             <span>{item.productName}</span>
                                             {/* Idealmente, o downloadUrl viria do backend */}
-                                            <a href="#" target="_blank" rel="noopener noreferrer" className="btn-download">Baixar</a>
+                                            <a href={item.downloadUrl} target="_blank" rel="noopener noreferrer" className="btn-download">Baixar</a>
                                         </div>
                                     ))}
                                 </div>
