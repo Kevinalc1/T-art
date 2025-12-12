@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useCurrency } from '../context/CurrencyContext.jsx';
+import { toast } from 'react-toastify';
 import './ProfilePage.css'; // Reusing existing styles for now
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -44,6 +45,40 @@ export default function MeusPedidos() {
 
     const formatarData = (dataString) => new Date(dataString).toLocaleDateString('pt-BR');
 
+    const handleDownload = async (productId, fileName) => {
+        try {
+            toast.info('Gerando link de download seguro...');
+            const response = await fetch(`${API_URL}/api/download/secure`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ productId })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Erro ao gerar link de download');
+            }
+
+            // Criar um link temporário e clicar nele para forçar o download
+            const link = document.createElement('a');
+            link.href = data.downloadUrl;
+            link.setAttribute('download', fileName || 'download'); // Opcional, R2 já manda header
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+            toast.success('Download iniciado!');
+
+        } catch (error) {
+            console.error('Erro no download:', error);
+            toast.error(error.message);
+        }
+    };
+
     return (
         <div className="profile-content">
             <h1>Meus Pedidos</h1>
@@ -64,8 +99,12 @@ export default function MeusPedidos() {
                                     {pedido.items.map((item, index) => (
                                         <div key={index} className="pedido-item">
                                             <span>{item.productName}</span>
-                                            {/* Idealmente, o downloadUrl viria do backend */}
-                                            <a href={item.downloadUrl} target="_blank" rel="noopener noreferrer" className="btn-download">Baixar</a>
+                                            <button
+                                                onClick={() => handleDownload(item.product._id || item.product, item.productName)}
+                                                className="btn-download"
+                                            >
+                                                Baixar
+                                            </button>
                                         </div>
                                     ))}
                                 </div>

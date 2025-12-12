@@ -125,11 +125,31 @@ router.post('/webhook', async (req, res) => {
 
                             totalPrice += produtoDb.price * (item.quantidade || 1);
 
+                            // --- GERAÇÃO DE TOKEN SEGURO PARA EMAIL (Pix) ---
+                            const crypto = require('crypto');
+                            const DownloadToken = require('../models/DownloadToken'); // Ajuste o path se necessário
+
+                            const token = crypto.randomBytes(32).toString('hex');
+                            const expiresAt = new Date();
+                            expiresAt.setDate(expiresAt.getDate() + 7);
+
+                            await DownloadToken.create({
+                                token,
+                                productId: produtoDb._id,
+                                userEmail: userEmail,
+                                orderId: data.id, // Pix ID
+                                downloadUrl: produtoDb.downloadUrl,
+                                expiresAt
+                            });
+
+                            const baseUrl = process.env.BASE_URL || 'http://localhost:4000';
+                            const secureEmailLink = `${baseUrl}/api/download/${token}`;
+
                             // Enviar email com token seguro
                             await enviarEmailDownload(
                                 userEmail,
                                 produtoDb.productName,
-                                produtoDb.downloadUrl,
+                                secureEmailLink,
                                 produtoDb._id,
                                 data.id,
                                 paymentInfo.payer?.first_name || null

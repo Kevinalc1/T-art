@@ -85,7 +85,7 @@ const enviarEmailDownload = async (email, nomeProduto, linkDownloadOriginal, pro
         if (productId && PRODUCT_REGISTRY[productId]) {
             console.log(`✅ [Registry] Produto encontrado no PRODUCT_REGISTRY: ${productId}`);
             const produtoReg = PRODUCT_REGISTRY[productId];
-            finalLink = produtoReg.link;
+            // finalLink = produtoReg.link; // DESATIVADO: Usar o link dinâmico seguro gerado pelo controller
             finalName = produtoReg.nome;
             finalImage = produtoReg.imagem;
         } else {

@@ -38,7 +38,9 @@ router.post('/image', uploadImage.single('file'), async (req, res) => {
     }
 });
 
-// @desc    Upload de ARQUIVO (.cdr, .zip, etc) para Supabase Storage
+const { uploadFileToR2 } = require('../services/storageService');
+
+// @desc    Upload de ARQUIVO (.cdr, .zip, etc) para Cloudflare R2 (Download Seguro)
 // @route   POST /api/upload (ou /api/upload/file)
 // @access  Public
 router.post(['/', '/file'], uploadFile.single('file'), async (req, res) => {
@@ -47,28 +49,28 @@ router.post(['/', '/file'], uploadFile.single('file'), async (req, res) => {
             return res.status(400).json({ message: 'Nenhum arquivo enviado' });
         }
 
-        console.log('📤 [Upload] Enviando arquivo para Supabase...');
+        console.log('📤 [Upload] Enviando arquivo para Cloudflare R2 (Seguro)...');
         console.log(`📦 [Arquivo] Nome: ${req.file.originalname}`);
         console.log(`📊 [Tamanho] ${(req.file.size / 1024 / 1024).toFixed(2)} MB`);
 
-        // Upload para Supabase
-        const fileUrl = await uploadToSupabase(
+        // Upload para R2
+        const fileKey = await uploadFileToR2(
             req.file.buffer,
             req.file.originalname,
-            'produtos', // Nome do bucket
-            'files',    // Pasta dentro do bucket
             req.file.mimetype
         );
 
-        console.log('✅ [Upload] Arquivo enviado com sucesso!');
+        console.log('✅ [Upload] Arquivo enviado para R2 com sucesso!');
+        console.log('🔑 [R2 Key]:', fileKey);
 
         res.send({
-            message: 'Upload de arquivo realizado com sucesso',
-            filePath: fileUrl,
-            fileName: req.file.originalname
+            message: 'Upload de arquivo realizado com sucesso (R2)',
+            filePath: fileKey, // Retorna a Key, que é o que o frontend deve salvar no campo 'downloadUrl' ou 'vectorUrl'
+            fileName: req.file.originalname,
+            storage: 'r2'
         });
     } catch (error) {
-        console.error('❌ [Upload] Erro ao enviar arquivo:', error);
+        console.error('❌ [Upload] Erro ao enviar arquivo para R2:', error);
         res.status(500).json({
             message: 'Erro ao fazer upload do arquivo',
             error: error.message

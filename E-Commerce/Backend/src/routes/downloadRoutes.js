@@ -1,6 +1,35 @@
 const express = require('express');
 const router = express.Router();
 const DownloadToken = require('../models/DownloadToken');
+// Importar middleware de auth
+const { protect } = require('../middleware/authMiddleware');
+const { requestDownload } = require('../controllers/downloadController');
+
+// ==============================================================================
+// 1. ROTAS ESPECÍFICAS (Devem vir ANTES das rotas dinâmicas como /:token)
+// ==============================================================================
+
+// @desc    Rota de teste para download (gens.zip)
+// @route   GET /api/download/test-download
+router.get('/test-download', async (req, res) => {
+    try {
+        const { getDownloadLink } = require('../services/storageService');
+        // 'gens.zip' conforme solicitado pelo usuário
+        const url = await getDownloadLink('gens.zip');
+        res.json({ url });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// @desc    Solicitar link de download seguro (Baseado na compra)
+// @route   POST /api/download/secure
+// @access  Private (Requer Login)
+router.post('/secure', protect, requestDownload);
+
+// ==============================================================================
+// 2. ROTAS DINÂMICAS
+// ==============================================================================
 
 /**
  * GET /api/download/:token
@@ -51,10 +80,21 @@ router.get('/:token', async (req, res) => {
         console.log('✅ [Download] Token validado com sucesso!');
         console.log('📧 [Download] Email:', downloadToken.userEmail);
         console.log('📦 [Download] Produto ID:', downloadToken.productId);
-        console.log('🔗 [Download] Redirecionando para:', downloadToken.downloadUrl);
+        console.log('🔗 [Download] Recurso original:', downloadToken.downloadUrl);
+
+        let finalRedirectUrl = downloadToken.downloadUrl;
+
+        // Se NÃO for uma URL completa (não começa com http), assumimos que é uma Key do R2
+        if (!downloadToken.downloadUrl.startsWith('http')) {
+            console.log('🔄 [Download] Detectada Key do R2. Gerando link assinado...');
+            const { getDownloadLink } = require('../services/storageService');
+            finalRedirectUrl = await getDownloadLink(downloadToken.downloadUrl);
+        }
+
+        console.log('🚀 [Download] Redirecionando para:', finalRedirectUrl);
 
         // Redirecionar para o arquivo de download
-        return res.redirect(downloadToken.downloadUrl);
+        return res.redirect(finalRedirectUrl);
 
     } catch (error) {
         console.error('❌ [Download] Erro ao processar token:', error);

@@ -1,11 +1,34 @@
 const { createClient } = require('@supabase/supabase-js');
 const multer = require('multer');
 
-// Inicializar cliente Supabase
-const supabase = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_ROLE_KEY // Service Role Key para bypass RLS
-);
+
+// Inicializar cliente Supabase (Com verificação de segurança)
+let supabase;
+
+if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    try {
+        supabase = createClient(
+            process.env.SUPABASE_URL,
+            process.env.SUPABASE_SERVICE_ROLE_KEY
+        );
+        console.log('✅ Supabase configurado com sucesso.');
+    } catch (err) {
+        console.error('❌ Erro ao inicializar Supabase:', err.message);
+    }
+} else {
+    console.warn('⚠️  AVISO: Variáveis do Supabase não encontradas (SUPABASE_URL ou SUPABASE_SERVICE_ROLE_KEY).');
+    console.warn('⚠️  O upload de arquivos via Supabase não funcionará.');
+
+    // Mock para evitar crash ao importar, mas falhar ao usar
+    supabase = {
+        storage: {
+            from: () => ({
+                upload: async () => { throw new Error('Supabase não configurado.'); },
+                getPublicUrl: () => ({ data: { publicUrl: null } })
+            })
+        }
+    };
+}
 
 // Configuração do Multer para armazenar em memória
 const storage = multer.memoryStorage();
@@ -44,6 +67,10 @@ const uploadFile = multer({
  * @returns {Promise<string>} - URL pública do arquivo
  */
 async function uploadToSupabase(fileBuffer, fileName, bucket, folder, contentType) {
+    if (!process.env.SUPABASE_URL) {
+        throw new Error('Supabase não está configurado. Verifique o arquivo .env.');
+    }
+
     const timestamp = Date.now();
     const sanitizedFileName = fileName.replace(/[^a-zA-Z0-9.-]/g, '_');
     const filePath = `${folder}/${timestamp}-${sanitizedFileName}`;

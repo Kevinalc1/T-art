@@ -194,16 +194,38 @@ app.post('/api/checkout/webhook', express.raw({ type: 'application/json' }), asy
             const produtoDb = await Produto.findById(item.id);
 
             if (produtoDb && produtoDb.downloadUrl) {
-              // Enviar email com token seguro
+              // --- GERAÇÃO DE TOKEN SEGURO PARA EMAIL ---
+              const crypto = require('crypto');
+              const DownloadToken = require('./models/DownloadToken');
+
+              const token = crypto.randomBytes(32).toString('hex');
+              const expiresAt = new Date();
+              expiresAt.setDate(expiresAt.getDate() + 7); // Validade de 7 dias para o link do email
+
+              await DownloadToken.create({
+                token,
+                productId: produtoDb._id,
+                userEmail: session.customer_details.email,
+                orderId: session.id,
+                downloadUrl: produtoDb.downloadUrl, // Salva a Key (ou URL) original
+                expiresAt
+              });
+
+              // Montar o link completo para a API
+              // O usuário clica -> API valida token -> Redireciona para R2 Signed URL
+              const baseUrl = process.env.BASE_URL || 'http://localhost:4000';
+              const secureEmailLink = `${baseUrl}/api/download/${token}`;
+
+              // Enviar email com o LINK do Token
               await enviarEmailDownload(
                 session.customer_details.email,
                 produtoDb.productName,
-                produtoDb.downloadUrl,
+                secureEmailLink, // Passamos o link http://.../api/download/xyz
                 produtoDb._id,
-                session.id, // orderId (Session ID do Stripe)
-                session.customer_details?.name || null // Nome do cliente
+                session.id,
+                session.customer_details?.name || null
               );
-              console.log(`Link enviado (Stripe) para ${session.customer_details.email} - Produto: ${produtoDb.productName}`);
+              console.log(`Link seguro enviado (Stripe) para ${session.customer_details.email} - Token: ${token}`);
             } else {
               console.error(`ERRO: Produto ${item.id} não encontrado ou sem downloadUrl.`);
             }

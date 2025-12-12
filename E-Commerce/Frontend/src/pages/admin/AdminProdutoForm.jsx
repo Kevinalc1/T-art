@@ -155,6 +155,18 @@ export default function AdminProdutoForm() {
     const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/upload`, data, {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
+
+    // Se for R2, retornamos a Key pura para salvar no banco
+    if (res.data.storage === 'r2') {
+      return res.data.filePath;
+    }
+
+    // Se já for uma URL absoluta (ex: Supabase ou Cloudinary), retorna direto
+    if (res.data.filePath && res.data.filePath.startsWith('http')) {
+      return res.data.filePath;
+    }
+
+    // Fallback para uploads locais ou relativos
     return `${import.meta.env.VITE_API_URL}${res.data.filePath}`;
   };
 
