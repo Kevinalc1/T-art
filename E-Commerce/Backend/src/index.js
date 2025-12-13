@@ -249,6 +249,11 @@ app.post('/api/checkout/webhook', express.raw({ type: 'application/json' }), asy
 
 app.use(express.json());
 
+// --- Rota de Health Check (Uptime Robot) ---
+app.get('/', (req, res) => {
+  res.send('Estou acordado!');
+});
+
 // --- ROTAS ---
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
