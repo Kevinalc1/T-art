@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaDownload, FaFileImage, FaFileArchive, FaFileAlt, FaCalendar, FaReceipt } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 import './ProfileTabs.css'; // Vamos criar um CSS compartilhado
 
 export default function LibraryTab() {
@@ -45,22 +46,34 @@ export default function LibraryTab() {
     })).filter(pedido => pedido.items.length > 0);
 
     const handleDownload = async (item, pedidoId) => {
-        // Registra o download
         try {
+            toast.info('Gerando link de download seguro...');
             const token = localStorage.getItem('userToken');
-            await axios.post(`${import.meta.env.VITE_API_URL}/api/users/downloads`,
-                { productId: item.productId, version: '1.0' },
+
+            // Solicita link seguro ao backend
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/download/secure`,
+                { productId: item.productId },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-        } catch (err) {
-            console.error('Erro ao registrar download:', err);
-        }
 
-        // Inicia o download real
-        if (item.downloadUrl) {
-            window.open(item.downloadUrl, '_blank');
-        } else {
-            alert('Link de download não disponível.');
+            if (response.data && response.data.downloadUrl) {
+                // Cria link temporário para forçar download
+                const link = document.createElement('a');
+                link.href = response.data.downloadUrl;
+                link.setAttribute('download', item.productName || 'download');
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+
+                toast.success('Download iniciado!');
+            } else {
+                throw new Error('Url de download não retornada pelo servidor');
+            }
+
+        } catch (err) {
+            console.error('Erro ao baixar arquivo:', err);
+            const msg = err.response?.data?.message || 'Erro ao gerar link de download.';
+            toast.error(msg);
         }
     };
 
