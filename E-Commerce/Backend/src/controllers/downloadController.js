@@ -50,17 +50,30 @@ const requestDownload = async (req, res) => {
         // Se for uma URL completa, tentar extrair a key (lógica básica, ajustar conforme formato real no DB)
         // Exemplo http://.../balde/pasta/arquivo.zip -> pasta/arquivo.zip
         // Por segurança, vamos assumir que se começar com http, precisamos processar, senão é a key direta.
-        if (fileKey.startsWith('http')) {
-            try {
-                const urlObj = new URL(fileKey);
-                // Remove a primeira barra do pathname para pegar a key (depende da estrutura exata da URL pública se houver)
-                // Se for R2 custom domain: https://dominio.com/pasta/arquivo -> pasta/arquivo
-                fileKey = urlObj.pathname.substring(1);
-            } catch (e) {
-                console.error('Erro ao processar URL do arquivo:', e);
-                // Fallback: usar como está
-            }
+        // Lógica ROBUSTA para extrair a Key do R2, independente do que estiver salvo no banco
+        // Cenários possíveis no DB:
+        // 1. "uploads/arquivo.cdr" (Key limpa - Ideal)
+        // 2. "/uploads/arquivo.cdr" (Caminho absoluto)
+        // 3. "http://localhost:4000/uploads/arquivo.cdr" (URL local antiga)
+        // 4. "https://backend.com/uploads/arquivo.cdr" (URL antiga)
+
+        // Remove protocolo e domínio se existir
+        if (fileKey.includes('/uploads/')) {
+            // Pega tudo a partir de 'uploads/'
+            // Ex: http://site.com/uploads/pasta/arquivo.zip -> uploads/pasta/arquivo.zip
+            fileKey = fileKey.substring(fileKey.indexOf('uploads/'));
         }
+
+        // Remove barra inicial se sobrou (ex: /uploads/...)
+        if (fileKey.startsWith('/')) {
+            fileKey = fileKey.substring(1);
+        }
+
+        // Decodificar URI caso tenha espaços ou caracteres especiais (ex: %20)
+        fileKey = decodeURIComponent(fileKey);
+
+        // Debug
+        console.log(`🧹 [Download Seguro] Key limpa: ${fileKey}`);
 
         // Decodificar URI caso tenha espaços ou caracteres especiais
         fileKey = decodeURIComponent(fileKey);

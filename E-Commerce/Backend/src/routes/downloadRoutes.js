@@ -84,12 +84,29 @@ router.get('/:token', async (req, res) => {
 
         let finalRedirectUrl = downloadToken.downloadUrl;
 
-        // Se NÃO for uma URL completa (não começa com http), assumimos que é uma Key do R2
-        if (!downloadToken.downloadUrl.startsWith('http')) {
-            console.log('🔄 [Download] Detectada Key do R2. Gerando link assinado...');
-            const { getDownloadLink } = require('../services/storageService');
-            finalRedirectUrl = await getDownloadLink(downloadToken.downloadUrl);
+        // Validação e Limpeza da Key para R2
+        let fileKey = downloadToken.downloadUrl;
+
+        // Se o link salvo no banco for uma URL completa (ex: legado), extraímos apenas a Key
+        if (fileKey.startsWith('http') || fileKey.includes('/uploads/')) {
+            if (fileKey.includes('/uploads/')) {
+                fileKey = fileKey.substring(fileKey.indexOf('uploads/'));
+            } else {
+                // Tenta extrair pathname de outras URLs
+                try {
+                    const urlObj = new URL(fileKey);
+                    fileKey = urlObj.pathname.substring(1);
+                } catch (e) { /* ignorar */ }
+            }
         }
+
+        if (fileKey.startsWith('/')) fileKey = fileKey.substring(1);
+
+        console.log('🔄 [Download] Key limpa para R2:', fileKey);
+
+        // Gerar link assinado SEMPRE (segurança máxima)
+        const { getDownloadLink } = require('../services/storageService');
+        finalRedirectUrl = await getDownloadLink(fileKey);
 
         console.log('🚀 [Download] Redirecionando para:', finalRedirectUrl);
 
