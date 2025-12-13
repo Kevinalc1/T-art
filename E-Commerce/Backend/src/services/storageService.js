@@ -31,8 +31,7 @@ const r2Client = new S3Client({
         accessKeyId: process.env.R2_ACCESS_KEY_ID,
         secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
     },
-    // R2 não requer forcePathStyle: true necessariamente, mas ajuda em alguns casos.
-    // O SDK v3 lida bem com isso.
+    forcePathStyle: true, // R2 OBRIGATÓRIO: Gera url https://endpoint/bucket/key
 });
 
 /**
