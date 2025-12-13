@@ -10,24 +10,34 @@
 }
 
 h2 {
-    font-size: 1.5rem;
-    margin-bottom: 20px;
-    color: #333;
-    border-bottom: 2px solid #f0f0f0;
-    padding-bottom: 10px;
+    font-family: 'Times New Roman', Times, serif;
+    /* Ou a fonte da marca */
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: #133853;
+    border-bottom: none;
+    font-weight: bold;
 }
 
 .library-search {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 .search-input {
     width: 100%;
-    padding: 12px;
+    padding: 15px 20px;
     font-size: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e0e0e0;
+    border-radius: 30px;
+    /* Arredondado completo */
+    box-shadow: none;
+    background-color: #fff;
+    color: #555;
+    outline: none;
+}
+
+.search-input::placeholder {
+    color: #999;
 }
 
 /* Library Grid */
@@ -51,18 +61,30 @@ h2 {
 
 .card-thumb {
     position: relative;
-    height: 200px;
-    background-color: #f9f9f9;
+    height: 180px;
+    /* Reduzido levemente */
+    background-color: #f0f0f0;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    border-radius: 8px;
+    /* Arredondado */
+    margin-bottom: 15px;
+    /* Espaço para o título */
 }
 
 .card-thumb img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Preenche melhor */
+    transition: transform 0.3s ease;
+}
+
+.card-thumb:hover img {
+    transform: scale(1.05);
+    /* Zoom sutil ao passar o mouse */
 }
 
 .version-badge {
@@ -148,129 +170,132 @@ h2 {
     background-color: #e0e0e0;
 }
 
-/* Pedidos List */
+/* Pedidos List - Design Atualizado */
 .pedidos-list {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 30px;
 }
 
 .pedido-card {
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
+    border: none;
+    border-radius: 16px;
     overflow: hidden;
-    background: #fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    background: transparent;
+    /* Deixa o fundo transparente para ver o card interno */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 .pedido-header {
-    background: linear-gradient(135deg, #133853 0%, #1a4d6d 100%);
+    background-color: #133853;
+    /* Dark Teal */
     color: white;
-    padding: 20px;
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .pedido-info h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 5px 0;
+    color: #fff;
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 1.2rem;
-    margin-bottom: 12px;
-    color: white;
+    gap: 8px;
 }
 
 .pedido-meta {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.9);
-}
-
-.pedido-meta span {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.8);
     display: flex;
     align-items: center;
-    gap: 6px;
-}
-
-.pedido-date {
-    opacity: 0.9;
-}
-
-.pedido-total strong {
-    color: #fff;
-    font-weight: 600;
-}
-
-.pedido-status {
-    padding: 4px 12px;
-    border-radius: 12px;
-    font-size: 0.85rem;
-    font-weight: 600;
+    gap: 15px;
 }
 
 .pedido-status.paid {
-    background: rgba(76, 175, 80, 0.2);
-    color: #4CAF50;
-}
-
-.pedido-status.pending {
-    background: rgba(255, 152, 0, 0.2);
-    color: #FF9800;
+    background-color: #4CAF50;
+    color: white;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
 }
 
 .pedido-items {
-    padding: 20px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
 }
 
+/* O card interno do produto (fundo bege) */
 .pedido-items .library-card {
-    border: 1px solid #f0f0f0;
-    border-radius: 8px;
-    padding: 16px;
-    background: #fafafa;
+    border: none;
+    border-radius: 0 0 16px 16px;
+    /* Arredonda apenas embaixo */
+    padding: 25px;
+    background-color: #F8F5EC;
+    /* Cor Creme/Bege do mockup */
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .pedido-items .library-card:hover {
-    background: #f5f5f5;
-    border-color: #e0e0e0;
+    background-color: #F8F5EC;
+    /* Mantém a cor */
+    transform: none;
+    box-shadow: none;
 }
 
 .pedido-items .card-content h4 {
-    font-size: 1rem;
-    margin-bottom: 12px;
-    color: #333;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #133853;
 }
 
 .item-details {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
-    padding: 8px 0;
-    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 20px;
+    padding-bottom: 0;
+    border-bottom: none;
+    font-size: 0.95rem;
+    color: #555;
 }
 
 .item-price {
-    font-weight: 600;
+    font-weight: bold;
     color: #133853;
-    font-size: 1.1rem;
 }
 
-.item-quantity {
-    color: #666;
-    font-size: 0.9rem;
+.download-actions {
+    width: 100%;
+}
+
+.btn-download.primary {
+    background-color: #133853;
+    /* Dark Teal */
+    color: #fff;
+    width: 100%;
+    padding: 12px;
+    border-radius: 30px;
+    /* Pill shape */
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: background-color 0.3s;
+}
+
+.btn-download.primary:hover {
+    background-color: #0e2a3f;
 }
 
 .btn-download:disabled {
     background-color: #ccc;
     cursor: not-allowed;
-    opacity: 0.6;
-}
-
-.btn-download:disabled:hover {
-    background-color: #ccc;
 }
 
 

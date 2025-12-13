@@ -50,21 +50,28 @@ export default function LibraryTab() {
             toast.info('Gerando link de download seguro...');
             const token = localStorage.getItem('userToken');
 
+            // Importante: Como productId foi POPULADO (agora é um objeto), precisamos pegar o ID dele (.userId ou ._id)
+            // Caso por algum motivo não tenha populado (item antigo ou deletado), usamos item.productId direto se for string
+            const idDoProduto = typeof item.productId === 'object' ? item.productId?._id : item.productId;
+
+            if (!idDoProduto) {
+                toast.error('Produto não encontrado ou removido.');
+                return;
+            }
+
             // Solicita link seguro ao backend
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/download/secure`,
-                { productId: item.productId },
+                { productId: idDoProduto },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
             if (response.data && response.data.downloadUrl) {
-                // Cria link temporário para forçar download
                 const link = document.createElement('a');
                 link.href = response.data.downloadUrl;
                 link.setAttribute('download', item.productName || 'download');
                 document.body.appendChild(link);
                 link.click();
                 link.remove();
-
                 toast.success('Download iniciado!');
             } else {
                 throw new Error('Url de download não retornada pelo servidor');
@@ -138,26 +145,42 @@ export default function LibraryTab() {
                             </div>
 
                             <div className="pedido-items">
-                                {pedido.items.map((item, index) => (
-                                    <div key={index} className="library-card">
-                                        <div className="card-content">
-                                            <h4>{item.productName}</h4>
-                                            <div className="item-details">
-                                                <span className="item-price">{formatPrice(item.price)}</span>
-                                                <span className="item-quantity">Qtd: {item.quantidade}</span>
+                                {pedido.items.map((item, index) => {
+                                    // Pega a imagem do objeto populado
+                                    const productImg = item.productId?.imageUrls?.[0] || null;
+
+                                    return (
+                                        <div key={index} className="library-card">
+                                            {/* Renderiza a imagem se existir */}
+                                            <div className="card-thumb">
+                                                {productImg ? (
+                                                    <img src={productImg} alt={item.productName} />
+                                                ) : (
+                                                    <div className="no-image-placeholder">
+                                                        <FaFileImage size={24} color="#ccc" />
+                                                    </div>
+                                                )}
                                             </div>
-                                            <div className="download-actions">
-                                                <button
-                                                    onClick={() => handleDownload(item, pedido._id)}
-                                                    className="btn-download primary"
-                                                    disabled={!item.downloadUrl}
-                                                >
-                                                    <FaDownload /> Baixar Arquivo
-                                                </button>
+
+                                            <div className="card-content">
+                                                <h4>{item.productName}</h4>
+                                                <div className="item-details">
+                                                    <span className="item-price">{formatPrice(item.price)}</span>
+                                                    <span className="item-quantity">Qtd: {item.quantidade}</span>
+                                                </div>
+                                                <div className="download-actions">
+                                                    <button
+                                                        onClick={() => handleDownload(item, pedido._id)}
+                                                        className="btn-download primary"
+                                                        disabled={!item.downloadUrl}
+                                                    >
+                                                        <FaDownload /> Baixar Arquivo
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         </div>
                     ))}

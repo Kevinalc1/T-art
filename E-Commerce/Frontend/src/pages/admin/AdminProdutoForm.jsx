@@ -149,6 +149,64 @@ export default function AdminProdutoForm() {
     }
   };
 
+  // --- Lógica para EDIÇÃO e REMOÇÃO de Categorias ---
+  const [editingCategory, setEditingCategory] = useState(null); // ID da categoria sendo editada
+  const [editCategoryName, setEditCategoryName] = useState(''); // Novo nome
+  const [showEditModal, setShowEditModal] = useState(false);
+
+  // Abrir modal de edição com o nome atual
+  const handleEditClick = () => {
+    if (!formData.category) return;
+    const cat = allCategories.find(c => c._id === formData.category);
+    if (cat) {
+      setEditingCategory(cat._id);
+      setEditCategoryName(cat.name);
+      setShowEditModal(true);
+    }
+  };
+
+  // Salvar a edição
+  const handleUpdateCategory = async () => {
+    if (!editCategoryName.trim()) return;
+    try {
+      const token = localStorage.getItem('userToken');
+      const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/categorias/${editingCategory}`,
+        { name: editCategoryName },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      // Atualiza lista local
+      setAllCategories(prev => prev.map(c => c._id === editingCategory ? res.data : c));
+      setShowEditModal(false);
+      setEditingCategory(null);
+      toast.success('Categoria atualizada!');
+    } catch (error) {
+      console.error(error);
+      toast.error('Erro ao atualizar categoria.');
+    }
+  };
+
+  // Deletar categoria
+  const handleDeleteCategory = async () => {
+    if (!formData.category) return;
+    if (!window.confirm('Tem certeza que deseja excluir esta categoria?')) return;
+
+    try {
+      const token = localStorage.getItem('userToken');
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/categorias/${formData.category}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      // Remove da lista
+      setAllCategories(prev => prev.filter(c => c._id !== formData.category));
+      setFormData(prev => ({ ...prev, category: '' })); // Limpa seleção
+      toast.success('Categoria excluída.');
+    } catch (error) {
+      console.error(error);
+      toast.error('Erro ao excluir categoria.');
+    }
+  };
+
   const uploadFile = async (file) => {
     const data = new FormData();
     data.append('file', file);
@@ -317,7 +375,7 @@ export default function AdminProdutoForm() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="price">Preço (€)</label>
+            <label htmlFor="price">Preço (R$)</label>
             <input
               type="number"
               id="price"
@@ -337,14 +395,27 @@ export default function AdminProdutoForm() {
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
+                style={{ flex: 1 }}
               >
                 <option value="">-- Selecione uma categoria --</option>
                 {allCategories.map(cat => (
                   <option key={cat._id} value={cat._id}>{cat.name}</option>
                 ))}
               </select>
+
+              {formData.category && (
+                <div className="cat-actions" style={{ display: 'flex', gap: '5px' }}>
+                  <button type="button" onClick={handleEditClick} title="Editar" style={{ background: '#ffc107', border: 'none', padding: '8px', cursor: 'pointer', borderRadius: '4px' }}>
+                    ✏️
+                  </button>
+                  <button type="button" onClick={handleDeleteCategory} title="Excluir" style={{ background: '#dc3545', border: 'none', padding: '8px', cursor: 'pointer', borderRadius: '4px', color: 'white' }}>
+                    🗑️
+                  </button>
+                </div>
+              )}
+
               <button type="button" className="btn-create-category" onClick={() => setIsModalOpen(true)}>
-                + Criar Nova
+                + Nova
               </button>
             </div>
           </div>
@@ -471,6 +542,28 @@ export default function AdminProdutoForm() {
       </button>
 
       {/* Modal para Criar Nova Categoria */}
+      {/* Modal para Editar Categoria */}
+      {showEditModal && (
+        <div className="modal-backdrop" onClick={() => setShowEditModal(false)}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <h2>Editar Categoria</h2>
+            <div className="form-group">
+              <label>Novo Nome</label>
+              <input
+                type="text"
+                value={editCategoryName}
+                onChange={(e) => setEditCategoryName(e.target.value)}
+                autoFocus
+              />
+            </div>
+            <div className="modal-actions">
+              <button type="button" className="btn-modal-cancel" onClick={() => setShowEditModal(false)}>Cancelar</button>
+              <button type="button" className="btn-modal-confirm" onClick={handleUpdateCategory}>Salvar</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {isModalOpen && (
         <div className="modal-backdrop" onClick={() => setIsModalOpen(false)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>

@@ -44,9 +44,55 @@ router.post('/', protect, admin, async (req, res) => { // A rota está protegida
 
     // Para todos os outros tipos de erro, retorna um erro 500 genérico.
     // A mensagem específica do erro já foi logada no console para depuração.
-    res.status(500).json({ 
-      message: 'Ocorreu um erro interno no servidor ao tentar criar a categoria.' 
+    res.status(500).json({
+      message: 'Ocorreu um erro interno no servidor ao tentar criar a categoria.'
     });
+  }
+}); // Fim do router.post
+
+// @route   PUT /api/categorias/:id
+// @desc    Atualiza uma categoria existente
+// @access  Privado/Admin
+router.put('/:id', protect, admin, async (req, res) => {
+  try {
+    const { name } = req.body;
+    if (!name) {
+      return res.status(400).json({ message: 'O nome da categoria é obrigatório.' });
+    }
+
+    const category = await Category.findById(req.params.id);
+
+    if (category) {
+      category.name = name;
+      const updatedCategory = await category.save();
+      res.json(updatedCategory);
+    } else {
+      res.status(404).json({ message: 'Categoria não encontrada' });
+    }
+  } catch (error) {
+    if (error.code === 11000) {
+      res.status(400).json({ message: 'Já existe uma categoria com este nome.' });
+    } else {
+      res.status(500).json({ message: 'Erro ao atualizar categoria' });
+    }
+  }
+});
+
+// @route   DELETE /api/categorias/:id
+// @desc    Remove uma categoria
+// @access  Privado/Admin
+router.delete('/:id', protect, admin, async (req, res) => {
+  try {
+    const category = await Category.findById(req.params.id);
+
+    if (category) {
+      await category.deleteOne(); // ou category.remove() dependendo da versão do Mongoose
+      res.json({ message: 'Categoria removida' });
+    } else {
+      res.status(404).json({ message: 'Categoria não encontrada' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Erro ao remover categoria' });
   }
 });
 

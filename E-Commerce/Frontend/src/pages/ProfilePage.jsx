@@ -3,6 +3,9 @@ import { NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import './ProfilePage.css';
 
+import { FaThLarge, FaShieldAlt, FaQuestionCircle, FaCog, FaSignOutAlt, FaBoxOpen, FaImages, FaChartLine } from 'react-icons/fa';
+import { MdDashboard } from 'react-icons/md';
+
 export default function ProfilePage() {
   const { logout, user } = useAuth();
 
@@ -16,22 +19,22 @@ export default function ProfilePage() {
               <>
                 <li>
                   <NavLink to="/perfil" end className={({ isActive }) => isActive ? "active" : ""}>
-                    Minha Biblioteca
+                    <FaThLarge className="nav-icon" /> Minha Biblioteca
                   </NavLink>
                 </li>
                 <li>
                   <NavLink to="/perfil/seguranca" className={({ isActive }) => isActive ? "active" : ""}>
-                    Segurança
+                    <FaShieldAlt className="nav-icon" /> Segurança
                   </NavLink>
                 </li>
                 <li>
                   <NavLink to="/perfil/suporte" className={({ isActive }) => isActive ? "active" : ""}>
-                    Suporte
+                    <FaQuestionCircle className="nav-icon" /> Suporte
                   </NavLink>
                 </li>
                 <li>
                   <NavLink to="/perfil/configuracoes" className={({ isActive }) => isActive ? "active" : ""}>
-                    Configurações
+                    <FaCog className="nav-icon" /> Configurações
                   </NavLink>
                 </li>
               </>
@@ -40,39 +43,36 @@ export default function ProfilePage() {
               <>
                 <li>
                   <NavLink to="/perfil" end className={({ isActive }) => isActive ? "active" : ""}>
-                    Dashboard
+                    <MdDashboard className="nav-icon" /> Dashboard
                   </NavLink>
                 </li>
                 <li>
                   <NavLink to="/perfil/produtos" className={({ isActive }) => isActive ? "active" : ""}>
-                    Produtos
+                    <FaBoxOpen className="nav-icon" /> Produtos
                   </NavLink>
                 </li>
                 <li>
                   <NavLink to="/perfil/colecoes" className={({ isActive }) => isActive ? "active" : ""}>
-                    Coleções
+                    <FaImages className="nav-icon" /> Coleções
                   </NavLink>
                 </li>
                 <li>
                   <NavLink to="/perfil/banners" className={({ isActive }) => isActive ? "active" : ""}>
-                    Banners
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink to="/perfil/auditoria" className={({ isActive }) => isActive ? "active" : ""}>
-                    Auditoria Financeira
+                    <FaImages className="nav-icon" /> Banners
                   </NavLink>
                 </li>
                 <li>
                   <NavLink to="/perfil/configuracoes" className={({ isActive }) => isActive ? "active" : ""}>
-                    Configurações
+                    <FaCog className="nav-icon" /> Configurações
                   </NavLink>
                 </li>
               </>
             )}
           </ul>
         </nav>
-        <button onClick={logout} className="btn-logout">Sair</button>
+        <button onClick={logout} className="btn-logout">
+          <FaSignOutAlt className="nav-icon" /> Sair
+        </button>
       </aside>
 
       {/* Conteúdo Principal (Renderiza as rotas filhas) */}
