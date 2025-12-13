@@ -268,7 +268,8 @@ app.use('/api/download', downloadRoutes);
 const hotlinkProtection = require('./middleware/hotlinkProtection');
 
 // Arquivos estáticos
-app.use('/uploads', hotlinkProtection, express.static(path.join(__dirname, '../uploads')));
+// Arquivos estáticos - UPLOADS LOCAIS DESATIVADOS (Tudo via R2/Supabase)
+// app.use('/uploads', hotlinkProtection, express.static(path.join(__dirname, '../uploads')));
 
 // Teste de Email
 app.get('/api/test-email', async (req, res) => {

@@ -2,21 +2,37 @@ const { S3Client, GetObjectCommand, PutObjectCommand } = require('@aws-sdk/clien
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 
 // Configuração do cliente S3 para Cloudflare R2
-// CORREÇÃO DE SEGURANÇA: Remover o nome do bucket do endpoint se o usuário tiver colocado errado no .env
-let endpoint = process.env.R2_ENDPOINT;
-if (endpoint && endpoint.endsWith(`/${process.env.R2_BUCKET_NAME}`)) {
-    console.warn('⚠️  AVISO: R2_ENDPOINT continha o nome do bucket. Ajustando automaticamente...');
+let endpoint = process.env.R2_ENDPOINT || '';
+
+// 1. Garantir protocolo HTTPS
+if (endpoint && !endpoint.startsWith('http')) {
+    console.warn('⚠️  [R2 Config] Endpoint sem protocolo. Adicionando https://');
+    endpoint = `https://${endpoint}`;
+}
+
+// 2. Remover bucket do endpoint se estiver presente (fix comum)
+if (endpoint && endpoint.includes(`/${process.env.R2_BUCKET_NAME}`)) {
+    console.warn('⚠️  [R2 Config] O endpoint contém o nome do bucket. Ajustando...');
     endpoint = endpoint.replace(`/${process.env.R2_BUCKET_NAME}`, '');
 }
 
+// 3. Garantir sufixo do R2 se o usuário informou apenas o ID da conta
+if (endpoint && !endpoint.includes('.r2.cloudflarestorage.com')) {
+    console.warn('⚠️  [R2 Config] Endpoint parece incompleto (apenas ID?). Adicionando domínio R2.');
+    endpoint = `${endpoint}.r2.cloudflarestorage.com`;
+}
+
+console.log('✅ [R2 Config] Endpoint final:', endpoint);
+
 const r2Client = new S3Client({
-    region: 'us-east-1', // AWS SDK compatibilidade para R2
+    region: 'auto',
     endpoint: endpoint,
     credentials: {
         accessKeyId: process.env.R2_ACCESS_KEY_ID,
         secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
     },
-    forcePathStyle: true, // R2 requer isso para conexões via endpoint customizado
+    // R2 não requer forcePathStyle: true necessariamente, mas ajuda em alguns casos.
+    // O SDK v3 lida bem com isso.
 });
 
 /**
@@ -38,6 +54,7 @@ const generateSignedDownloadLink = async (fileKey, expiresIn = 3600) => {
         });
 
         const signedUrl = await getSignedUrl(r2Client, command, { expiresIn });
+        console.log('🔗 [R2] Signed URL gerada:', signedUrl);
         return signedUrl;
 
     } catch (error) {

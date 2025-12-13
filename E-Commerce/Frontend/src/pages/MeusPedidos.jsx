@@ -100,7 +100,7 @@ export default function MeusPedidos() {
                                         <div key={index} className="pedido-item">
                                             <span>{item.productName}</span>
                                             <button
-                                                onClick={() => handleDownload(item.product._id || item.product, item.productName)}
+                                                onClick={() => handleDownload(item.productId, item.productName)}
                                                 className="btn-download"
                                             >
                                                 Baixar
