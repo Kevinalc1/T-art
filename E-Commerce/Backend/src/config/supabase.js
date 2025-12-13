@@ -50,7 +50,7 @@ const uploadImage = multer({
 // Upload para ARQUIVOS (.cdr, .zip, .pdf, etc)
 const uploadFile = multer({
     storage: storage,
-    limits: { fileSize: 50 * 1024 * 1024 }, // 50MB (limite do Supabase Free)
+    limits: { fileSize: 500 * 1024 * 1024 }, // 500MB
     fileFilter: (req, file, cb) => {
         // Aceitar qualquer tipo de arquivo
         cb(null, true);
