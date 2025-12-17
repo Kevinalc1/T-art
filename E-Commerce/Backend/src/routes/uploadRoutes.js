@@ -15,7 +15,7 @@ router.post('/image', uploadImage.single('file'), async (req, res) => {
 
         // Upload para Supabase
         const fileUrl = await uploadToSupabase(
-            req.file.buffer,
+            req.file,
             req.file.originalname,
             'produtos', // Nome do bucket
             'images',   // Pasta dentro do bucket
@@ -55,7 +55,7 @@ router.post(['/', '/file'], uploadFile.single('file'), async (req, res) => {
 
         // Upload para R2
         const fileKey = await uploadFileToR2(
-            req.file.buffer,
+            req.file,
             req.file.originalname,
             req.file.mimetype
         );

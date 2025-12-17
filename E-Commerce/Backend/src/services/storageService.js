@@ -1,5 +1,6 @@
 const { S3Client, GetObjectCommand, PutObjectCommand } = require('@aws-sdk/client-s3');
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
+const fs = require('fs');
 
 // Configuração do cliente S3 para Cloudflare R2
 let endpoint = process.env.R2_ENDPOINT || '';
@@ -64,12 +65,12 @@ const generateSignedDownloadLink = async (fileKey, expiresIn = 3600) => {
 
 /**
  * Faz upload de um arquivo para o Cloudflare R2
- * @param {Buffer} fileBuffer - O conteúdo do arquivo em buffer
+ * @param {object} file - Objeto do arquivo do Multer (com .path)
  * @param {string} fileName - O nome original do arquivo
  * @param {string} contentType - O tipo MIME do arquivo (opcional)
  * @returns {Promise<string>} - A Chave (Key) do arquivo no R2 para ser salva no banco
  */
-const uploadFileToR2 = async (fileBuffer, fileName, contentType = 'application/octet-stream') => {
+const uploadFileToR2 = async (file, fileName, contentType = 'application/octet-stream') => {
     try {
         // Gerar uma chave única para evitar sobrescrita
         const timestamp = Date.now();
@@ -77,6 +78,8 @@ const uploadFileToR2 = async (fileBuffer, fileName, contentType = 'application/o
         const fileKey = `uploads/${timestamp}-${sanitizedFileName}`; // Pasta 'uploads'
 
         console.log(`📤 [R2] Iniciando upload: ${fileKey}`);
+
+        const fileBuffer = fs.readFileSync(file.path);
 
         const command = new PutObjectCommand({
             Bucket: process.env.R2_BUCKET_NAME,
@@ -95,6 +98,15 @@ const uploadFileToR2 = async (fileBuffer, fileName, contentType = 'application/o
     } catch (error) {
         console.error('❌ [R2] Erro no upload:', error);
         throw new Error(`Falha no upload para R2: ${error.message}`);
+    } finally {
+        if (file.path && fs.existsSync(file.path)) {
+            try {
+                fs.unlinkSync(file.path);
+                console.log('🗑️ [Temp] Arquivo removido do disco (R2 Upload):', file.path);
+            } catch (cleanupErr) {
+                console.error('⚠️ [Temp] Erro ao remover arquivo temporário (R2 Upload):', cleanupErr);
+            }
+        }
     }
 };
 
