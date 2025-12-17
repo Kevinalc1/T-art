@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard.jsx';
+import CircularGallery from '../components/CircularGallery.jsx';
 import './HomePage.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -15,7 +16,6 @@ const getImageUrl = (url) => {
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [heroItems, setHeroItems] = useState([]); // Can be banners or mockups
   const [loading, setLoading] = useState(true);
   const [isBannerMode, setIsBannerMode] = useState(false);
@@ -62,83 +62,35 @@ const HomePage = () => {
     fetchData();
   }, []);
 
-  // Rotação automática
-  useEffect(() => {
-    if (heroItems.length <= 1) return;
-
-    const interval = setInterval(() => {
-      setCurrentImageIndex(prev => (prev + 1) % heroItems.length);
-    }, 4000);
-
-    return () => clearInterval(interval);
-  }, [heroItems.length]);
+  // Memoize items to prevent CircularGallery re-initialization on every render
+  const galleryItems = React.useMemo(() => {
+    return heroItems.map(item => ({
+      image: isBannerMode ? getImageUrl(item.imageUrl) : getImageUrl(item),
+      text: ''
+    }));
+  }, [heroItems, isBannerMode]);
 
   return (
     <div className="home-container">
-      {/* Hero Section */}
-      <section className="hero-carousel">
-        <div className="hero-content-wrapper">
-          <div className="hero-content">
-            <h1>Encontre sua arte<br />vista sua paixão.</h1>
-            <p>Descubra coleções exclusivas e personalize seu estilo</p>
-            <Link to="/loja" className="hero-btn">
-              Compre Agora
-            </Link>
-          </div>
-
-          <div className="hero-images">
-            {heroItems.map((item, index) => {
-              // Determine URL based on whether it's a banner object or a mockup string
-              const imgUrl = isBannerMode ? getImageUrl(item.imageUrl) : getImageUrl(item);
-              const linkUrl = isBannerMode ? item.linkUrl : null;
-
-              return (
-                <div
-                  key={index}
-                  className={`hero-image ${index === currentImageIndex ? 'active' : ''}`}
-                >
-                  {linkUrl ? (
-                    <Link to={linkUrl}>
-                      <img
-                        src={imgUrl}
-                        alt={isBannerMode ? item.title : `Destaque ${index + 1}`}
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                        }}
-                      />
-                    </Link>
-                  ) : (
-                    <img
-                      src={imgUrl}
-                      alt={isBannerMode ? item.title : `Destaque ${index + 1}`}
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                      }}
-                    />
-                  )}
-                </div>
-              );
-            })}
-          </div>
+      {/* Hero Section Replaced with CircularGallery */}
+      <section className="hero-carousel" style={{ height: '600px', position: 'relative', overflow: 'hidden' }}>
+        {/* Circular Gallery Foreground */}
+        <div style={{ position: 'relative', zIndex: 1, width: '100%', height: '100%' }}>
+          {heroItems.length > 0 && (
+            <CircularGallery
+              items={galleryItems}
+              bend={3}
+              textColor="#ffffff"
+              borderRadius={0.05}
+              font="bold 30px Playfair Display"
+            />
+          )}
         </div>
-
-        {heroItems.length > 1 && (
-          <div className="hero-indicators">
-            {heroItems.map((_, index) => (
-              <button
-                key={index}
-                className={`indicator ${index === currentImageIndex ? 'active' : ''}`}
-                onClick={() => setCurrentImageIndex(index)}
-                aria-label={`Ir para imagem ${index + 1}`}
-              />
-            ))}
-          </div>
-        )}
       </section>
 
       {/* Products Grid */}
       <section className="products-section">
-        <h2>Estampas em Destaque</h2>
+        <h2 style={{ color: '#133853' }}>Estampas em Destaque</h2>
         <div className="products-grid">
           {loading ? (
             <p className="loading-text">Carregando estampas...</p>

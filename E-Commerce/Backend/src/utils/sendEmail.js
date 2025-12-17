@@ -108,10 +108,14 @@ const enviarEmailDownload = async (email, nomeProduto, linkDownloadOriginal, pro
         const generatedOrderId = orderId || Date.now(); // ID único numérico ou string
 
         // 3. Correção de URL: Garantir que é a URL pura (sem concatenações estranhas do passado)
-        // Se vier com prefixos errados como "meusite.comhttps...", tenta limpar
-        if (finalLink && finalLink.includes('http') && finalLink.indexOf('http') > 0) {
-            finalLink = finalLink.substring(finalLink.indexOf('http'));
-            console.log(`🔧 [URL Fix] Link corrigido para: ${finalLink}`);
+        // Se vier com prefixos errados como "meusite.comhttps...", pega apenas a última ocorrência de http/https
+        if (finalLink && (finalLink.includes('http://') || finalLink.includes('https://'))) {
+            // Encontra a ÚLTIMA ocorrência de "http" para descartar qualquer prefixo incorreto
+            const lastHttpIndex = finalLink.lastIndexOf('http');
+            if (lastHttpIndex > 0) {
+                finalLink = finalLink.substring(lastHttpIndex);
+                console.log(`🔧 [URL Fix] Link corrigido (Double URL Removal): ${finalLink}`);
+            }
         }
 
         // --- 4. Montagem do templateParams (ESTRUTURA OBRIGATÓRIA) ---

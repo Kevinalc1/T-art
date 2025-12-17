@@ -10,15 +10,22 @@ export default function LojaPage() {
   const [termoBusca, setTermoBusca] = useState('');
   const [categoriaSelecionada, setCategoriaSelecionada] = useState('');
 
+  /* Pagination State */
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12; // Updated to 12 to fit grid of 4
+
   useEffect(() => {
     // Busca os produtos e as categorias da API
     const fetchData = async () => {
       try {
         const [produtosRes, categoriasRes] = await Promise.all([
           fetch(`${API_URL}/api/produtos`),
-          fetch(`${API_URL}/api/categorias`) // Busca a lista de categorias do backend
+          fetch(`${API_URL}/api/categorias`)
         ]);
         const produtosData = await produtosRes.json();
+        // Sort items by date descending (newest first)
+        produtosData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
         const categoriasData = await categoriasRes.json();
         setProdutos(produtosData);
         setCategorias(categoriasData);
@@ -27,59 +34,110 @@ export default function LojaPage() {
       }
     };
     fetchData();
-  }, []); // O array vazio garante que o efeito rode apenas uma vez
+  }, []);
 
-  // Filtra os produtos com base na busca e na categoria selecionada
+  // Filtra os produtos
   const produtosFiltrados = produtos.filter(produto => {
     const correspondeBusca = produto.productName.toLowerCase().includes(termoBusca.toLowerCase());
-    // Ajustado para lidar com o objeto de categoria populado
     const correspondeCategoria = categoriaSelecionada ? produto.category?._id === categoriaSelecionada : true;
     return correspondeBusca && correspondeCategoria;
   });
 
+  // Calculate Pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = produtosFiltrados.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(produtosFiltrados.length / itemsPerPage);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Reset pagination when filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [termoBusca, categoriaSelecionada]);
+
   return (
     <div className="loja-page">
-      <h1>Nossa Loja</h1>
+      <h1>Encontre sua arte</h1>
 
-      {/* Seção de Controles de Busca e Filtro */}
-      <div className="loja-controles">
-        <div className="campo-busca">
-          <input
-            type="text"
-            placeholder="Buscar por nome..."
-            value={termoBusca}
-            onChange={(e) => setTermoBusca(e.target.value)}
-          />
-        </div>
-      </div>
+      <div className="loja-content-wrapper">
+        {/* Sidebar: Search and Filters */}
+        <aside className="loja-sidebar">
+          <div className="sidebar-section">
+            <h3>Buscar</h3>
+            <div className="campo-busca">
+              <input
+                type="text"
+                placeholder="Buscar por nome..."
+                value={termoBusca}
+                onChange={(e) => setTermoBusca(e.target.value)}
+              />
+            </div>
+          </div>
 
-      {/* Nova seção de filtros por categoria com botões */}
-      <div className="filtro-categorias">
-        <button
-          className={`btn-categoria ${categoriaSelecionada === '' ? 'active' : ''}`}
-          onClick={() => setCategoriaSelecionada('')}
-        >
-          Todas
-        </button>
-        {Array.isArray(categorias) && categorias.map(cat => (
-          <button
-            key={cat._id}
-            className={`btn-categoria ${categoriaSelecionada === cat._id ? 'active' : ''}`}
-            onClick={() => setCategoriaSelecionada(cat._id)}
-          >
-            {cat.name}
-          </button>
-        ))}
-      </div>
+          <div className="sidebar-section">
+            <h3>Categorias</h3>
+            <div className="filtro-categorias-vertical">
+              <button
+                className={`btn-categoria-vertical ${categoriaSelecionada === '' ? 'active' : ''}`}
+                onClick={() => setCategoriaSelecionada('')}
+              >
+                Todas
+              </button>
+              {Array.isArray(categorias) && categorias.map(cat => (
+                <button
+                  key={cat._id}
+                  className={`btn-categoria-vertical ${categoriaSelecionada === cat._id ? 'active' : ''}`}
+                  onClick={() => setCategoriaSelecionada(cat._id)}
+                >
+                  {cat.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        </aside>
 
-      <div className="produtos-grid">
-        {produtosFiltrados.length > 0 ? (
-          produtosFiltrados.map((produto) => (
-            <ProdutoCard key={produto._id} produto={produto} />
-          ))
-        ) : (
-          <p>Nenhum produto encontrado com os filtros aplicados.</p>
-        )}
+        {/* Main Content: Product Grid and Pagination */}
+        <main className="loja-main">
+          <div className="produtos-grid">
+            {currentItems.length > 0 ? (
+              currentItems.map((produto) => (
+                <ProdutoCard key={produto._id} produto={produto} />
+              ))
+            ) : (
+              <p>Nenhum produto encontrado com os filtros aplicados.</p>
+            )}
+          </div>
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="pagination">
+              <button
+                onClick={() => paginate(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="page-btn"
+              >
+                Anterior
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => (
+                <button
+                  key={i + 1}
+                  onClick={() => paginate(i + 1)}
+                  className={`page-btn ${currentPage === i + 1 ? 'active' : ''}`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+              <button
+                onClick={() => paginate(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="page-btn"
+              >
+                Próximo
+              </button>
+            </div>
+          )}
+        </main>
       </div>
     </div>
   );

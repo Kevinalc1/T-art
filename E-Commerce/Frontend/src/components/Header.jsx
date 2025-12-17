@@ -1,53 +1,52 @@
-import React, { useState, useEffect } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import './Header.css';
 import CartIcon from './CartIcon.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { FaUser, FaSignOutAlt } from 'react-icons/fa';
 import CurrencySwitcher from './CurrencySwitcher.jsx';
+import PillNav from './PillNav.jsx';
 
 export default function Header() {
   const { user, logout } = useAuth();
-  const [scrolled, setScrolled] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const isScrolled = window.scrollY > 50;
-      if (isScrolled !== scrolled) {
-        setScrolled(isScrolled);
-      }
-    };
+  const navItems = [
+    { label: 'Início', href: '/' },
+    { label: 'Loja', href: '/loja' },
+    { label: 'Coleções', href: '/colecoes' }
+  ];
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [scrolled]);
+  /* rightContent handles the icons */
+  const rightContent = (
+    <>
+      <CurrencySwitcher />
+      <Link to={user ? "/perfil" : "/login"} className="icon-link">
+        <FaUser />
+      </Link>
+      <CartIcon />
+      {user && (
+        <button onClick={logout} className="icon-link logout-btn" aria-label="Sair">
+          <FaSignOutAlt />
+        </button>
+      )}
+    </>
+  );
 
   return (
-    <header className={`main-header ${scrolled ? 'scrolled' : ''}`}>
-      <div className="header-container">
-        <Link to="/" className="logo">
-          <img src="/logo.svg" alt="Gens Logo" className="logo-image" />
-        </Link>
-
-        <nav>
-          <NavLink to="/">Início</NavLink>
-          <NavLink to="/loja">Loja</NavLink>
-          <NavLink to="/colecoes">Coleções</NavLink>
-        </nav>
-
-        <div className="icons-area">
-          <CurrencySwitcher />
-          <Link to={user ? "/perfil" : "/login"} className="icon-link">
-            <FaUser />
-          </Link>
-          <CartIcon />
-          {user && (
-            <button onClick={logout} className="icon-link logout-btn" aria-label="Sair">
-              <FaSignOutAlt />
-            </button>
-          )}
-        </div>
-      </div>
+    /* We remove main-header class to let PillNav handle the floating/sticky behavior per its CSS */
+    /* Or we keep a wrapper if we want to constrain it */
+    <header className="main-header-wrapper" style={{ pointerEvents: 'none', position: 'relative', zIndex: 100 }}>
+      <PillNav
+        logo="/logo.svg"
+        logoAlt="Gens Logo"
+        items={navItems}
+        rightContent={rightContent}
+        mobileMenuContent={rightContent} /* Optional: pass icons to mobile menu if supported */
+        baseColor="#ffffff"
+        pillColor="#133853" /* Primary Blue */
+        pillTextColor="#133853"
+        hoveredPillTextColor="#ffffff"
+      />
     </header>
   );
 }

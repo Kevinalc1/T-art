@@ -20,6 +20,7 @@ import { WishlistProvider } from './context/WishlistContext.jsx';
 
 // Páginas de Administração
 import AdminDashboard from './pages/admin/AdminDashboard.jsx';
+import AdminOrdersDashboard from './pages/admin/AdminOrdersDashboard.jsx';
 import AdminProdutoForm from './pages/admin/AdminProdutoForm.jsx';
 import AdminColecoesDashboard from './pages/admin/AdminColecoesDashboard.jsx';
 import AdminColecaoForm from './pages/admin/AdminColecaoForm.jsx';
@@ -128,6 +129,10 @@ const router = createBrowserRouter([
               {
                 element: <AdminProtectedRoute />, // Proteção extra para rotas de admin
                 children: [
+                  {
+                    path: 'dashboard',
+                    element: <AdminOrdersDashboard />,
+                  },
                   {
                     path: 'produtos',
                     element: <AdminDashboard />,

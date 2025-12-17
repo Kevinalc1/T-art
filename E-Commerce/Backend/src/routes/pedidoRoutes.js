@@ -27,7 +27,9 @@ router.get('/meus-pedidos', protect, async (req, res) => {
 // @access  Private/Admin
 router.get('/todos', protect, admin, async (req, res) => {
   try {
-    const pedidos = await Pedido.find({}).sort({ createdAt: -1 });
+    const pedidos = await Pedido.find({})
+      .populate('items.productId', 'imageUrls')
+      .sort({ createdAt: -1 });
     res.json(pedidos);
   } catch (error) {
     console.error('Erro ao buscar todos os pedidos:', error);

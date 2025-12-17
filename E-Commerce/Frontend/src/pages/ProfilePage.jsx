@@ -42,7 +42,7 @@ export default function ProfilePage() {
             {user && user.isAdmin && (
               <>
                 <li>
-                  <NavLink to="/perfil" end className={({ isActive }) => isActive ? "active" : ""}>
+                  <NavLink to="/perfil/dashboard" className={({ isActive }) => isActive ? "active" : ""}>
                     <MdDashboard className="nav-icon" /> Dashboard
                   </NavLink>
                 </li>

@@ -1,5 +1,6 @@
 /* 1. Importar Fonte Profissional */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
 /* 2. Variáveis de Design (O "DNA" do seu site) */
 :root {
@@ -62,14 +63,16 @@ h2,
 h3,
 h4 {
   color: var(--cor-texto-titulo);
-  font-weight: 600;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
   line-height: 1.2;
   margin-bottom: 1rem;
 }
 
 h1 {
-  font-size: 2.5rem;
-  letter-spacing: -0.02em;
+  font-size: 2.8rem;
+  /* Aumentei um pouco para destacar a fonte display */
+  letter-spacing: -0.01em;
 }
 
 h2 {
@@ -152,4 +155,50 @@ textarea:focus {
   border-color: var(--cor-primaria);
   box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
   /* Anel de foco */
+}
+
+/* 7. Responsividade Global (Mobile First Strategy) */
+@media (max-width: 768px) {
+
+  /* Ajuste de Tipografia para Telas Menores */
+  html {
+    font-size: 14px;
+    /* Reduz levemente a base para ganhar espaço */
+  }
+
+  h1 {
+    font-size: 1.8rem;
+    /* Reduz títulos grandes */
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  /* Ajuste de Layout */
+  .container,
+  .wrapper,
+  main {
+    width: 100% !important;
+    max-width: 100vw !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    overflow-x: hidden;
+    /* Evita scroll horizontal indesejado */
+  }
+
+  /* Imagens Responsivas */
+  img,
+  video,
+  iframe {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Tabelas com Scroll Horizontal */
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
 }

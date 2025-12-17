@@ -1,7 +1,9 @@
 /* Renomeado para consistência e adicionado layout padrão */
 .loja-page {
-  padding: 2rem 5%;
-  max-width: 1200px;
+  padding: 2rem 2%;
+  /* Reduced horizontal padding */
+  max-width: 1600px;
+  /* Increased max-width to allow more space */
   margin: 2rem auto;
   font-family: sans-serif;
 }
@@ -9,82 +11,162 @@
 .loja-page h1 {
   text-align: center;
   font-size: 2.5rem;
-  margin-bottom: 3rem; /* Mais espaço abaixo do título */
-  color: var(--cor-primaria);
+  margin-bottom: 3rem;
+  /* Mais espaço abaixo do título */
+  color: white;
 }
 
-/* Container para os controles de filtro e busca */
-.loja-controles {
+/* Layout Structure */
+.loja-content-wrapper {
   display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap; /* Permite que os filtros quebrem a linha em telas menores */
-  gap: 1.5rem;
+  gap: 2rem;
+  /* Reduced gap from 3rem */
+  align-items: flex-start;
+}
+
+/* Sidebar */
+.loja-sidebar {
+  width: 220px;
+  /* Reduced width from 250px */
+  flex-shrink: 0;
+  background-color: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.sidebar-section {
   margin-bottom: 2rem;
 }
 
-.campo-busca {
-  flex-grow: 1;
+.sidebar-section h3 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: var(--cor-primaria);
+  border-bottom: 2px solid var(--cor-acento);
+  padding-bottom: 0.5rem;
 }
 
+/* Search Field in Sidebar */
 .campo-busca input {
   width: 100%;
   padding: 0.8rem;
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 1rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .campo-busca input:focus {
   outline: none;
   border-color: var(--cor-acento);
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+  box-shadow: 0 0 0 3px rgba(152, 126, 75, 0.15);
+  /* Using accent color variable equivalent */
 }
 
-/* Nova seção de filtros por categoria */
-.filtro-categorias {
+/* Vertical Category Buttons */
+.filtro-categorias-vertical {
   display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 0.8rem;
-  margin-bottom: 2.5rem;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.btn-categoria {
-  padding: 0.6rem 1.2rem;
-  border: 1px solid #ddd;
-  background-color: #fff;
+.btn-categoria-vertical {
+  text-align: left;
+  padding: 0.8rem 1rem;
+  border: none;
+  background-color: transparent;
   color: #555;
-  border-radius: 20px;
+  border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease;
+  width: 100%;
 }
 
-.btn-categoria:hover {
-  background-color: #f0f0f0;
-  border-color: #ccc;
+.btn-categoria-vertical:hover {
+  background-color: #e9ecef;
+  color: var(--cor-primaria);
 }
 
-.btn-categoria.active {
-  background-color: #007bff;
+.btn-categoria-vertical.active {
+  background-color: var(--cor-primaria);
   color: #fff;
-  border-color: #007bff;
   font-weight: 600;
-  box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Grid de Produtos */
+/* Main Content */
+.loja-main {
+  flex-grow: 1;
+  width: 100%;
+  /* Ensure it takes full width in mobile */
+}
+
+/* Products Grid */
 .produtos-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  /* Reduced min-width to fit 4 */
+  gap: 1.5rem;
 }
 
-/* Media Query para ajustar os controles em telas menores */
-@media (max-width: 768px) {
-  .loja-controles {
+/* Force 4 columns on screens wide enough to support it reasonably */
+@media (min-width: 1200px) {
+  .produtos-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+}
+
+.page-btn {
+  padding: 0.6rem 1rem;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  color: var(--cor-primaria);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.page-btn:hover:not(:disabled) {
+  background-color: var(--cor-primaria);
+  color: #fff;
+}
+
+.page-btn.active {
+  background-color: var(--cor-primaria);
+  color: #fff;
+  border-color: var(--cor-primaria);
+}
+
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f3f3f3;
+}
+
+/* Responsive Design */
+@media (max-width: 900px) {
+  .loja-content-wrapper {
     flex-direction: column;
+  }
+
+  .loja-sidebar {
+    width: 100%;
+  }
+
+  .produtos-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   }
 }
