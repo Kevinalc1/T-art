@@ -90,7 +90,7 @@ const HomePage = () => {
 
       {/* Products Grid */}
       <section className="products-section">
-        <h2 style={{ color: '#133853' }}>Estampas em Destaque</h2>
+        <h2 style={{ color: '#ffffff' }}>Estampas em Destaque</h2>
         <div className="products-grid">
           {loading ? (
             <p className="loading-text">Carregando estampas...</p>

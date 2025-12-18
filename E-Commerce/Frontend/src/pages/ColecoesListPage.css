@@ -7,20 +7,23 @@
 
 .colecoes-list-page h1 {
   text-align: center;
-  margin-bottom: 3rem; /* Mais espaço abaixo do título */
+  margin-bottom: 3rem;
+  /* Mais espaço abaixo do título */
   font-size: 2.5rem;
-  color: var(--cor-primaria);
+  color: white;
 }
 
 .colecoes-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem; /* Garante o espaçamento consistente */
+  gap: 2rem;
+  /* Garante o espaçamento consistente */
 }
 
 .colecao-card {
   background-color: #fff;
-  border: 1px solid #eee; /* Borda mais suave */
+  border: 1px solid #eee;
+  /* Borda mais suave */
   border-radius: 8px;
   overflow: hidden;
   text-decoration: none;
@@ -28,24 +31,28 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Sombra padrão */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  /* Sombra padrão */
 }
 
 .colecao-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Sombra mais pronunciada no hover */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  /* Sombra mais pronunciada no hover */
 }
 
 .colecao-card img {
   width: 100%;
   height: 200px;
   object-fit: cover;
-  border-bottom: 1px solid #eee; /* Linha sutil separando a imagem do texto */
+  border-bottom: 1px solid #eee;
+  /* Linha sutil separando a imagem do texto */
 }
 
 .colecao-card-info {
   padding: 1rem;
-  flex-grow: 1; /* Faz o conteúdo textual ocupar o espaço restante */
+  flex-grow: 1;
+  /* Faz o conteúdo textual ocupar o espaço restante */
   display: flex;
   flex-direction: column;
 }

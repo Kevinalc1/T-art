@@ -175,15 +175,12 @@ router.put('/reset-password/:token', async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: 'Token inválido ou expirado.' });
     }
-    // 2. Criptografar a nova senha
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(req.body.password, salt);
-
-    // 3. Definir a nova senha (já criptografada) e limpar os campos do token
-    user.password = hashedPassword;
+    // 2. Definir a nova senha (o middleware pre-save do modelo fará o hash)
+    user.password = req.body.password;
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
-    // 4. Salvar o usuário com a nova senha criptografada
+
+    // 3. Salvar o usuário (o hash será gerado aqui)
     await user.save();
     res.status(200).json({ message: 'Senha redefinida com sucesso!' });
   } catch (err) {

@@ -12,7 +12,11 @@
 .admin-produto-form-container h1 {
   text-align: center;
   margin-bottom: 2rem;
-  color: #333;
+  background: linear-gradient(90deg, #133853 0%, #B99955 100%);
+  color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(19, 56, 83, 0.3);
   font-weight: 600;
 }
 
@@ -81,24 +85,28 @@
 
 .category-selection-wrapper {
   display: flex;
-  align-items: center; /* Garante alinhamento vertical */
+  align-items: center;
+  /* Garante alinhamento vertical */
   gap: 0.5rem;
 }
 
 .category-selection-wrapper select {
   flex-grow: 1;
-  margin: 0; /* Remove margens padrão que podem desalinhá-lo */
+  margin: 0;
+  /* Remove margens padrão que podem desalinhá-lo */
 }
 
 .btn-create-category {
-  padding: 0.75rem 1rem; /* Ajusta o padding para corresponder à altura do select */
+  padding: 0.75rem 1rem;
+  /* Ajusta o padding para corresponder à altura do select */
   background-color: transparent;
   color: #007bff;
   border: 1px solid #007bff;
   border-radius: 4px;
   cursor: pointer;
   font-weight: 500;
-  line-height: 1; /* Garante que o texto não cause altura extra */
+  line-height: 1;
+  /* Garante que o texto não cause altura extra */
   transition: background-color 0.2s, color 0.2s;
 }
 
@@ -163,7 +171,8 @@ input[type="file"] {
   font-size: 0.9rem;
 }
 
-.file-info, .upload-status {
+.file-info,
+.upload-status {
   font-size: 0.85rem;
   color: #666;
   margin-top: 0.5rem;
@@ -290,6 +299,13 @@ input[type="file"] {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

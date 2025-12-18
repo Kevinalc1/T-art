@@ -12,7 +12,7 @@ function App() {
     <CurrencyProvider>
       <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: -1, pointerEvents: 'none' }}>
         <Aurora
-          colorStops={["#133853", "#ff6f61", "#133853"]}
+          colorStops={["#133853", "#B99955", "#133853"]}
           blend={0.5}
           amplitude={1.0}
           speed={0.5}

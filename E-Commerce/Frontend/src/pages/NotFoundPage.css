@@ -12,7 +12,7 @@
 
 .not-found-container h1 {
   font-size: 2.5rem;
-  color: var(--cor-primaria);
+  color: white;
   margin-bottom: 0.5rem;
 }
 
@@ -36,12 +36,15 @@
   background-color: var(--cor-primaria);
   color: white;
   text-decoration: none;
-  border-radius: 8px; /* Bordas consistentes */
+  border-radius: 8px;
+  /* Bordas consistentes */
   font-size: 1.1rem;
-  font-weight: bold; /* Consistência com outros botões */
+  font-weight: bold;
+  /* Consistência com outros botões */
   transition: background-color 0.3s ease;
 }
 
 .btn-voltar:hover {
-  background-color: #333; /* Cor mais escura no hover */
+  background-color: #333;
+  /* Cor mais escura no hover */
 }

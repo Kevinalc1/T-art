@@ -9,14 +9,15 @@
   text-align: center;
   margin-bottom: 3rem;
   padding: 3rem 2rem;
-  background-color: #f9f9f9; /* Fundo suave para destacar */
+  background-color: #f9f9f9;
+  /* Fundo suave para destacar */
   border-radius: 8px;
   border: 1px solid #eee;
 }
 
 .colecao-header h1 {
   font-size: 2.5rem;
-  color: var(--cor-primaria);
+  color: white;
   margin-bottom: 1rem;
 }
 
@@ -24,7 +25,8 @@
   font-size: 1.1rem;
   color: #666;
   max-width: 700px;
-  margin: 0 auto; /* Centraliza o parágrafo */
+  margin: 0 auto;
+  /* Centraliza o parágrafo */
 }
 
 .colecao-detalhe-page h2 {
@@ -38,5 +40,6 @@
 .produtos-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 2rem; /* Garante o espaçamento consistente com a HomePage */
+  gap: 2rem;
+  /* Garante o espaçamento consistente com a HomePage */
 }

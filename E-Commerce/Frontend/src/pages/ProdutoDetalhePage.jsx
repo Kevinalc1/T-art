@@ -100,13 +100,6 @@ export default function ProdutoDetalhePage() {
         </p>
         <h3>Descrição</h3>
         <p>{product.description || 'Sem descrição disponível.'}</p>
-        <h3>Arquivos Inclusos</h3>
-        <ul>
-          <li>PNG (Fundo Transparente)</li>
-          <li>CDR (Vetor CorelDraw)</li>
-          <li>JPG (Alta Resolução)</li>
-        </ul>
-
         {/* Combo Details */}
         {product.isCombo && product.comboProducts && product.comboProducts.length > 0 && (
           <div className="combo-detalhes-incluidos">

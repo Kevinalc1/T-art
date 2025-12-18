@@ -1,26 +1,34 @@
 /* Container principal do rodapé */
 .main-footer {
-  background-color: transparent; /* Remove o fundo escuro */
-  color: var(--cor-texto-corpo); /* Usa a cor de texto padrão */
+  background-color: transparent;
+  /* Remove o fundo escuro */
+  color: #fff;
+  /* Texto branco */
   padding: 2rem 5%;
-  margin-top: 5rem; /* Aumenta um pouco a margem para dar mais respiro */
+  margin-top: 5rem;
+  /* Aumenta um pouco a margem para dar mais respiro */
   font-family: sans-serif;
-  border-top: 1px solid var(--cor-borda); /* Adiciona uma linha sutil no topo */
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  /* Linha sutil clara */
 }
 
 /* Conteúdo interno do rodapé */
 .footer-content {
   max-width: var(--largura-maxima);
   margin: 0 auto;
-  display: flex; /* Muda para flexbox para um layout mais simples */
-  justify-content: center; /* Centraliza o conteúdo */
-  gap: 3rem; /* Espaço entre as colunas */
+  display: flex;
+  /* Muda para flexbox para um layout mais simples */
+  justify-content: center;
+  /* Centraliza o conteúdo */
+  gap: 3rem;
+  /* Espaço entre as colunas */
   text-align: center;
 }
 
 /* Coluna individual no rodapé */
 .footer-column h4 {
-  color: var(--cor-texto-titulo); /* Usa a cor de título padrão */
+  color: #fff;
+  /* Título branco */
   font-size: 1rem;
   margin-bottom: 1rem;
   font-weight: 600;
@@ -30,18 +38,22 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  display: flex; /* Coloca os links lado a lado */
+  display: flex;
+  /* Coloca os links lado a lado */
   gap: 1.5rem;
 }
 
 .footer-column a {
-  color: var(--cor-texto-corpo); /* Usa a cor de texto padrão */
+  color: rgba(255, 255, 255, 0.8);
+  /* Branco levemente transparente */
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .footer-column a:hover {
-  color: var(--cor-acento); /* Usa a cor de destaque no hover */
+  color: #fff;
+  /* Branco puro no hover */
+  text-decoration: underline;
 }
 
 /* Barra inferior com o copyright */
@@ -50,5 +62,6 @@
   margin: 2.5rem auto 0;
   text-align: center;
   font-size: 0.9rem;
-  color: var(--cor-texto-leve); /* Usa a cor de texto mais clara */
+  color: rgba(255, 255, 255, 0.6);
+  /* Branco mais transparente */
 }

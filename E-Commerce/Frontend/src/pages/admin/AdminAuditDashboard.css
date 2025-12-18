@@ -12,8 +12,12 @@
 }
 
 .audit-header h1 {
-    color: var(--cor-primaria);
     font-size: 2rem;
+    background: linear-gradient(90deg, #133853 0%, #B99955 100%);
+    color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(19, 56, 83, 0.3);
 }
 
 .btn-export {
