@@ -33,7 +33,7 @@
   text-align: center;
   font-size: 2rem;
   margin-bottom: 2.5rem;
-  color: var(--cor-primaria);
+  color: white;
 }
 
 /* Reutilizando o estilo da LojaPage para a grelha de produtos */

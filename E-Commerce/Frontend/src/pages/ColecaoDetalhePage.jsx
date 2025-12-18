@@ -36,10 +36,7 @@ export default function ColecaoDetalhePage() {
 
   return (
     <div className="colecao-detalhe-page">
-      <div className="colecao-header">
-        <h1>{colecao.name}</h1>
-        <p>{colecao.description}</p>
-      </div>
+
 
       <h2>{t('collections.produtosTitulo')}</h2>
       <div className="produtos-grid">
