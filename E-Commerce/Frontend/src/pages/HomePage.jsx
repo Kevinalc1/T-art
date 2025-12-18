@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import ProductCard from '../components/ProductCard.jsx';
 import CircularGallery from '../components/CircularGallery.jsx';
 import './HomePage.css';
@@ -15,6 +16,7 @@ const getImageUrl = (url) => {
 };
 
 const HomePage = () => {
+  const { t } = useTranslation();
   const [products, setProducts] = useState([]);
   const [heroItems, setHeroItems] = useState([]); // Can be banners or mockups
   const [loading, setLoading] = useState(true);
@@ -90,16 +92,16 @@ const HomePage = () => {
 
       {/* Products Grid */}
       <section className="products-section">
-        <h2 style={{ color: '#ffffff' }}>Estampas em Destaque</h2>
+        <h2 style={{ color: '#ffffff' }}>{t('home.estampasDestaque')}</h2>
         <div className="products-grid">
           {loading ? (
-            <p className="loading-text">Carregando estampas...</p>
+            <p className="loading-text">{t('home.carregando')}</p>
           ) : products.length > 0 ? (
             products.slice(0, 8).map(product => (
               <ProductCard key={product._id} produto={product} />
             ))
           ) : (
-            <p className="loading-text">Nenhuma estampa encontrada.</p>
+            <p className="loading-text">{t('home.nenhumaEstampa')}</p>
           )}
         </div>
       </section>

@@ -1,0 +1,56 @@
+{
+    "header": {
+        "inicio": "Home",
+        "loja": "Shop",
+        "colecoes": "Collections",
+        "faq": "FAQ",
+        "contato": "Contact",
+        "menu": "Menu",
+        "ola": "Hello",
+        "sair": "Logout",
+        "perfil": "Profile",
+        "admin": "Admin",
+        "entrar": "Login"
+    },
+    "footer": {
+        "inicio": "Home",
+        "loja": "Shop",
+        "colecoes": "Collections",
+        "faq": "FAQ",
+        "contato": "Contact",
+        "todosDireitos": "All rights reserved."
+    },
+    "home": {
+        "estampasDestaque": "Featured Prints",
+        "carregando": "Loading prints...",
+        "nenhumaEstampa": "No prints found."
+    },
+    "commons": {
+        "verDetalhes": "View Details",
+        "adicionarCarrinho": "Add to Cart",
+        "comprarAgora": "Buy Now"
+    },
+    "checkout": {
+        "titulo": "Checkout",
+        "carrinhoVazio": "Your cart is empty",
+        "adicioneProdutos": "Add products to your cart before checking out.",
+        "voltarLoja": "Back to Shop",
+        "seusDados": "Your Details",
+        "nomePlaceholder": "Full Name",
+        "emailPlaceholder": "E-mail",
+        "confirmaEmailPlaceholder": "Confirm E-mail",
+        "cpfPlaceholder": "Tax ID / CPF (Only for Brazil)",
+        "resumoPedido": "Order Summary",
+        "total": "Total",
+        "pagamento": "Payment",
+        "cartaoCredito": "Credit Card",
+        "pix": "Pix (Instant - Brazil Only)",
+        "avisoPix": "Please enter your CPF for Pix payment.",
+        "emailNaoCoincide": "Emails do not match!",
+        "processando": "Processing...",
+        "irParaPagamento": "Go to Payment",
+        "gerarPix": "Generate Pix",
+        "erroComunicacao": "A communication error occurred with the server.",
+        "sucessoPix": "Payment approved! Redirecting to confirmation..."
+    }
+}

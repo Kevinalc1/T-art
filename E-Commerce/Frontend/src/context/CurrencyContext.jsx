@@ -2,32 +2,55 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const CurrencyContext = createContext();
 
-const exchangeRates = {
+const defaultRates = {
     BRL: 1,
-    USD: 0.17, // Approximate rate
-    EUR: 0.16, // Approximate rate
+    USD: 0.17,
+    EUR: 0.16,
 };
 
 const currencyLocales = {
     BRL: 'pt-BR',
     USD: 'en-US',
-    EUR: 'de-DE', // or en-IE, fr-FR, etc. de-DE is common for EUR
+    EUR: 'de-DE',
 };
 
 export function CurrencyProvider({ children }) {
-    // Try to get from localStorage or default to BRL
     const [currency, setCurrency] = useState(() => {
         return localStorage.getItem('currency') || 'BRL';
     });
+    const [rates, setRates] = useState(defaultRates);
 
     useEffect(() => {
         localStorage.setItem('currency', currency);
     }, [currency]);
 
+    // Fetch Rates on Mount
+    useEffect(() => {
+        const fetchRates = async () => {
+            try {
+                const response = await fetch('https://api.exchangerate-api.com/v4/latest/BRL');
+                if (response.ok) {
+                    const data = await response.json();
+                    setRates({
+                        BRL: 1,
+                        USD: data.rates.USD,
+                        EUR: data.rates.EUR,
+                    });
+                    console.log('Taxas de câmbio atualizadas:', data.rates);
+                }
+            } catch (error) {
+                console.error('Erro ao buscar taxas de câmbio:', error);
+                // Mantém os defaultRates se falhar
+            }
+        };
+
+        fetchRates();
+    }, []);
+
     const formatPrice = (valueInBrl) => {
         if (valueInBrl === undefined || valueInBrl === null) return '';
 
-        const rate = exchangeRates[currency] || 1;
+        const rate = rates[currency] || 1;
         const convertedValue = valueInBrl * rate;
 
         return new Intl.NumberFormat(currencyLocales[currency], {
@@ -39,7 +62,7 @@ export function CurrencyProvider({ children }) {
     const value = {
         currency,
         setCurrency,
-        exchangeRates,
+        exchangeRates: rates,
         formatPrice,
     };
 

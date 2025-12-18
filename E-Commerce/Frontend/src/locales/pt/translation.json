@@ -1,0 +1,56 @@
+{
+    "header": {
+        "inicio": "Início",
+        "loja": "Loja",
+        "colecoes": "Coleções",
+        "faq": "FAQ",
+        "contato": "Contato",
+        "menu": "Menu",
+        "ola": "Olá",
+        "sair": "Sair",
+        "perfil": "Perfil",
+        "admin": "Admin",
+        "entrar": "Entrar"
+    },
+    "footer": {
+        "inicio": "Início",
+        "loja": "Loja",
+        "colecoes": "Coleções",
+        "faq": "FAQ",
+        "contato": "Contato",
+        "todosDireitos": "Todos os direitos reservados."
+    },
+    "home": {
+        "estampasDestaque": "Estampas em Destaque",
+        "carregando": "Carregando estampas...",
+        "nenhumaEstampa": "Nenhuma estampa encontrada."
+    },
+    "commons": {
+        "verDetalhes": "Ver Detalhes",
+        "adicionarCarrinho": "Adicionar",
+        "comprarAgora": "Comprar Agora"
+    },
+    "checkout": {
+        "titulo": "Finalizar Compra",
+        "carrinhoVazio": "Seu carrinho está vazio",
+        "adicioneProdutos": "Adicione produtos à sua cesta antes de finalizar a compra.",
+        "voltarLoja": "Voltar para a Loja",
+        "seusDados": "Seus Dados",
+        "nomePlaceholder": "Nome Completo",
+        "emailPlaceholder": "E-mail",
+        "confirmaEmailPlaceholder": "Confirme seu E-mail",
+        "cpfPlaceholder": "CPF (apenas números)",
+        "resumoPedido": "Resumo do Pedido",
+        "total": "Total",
+        "pagamento": "Pagamento",
+        "cartaoCredito": "Cartão de Crédito",
+        "pix": "Pix (Instantâneo)",
+        "avisoPix": "Por favor, informe o CPF para pagamento via Pix.",
+        "emailNaoCoincide": "Os e-mails não coincidem!",
+        "processando": "Processando...",
+        "irParaPagamento": "Ir para Pagamento",
+        "gerarPix": "Gerar Pix",
+        "erroComunicacao": "Ocorreu um erro de comunicação com o servidor.",
+        "sucessoPix": "Pagamento aprovado! Redirecionando para confirmação..."
+    }
+}

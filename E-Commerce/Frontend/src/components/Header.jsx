@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import './Header.css';
 import CartIcon from './CartIcon.jsx';
@@ -8,12 +9,13 @@ import CurrencySwitcher from './CurrencySwitcher.jsx';
 import PillNav from './PillNav.jsx';
 
 export default function Header() {
+  const { t } = useTranslation();
   const { user, logout } = useAuth();
 
   const navItems = [
-    { label: 'Início', href: '/' },
-    { label: 'Loja', href: '/loja' },
-    { label: 'Coleções', href: '/colecoes' }
+    { label: t('header.inicio'), href: '/' },
+    { label: t('header.loja'), href: '/loja' },
+    { label: t('header.colecoes'), href: '/colecoes' }
   ];
 
   /* rightContent handles the icons */
