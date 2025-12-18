@@ -30,6 +30,16 @@
         "adicionarCarrinho": "Adicionar",
         "comprarAgora": "Comprar Agora"
     },
+    "shop": {
+        "titulo": "Encontre sua arte",
+        "buscar": "Buscar",
+        "placeholderBusca": "Buscar por nome...",
+        "categorias": "Categorias",
+        "todas": "Todas",
+        "anterior": "Anterior",
+        "proximo": "Próximo",
+        "nenhumProduto": "Nenhum produto encontrado com os filtros aplicados."
+    },
     "checkout": {
         "titulo": "Finalizar Compra",
         "carrinhoVazio": "Seu carrinho está vazio",
@@ -52,5 +62,65 @@
         "gerarPix": "Gerar Pix",
         "erroComunicacao": "Ocorreu um erro de comunicação com o servidor.",
         "sucessoPix": "Pagamento aprovado! Redirecionando para confirmação..."
+    },
+    "product": {
+        "carregando": "Carregando detalhes...",
+        "adicionadoSucesso": "Produto adicionado ao carrinho!",
+        "jaNoCarrinho": "Este produto já está no seu carrinho",
+        "descricao": "Descrição",
+        "categoria": "Categoria",
+        "voltarLoja": "Voltar para a Loja",
+        "formato": "Formato",
+        "resolucao": "Resolução"
+    },
+    "cart": {
+        "titulo": "Seu Carrinho",
+        "vazio": "Seu carrinho está vazio",
+        "continuarComprando": "Continuar Comprando",
+        "produto": "Produto",
+        "preco": "Preço",
+        "quantidade": "Qtd",
+        "total": "Total",
+        "remover": "Remover",
+        "resumo": "Resumo do Pedido",
+        "subtotal": "Subtotal",
+        "finalizarCompra": "Finalizar Compra"
+    },
+    "auth": {
+        "loginTitulo": "Entrar",
+        "registroTitulo": "Criar Conta",
+        "email": "E-mail",
+        "senha": "Senha",
+        "confirmarSenha": "Confirmar Senha",
+        "entrar": "Entrar",
+        "registrar": "Registrar",
+        "ou": "ou entre com",
+        "naoTemConta": "Não tem uma conta? Registre-se",
+        "jaTemConta": "Já tem uma conta? Faça login",
+        "esqueceuSenha": "Esqueceu a senha?",
+        "senhasNaoCoincidem": "As senhas não coincidem!",
+        "sucessoLogin": "Login realizado com sucesso!",
+        "sucessoRegistro": "Conta criada com sucesso!"
+    },
+    "collections": {
+        "titulo": "Nossas Coleções",
+        "verColecao": "Ver Coleção",
+        "voltarColecoes": "Voltar para Coleções",
+        "nenhumaColecao": "Nenhuma coleção encontrada.",
+        "carregando": "Carregando coleções...",
+        "erroListar": "Erro ao carregar as coleções.",
+        "erroDetalhe": "Erro ao carregar os detalhes da coleção.",
+        "naoEncontrada": "Coleção não encontrada.",
+        "produtosTitulo": "Produtos desta Coleção",
+        "semProdutos": "Esta coleção ainda não possui produtos."
+    },
+    "profile": {
+        "titulo": "Minha Conta",
+        "biblioteca": "Minha Biblioteca",
+        "seguranca": "Segurança",
+        "suporte": "Suporte",
+        "configuracoes": "Configurações",
+        "fazerDownload": "Baixar",
+        "nenhumPedido": "Você ainda não comprou nada."
     }
 }

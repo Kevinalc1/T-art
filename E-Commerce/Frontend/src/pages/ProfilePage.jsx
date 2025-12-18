@@ -1,13 +1,15 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import { useTranslation } from 'react-i18next';
 import './ProfilePage.css';
 
-import { FaThLarge, FaShieldAlt, FaQuestionCircle, FaCog, FaSignOutAlt, FaBoxOpen, FaImages, FaChartLine } from 'react-icons/fa';
+import { FaThLarge, FaShieldAlt, FaQuestionCircle, FaCog, FaSignOutAlt, FaBoxOpen, FaImages } from 'react-icons/fa';
 import { MdDashboard } from 'react-icons/md';
 
 export default function ProfilePage() {
   const { logout, user } = useAuth();
+  const { t } = useTranslation();
 
   return (
     <div className="profile-page">
@@ -19,22 +21,22 @@ export default function ProfilePage() {
               <>
                 <li>
                   <NavLink to="/perfil" end className={({ isActive }) => isActive ? "active" : ""}>
-                    <FaThLarge className="nav-icon" /> Minha Biblioteca
+                    <FaThLarge className="nav-icon" /> {t('profile.biblioteca')}
                   </NavLink>
                 </li>
                 <li>
                   <NavLink to="/perfil/seguranca" className={({ isActive }) => isActive ? "active" : ""}>
-                    <FaShieldAlt className="nav-icon" /> Segurança
+                    <FaShieldAlt className="nav-icon" /> {t('profile.seguranca')}
                   </NavLink>
                 </li>
                 <li>
                   <NavLink to="/perfil/suporte" className={({ isActive }) => isActive ? "active" : ""}>
-                    <FaQuestionCircle className="nav-icon" /> Suporte
+                    <FaQuestionCircle className="nav-icon" /> {t('profile.suporte')}
                   </NavLink>
                 </li>
                 <li>
                   <NavLink to="/perfil/configuracoes" className={({ isActive }) => isActive ? "active" : ""}>
-                    <FaCog className="nav-icon" /> Configurações
+                    <FaCog className="nav-icon" /> {t('profile.configuracoes')}
                   </NavLink>
                 </li>
               </>
@@ -63,7 +65,7 @@ export default function ProfilePage() {
                 </li>
                 <li>
                   <NavLink to="/perfil/configuracoes" className={({ isActive }) => isActive ? "active" : ""}>
-                    <FaCog className="nav-icon" /> Configurações
+                    <FaCog className="nav-icon" /> {t('profile.configuracoes')}
                   </NavLink>
                 </li>
               </>

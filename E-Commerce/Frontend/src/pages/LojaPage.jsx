@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import ProdutoCard from '../components/ProductCard.jsx';
 import './LojaPage.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function LojaPage() {
+  const { t } = useTranslation();
   const [produtos, setProdutos] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [termoBusca, setTermoBusca] = useState('');
@@ -58,17 +60,17 @@ export default function LojaPage() {
 
   return (
     <div className="loja-page">
-      <h1>Encontre sua arte</h1>
+      <h1>{t('shop.titulo')}</h1>
 
       <div className="loja-content-wrapper">
         {/* Sidebar: Search and Filters */}
         <aside className="loja-sidebar">
           <div className="sidebar-section">
-            <h3>Buscar</h3>
+            <h3>{t('shop.buscar')}</h3>
             <div className="campo-busca">
               <input
                 type="text"
-                placeholder="Buscar por nome..."
+                placeholder={t('shop.placeholderBusca')}
                 value={termoBusca}
                 onChange={(e) => setTermoBusca(e.target.value)}
               />
@@ -76,13 +78,13 @@ export default function LojaPage() {
           </div>
 
           <div className="sidebar-section">
-            <h3>Categorias</h3>
+            <h3>{t('shop.categorias')}</h3>
             <div className="filtro-categorias-vertical">
               <button
                 className={`btn-categoria-vertical ${categoriaSelecionada === '' ? 'active' : ''}`}
                 onClick={() => setCategoriaSelecionada('')}
               >
-                Todas
+                {t('shop.todas')}
               </button>
               {Array.isArray(categorias) && categorias.map(cat => (
                 <button
@@ -105,7 +107,7 @@ export default function LojaPage() {
                 <ProdutoCard key={produto._id} produto={produto} />
               ))
             ) : (
-              <p>Nenhum produto encontrado com os filtros aplicados.</p>
+              <p>{t('shop.nenhumProduto')}</p>
             )}
           </div>
 
@@ -117,7 +119,7 @@ export default function LojaPage() {
                 disabled={currentPage === 1}
                 className="page-btn"
               >
-                Anterior
+                {t('shop.anterior')}
               </button>
               {Array.from({ length: totalPages }, (_, i) => (
                 <button
@@ -133,7 +135,7 @@ export default function LojaPage() {
                 disabled={currentPage === totalPages}
                 className="page-btn"
               >
-                Próximo
+                {t('shop.proximo')}
               </button>
             </div>
           )}

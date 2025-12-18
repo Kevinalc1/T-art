@@ -1,28 +1,29 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
-import './RegisterPage.css'; // Você pode criar este arquivo CSS para estilização
+import { useTranslation } from 'react-i18next';
+import './RegisterPage.css';
 
 export default function RegisterPage() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { register } = useAuth(); // Pega a função register do AuthContext
+  const { register } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(''); // Limpa erros anteriores
+    setError('');
 
     if (password !== confirmPassword) {
-      setError('As senhas não coincidem!');
+      setError(t('auth.senhasNaoCoincidem'));
       return;
     }
 
     try {
       await register(email, password);
-      // Redireciona para a página de perfil após o registro bem-sucedido
       navigate('/perfil');
     } catch (err) {
       console.error('Erro ao registrar:', err);
@@ -33,10 +34,10 @@ export default function RegisterPage() {
   return (
     <div className="register-container">
       <form onSubmit={handleSubmit} className="register-form">
-        <h1>Registrar Nova Conta</h1>
+        <h1>{t('auth.registroTitulo')}</h1>
         {error && <p className="error-message">{error}</p>}
         <div className="form-group">
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email">{t('auth.email')}</label>
           <input
             type="email"
             id="email"
@@ -46,7 +47,7 @@ export default function RegisterPage() {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="password">Senha</label>
+          <label htmlFor="password">{t('auth.senha')}</label>
           <input
             type="password"
             id="password"
@@ -56,12 +57,12 @@ export default function RegisterPage() {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="confirmPassword">Confirme a Senha</label>
+          <label htmlFor="confirmPassword">{t('auth.confirmarSenha')}</label>
           <input type="password" id="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
         </div>
-        <button type="submit" className="btn-register">Registrar</button>
+        <button type="submit" className="btn-register">{t('auth.registrar')}</button>
         <div className="register-links">
-          <Link to="/login">Já tem uma conta? Faça login</Link>
+          <Link to="/login">{t('auth.jaTemConta')}</Link>
         </div>
       </form>
     </div>

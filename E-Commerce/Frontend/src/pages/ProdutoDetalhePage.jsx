@@ -1,120 +1,129 @@
 import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useCarrinho } from '../context/CarrinhoContext.jsx';
 import { useCurrency } from '../context/CurrencyContext.jsx';
+import { toast } from 'react-toastify';
 import './ProdutoDetalhePage.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function ProdutoDetalhePage() {
+  const { t } = useTranslation();
   const { id } = useParams();
-  const navigate = useNavigate();
-  const { adicionarItem, state } = useCarrinho();
+  const { addToCart, state } = useCarrinho(); // Access cart state to check duplicates
   const { formatPrice } = useCurrency();
-
-  const [product, setProduct] = useState(null);
+  const [produto, setProduto] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState('');
-  const [quantidade, setQuantidade] = useState(1);
 
   useEffect(() => {
-    if (!id) return;
-
-    fetch(`${API_URL}/api/produtos/${id}`)
-      .then(res => {
-        if (!res.ok) throw new Error('Produto não encontrado');
-        return res.json();
-      })
-      .then(data => {
-        setProduct(data);
-        if (data && data.imageUrls && data.imageUrls.length > 0) {
-          setSelectedImage(data.imageUrls[0]);
+    const fetchProduto = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/produtos/${id}`);
+        if (response.ok) {
+          const data = await response.json();
+          setProduto(data);
+          if (data && data.imageUrls && data.imageUrls.length > 0) {
+            setSelectedImage(data.imageUrls[0]);
+          } else if (data.imageUrl) {
+            // Fallback for old data without imageUrls array
+            setSelectedImage(data.imageUrl);
+          }
+        } else {
+          console.error("Produto não encontrado");
         }
-      })
-      .catch(error => {
-        console.error("Erro ao buscar o produto:", error);
-        setProduct({ notFound: true });
-      });
+      } catch (error) {
+        console.error("Erro ao buscar detalhes do produto:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduto();
   }, [id]);
 
-  const handleAdicionar = () => {
-    const itemNoCarrinho = state.items.find(item => item._id === product._id);
+  const handleAddToCart = () => {
+    if (!produto) return;
 
-    if (itemNoCarrinho) {
-      toast.error('Esse produto já foi adicionado ao carrinho, Finalize sua compra', {
-        style: { background: '#d32f2f', color: '#fff' }
-      });
+    // Check if product is already in cart
+    const exists = state.items.find(item => item._id === produto._id);
+
+    if (exists) {
+      toast.info(t('product.jaNoCarrinho'));
       return;
     }
 
-    adicionarItem({
-      ...product,
-      quantidade: quantidade,
-    });
-    toast.success('Item adicionado ao carrinho!');
+    addToCart(produto);
+    toast.success(t('product.adicionadoSucesso'));
   };
 
-  const handleComprarAgora = () => {
-    const itemNoCarrinho = state.items.find(item => item._id === product._id);
+  if (loading) {
+    return <div className="produto-detalhe-page loading">{t('product.carregando')}</div>;
+  }
 
-    if (!itemNoCarrinho) {
-      adicionarItem({
-        ...product,
-        quantidade: quantidade,
-      });
-    }
-    navigate('/checkout');
-  };
-
-  if (!product) return <h1>Carregando...</h1>;
-  if (product.notFound) return <h1>Produto não encontrado</h1>;
+  if (!produto) {
+    return <div className="produto-detalhe-page error">Produto não encontrado.</div>;
+  }
 
   return (
-    <div className="detalhe-produto-container">
-      <div className="coluna-imagem">
-        {/* Imagem Principal */}
-        {selectedImage && (
-          <img src={selectedImage} alt={product.productName} className="imagem-principal-galeria" />
-        )}
+    <div className="produto-detalhe-page">
+      <Link to="/loja" className="btn-voltar">
+        &larr; {t('product.voltarLoja')}
+      </Link>
 
-        {/* Miniaturas */}
-        <div className="miniaturas-galeria">
-          {product.imageUrls && product.imageUrls.map((url, index) => (
-            <img
-              key={index}
-              src={url}
-              alt={`${product.productName} - miniatura ${index + 1}`}
-              className={`miniatura-item ${url === selectedImage ? 'ativa' : ''}`}
-              onClick={() => setSelectedImage(url)}
-              onMouseOver={() => setSelectedImage(url)}
-            />
-          ))}
-        </div>
-      </div>
+      <div className="produto-detalhe-container">
+        <div className="produto-imagem-grande">
+          {selectedImage ? (
+            <img src={selectedImage} alt={produto.productName} />
+          ) : (
+            <div className="no-image">Sem Imagem</div>
+          )}
 
-      <div className="coluna-info">
-        <h1>{product.productName}</h1>
-
-        <p className="preco-detalhe">
-          {formatPrice(product.price)}
-        </p>
-        <h3>Descrição</h3>
-        <p>{product.description || 'Sem descrição disponível.'}</p>
-        {/* Combo Details */}
-        {product.isCombo && product.comboProducts && product.comboProducts.length > 0 && (
-          <div className="combo-detalhes-incluidos">
-            <h3>Artes Incluídas neste Pacote:</h3>
-            <ul>
-              {product.comboProducts.map(subProd => (
-                <li key={subProd._id}>{subProd.productName}</li>
+          {/* Gallery Thumbnails if multiple images exist */}
+          {produto.imageUrls && produto.imageUrls.length > 1 && (
+            <div className="miniaturas-galeria" style={{ marginTop: '10px', display: 'flex', gap: '10px' }}>
+              {produto.imageUrls.map((url, index) => (
+                <img
+                  key={index}
+                  src={url}
+                  alt={`Thumb ${index}`}
+                  onClick={() => setSelectedImage(url)}
+                  style={{
+                    width: '60px',
+                    height: '60px',
+                    objectFit: 'cover',
+                    cursor: 'pointer',
+                    border: selectedImage === url ? '2px solid var(--cor-acento)' : '1px solid #ddd'
+                  }}
+                />
               ))}
-            </ul>
-          </div>
-        )}
+            </div>
+          )}
+        </div>
 
-        <div className="acoes-detalhe">
-          <button className="btn-comprar" onClick={handleAdicionar}>Adicionar ao Carrinho</button>
-          <button className="btn-comprar-agora" onClick={handleComprarAgora}>Comprar Agora</button>
+        <div className="produto-info-completa">
+          <span className="produto-categoria-tag">
+            {produto.category?.name || t('product.categoria')}
+          </span>
+          <h1>{produto.productName}</h1>
+          <p className="produto-preco-destaque">
+            {formatPrice(produto.price)}
+          </p>
+
+          <div className="produto-descricao">
+            <h3>{t('product.descricao')}</h3>
+            <p>{produto.description || 'Sem descrição.'}</p>
+          </div>
+
+          <button onClick={handleAddToCart} className="btn-adicionar-carrinho-grande">
+            {t('commons.adicionarCarrinho')}
+          </button>
+
+          <div className="produto-meta">
+            <p><strong>{t('product.formato')}:</strong> PNG, SVG</p>
+            <p><strong>{t('product.resolucao')}:</strong> Alta Qualidade (300 DPI)</p>
+          </div>
         </div>
       </div>
     </div>

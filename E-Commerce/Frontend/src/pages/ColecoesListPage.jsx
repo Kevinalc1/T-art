@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 import './ColecoesListPage.css';
 
 export default function ColecoesListPage() {
+  const { t } = useTranslation();
   const [colecoes, setColecoes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,7 +16,7 @@ export default function ColecoesListPage() {
         const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/colecoes`);
         setColecoes(data);
       } catch (err) {
-        setError('Erro ao carregar as coleções.');
+        setError(t('collections.erroListar'));
         console.error('Erro ao buscar coleções:', err);
       } finally {
         setLoading(false);
@@ -22,14 +24,14 @@ export default function ColecoesListPage() {
     };
 
     fetchColecoes();
-  }, []);
+  }, [t]);
 
-  if (loading) return <p>A carregar coleções...</p>;
+  if (loading) return <p>{t('collections.carregando')}</p>;
   if (error) return <p>{error}</p>;
 
   return (
     <div className="colecoes-list-page">
-      <h1>Nossas Coleções</h1>
+      <h1>{t('collections.titulo')}</h1>
       <div className="colecoes-grid">
         {colecoes.length > 0 ? (
           colecoes.map((colecao) => (
@@ -42,7 +44,7 @@ export default function ColecoesListPage() {
             </Link>
           ))
         ) : (
-          <p>Nenhuma coleção encontrada no momento.</p>
+          <p>{t('collections.nenhumaColecao')}</p>
         )}
       </div>
     </div>

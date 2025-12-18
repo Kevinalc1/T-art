@@ -30,6 +30,16 @@
         "adicionarCarrinho": "Add to Cart",
         "comprarAgora": "Buy Now"
     },
+    "shop": {
+        "titulo": "Find your art",
+        "buscar": "Search",
+        "placeholderBusca": "Search by name...",
+        "categorias": "Categories",
+        "todas": "All",
+        "anterior": "Previous",
+        "proximo": "Next",
+        "nenhumProduto": "No products found matching filters."
+    },
     "checkout": {
         "titulo": "Checkout",
         "carrinhoVazio": "Your cart is empty",
@@ -52,5 +62,65 @@
         "gerarPix": "Generate Pix",
         "erroComunicacao": "A communication error occurred with the server.",
         "sucessoPix": "Payment approved! Redirecting to confirmation..."
+    },
+    "product": {
+        "carregando": "Loading details...",
+        "adicionadoSucesso": "Product added to cart!",
+        "jaNoCarrinho": "This product is already in your cart",
+        "descricao": "Description",
+        "categoria": "Category",
+        "voltarLoja": "Back to Shop",
+        "formato": "Format",
+        "resolucao": "Resolution"
+    },
+    "cart": {
+        "titulo": "Your Cart",
+        "vazio": "Your cart is empty",
+        "continuarComprando": "Continue Shopping",
+        "produto": "Product",
+        "preco": "Price",
+        "quantidade": "Qty",
+        "total": "Total",
+        "remover": "Remove",
+        "resumo": "Order Summary",
+        "subtotal": "Subtotal",
+        "finalizarCompra": "Checkout"
+    },
+    "auth": {
+        "loginTitulo": "Login",
+        "registroTitulo": "Create Account",
+        "email": "E-mail",
+        "senha": "Password",
+        "confirmarSenha": "Confirm Password",
+        "entrar": "Sign In",
+        "registrar": "Register",
+        "ou": "or sign in with",
+        "naoTemConta": "Don't have an account? Register",
+        "jaTemConta": "Already have an account? Login",
+        "esqueceuSenha": "Forgot password?",
+        "senhasNaoCoincidem": "Passwords do not match!",
+        "sucessoLogin": "Login successful!",
+        "sucessoRegistro": "Account created successfully!"
+    },
+    "collections": {
+        "titulo": "Our Collections",
+        "verColecao": "View Collection",
+        "voltarColecoes": "Back to Collections",
+        "nenhumaColecao": "No collections found.",
+        "carregando": "Loading collections...",
+        "erroListar": "Error loading collections.",
+        "erroDetalhe": "Error loading collection details.",
+        "naoEncontrada": "Collection not found.",
+        "produtosTitulo": "Products in this Collection",
+        "semProdutos": "This collection has no products yet."
+    },
+    "profile": {
+        "titulo": "My Account",
+        "biblioteca": "My Library",
+        "seguranca": "Security",
+        "suporte": "Support",
+        "configuracoes": "Settings",
+        "fazerDownload": "Download",
+        "nenhumPedido": "You haven't bought anything yet."
     }
 }

@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaDownload, FaFileImage, FaFileArchive, FaFileAlt, FaCalendar, FaReceipt } from 'react-icons/fa';
+import { FaDownload, FaFileImage, FaCalendar, FaReceipt } from 'react-icons/fa';
 import { toast } from 'react-toastify';
-import './ProfileTabs.css'; // Vamos criar um CSS compartilhado
+import { useTranslation } from 'react-i18next';
+import { useCurrency } from '../../context/CurrencyContext.jsx';
+import './ProfileTabs.css';
 
 export default function LibraryTab() {
+    const { t } = useTranslation();
+    const { formatPrice } = useCurrency();
     const [pedidos, setPedidos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -15,19 +19,12 @@ export default function LibraryTab() {
         const fetchPedidos = async () => {
             try {
                 const token = localStorage.getItem('userToken');
-                console.log('🔍 [LibraryTab] Token:', token ? 'Existe' : 'Não encontrado');
-
                 const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/pedidos/meus-pedidos`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-
-                console.log('📦 [LibraryTab] Pedidos recebidos:', data);
-                console.log('📊 [LibraryTab] Quantidade de pedidos:', data.length);
-
                 setPedidos(data);
             } catch (err) {
-                console.error('❌ [LibraryTab] Erro ao buscar pedidos:', err);
-                console.error('❌ [LibraryTab] Erro completo:', err.response || err);
+                console.error('Erro ao buscar pedidos:', err);
                 setError('Não foi possível carregar seus pedidos.');
             } finally {
                 setLoading(false);
@@ -37,7 +34,6 @@ export default function LibraryTab() {
         fetchPedidos();
     }, []);
 
-    // Filtrar produtos dentro dos pedidos
     const filteredPedidos = pedidos.map(pedido => ({
         ...pedido,
         items: pedido.items.filter(item =>
@@ -50,8 +46,6 @@ export default function LibraryTab() {
             toast.info('Gerando link de download seguro...');
             const token = localStorage.getItem('userToken');
 
-            // Importante: Como productId foi POPULADO (agora é um objeto), precisamos pegar o ID dele (.userId ou ._id)
-            // Caso por algum motivo não tenha populado (item antigo ou deletado), usamos item.productId direto se for string
             const idDoProduto = typeof item.productId === 'object' ? item.productId?._id : item.productId;
 
             if (!idDoProduto) {
@@ -59,7 +53,6 @@ export default function LibraryTab() {
                 return;
             }
 
-            // Solicita link seguro ao backend
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/download/secure`,
                 { productId: idDoProduto },
                 { headers: { Authorization: `Bearer ${token}` } }
@@ -86,31 +79,20 @@ export default function LibraryTab() {
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
-        return date.toLocaleDateString('pt-BR', {
-            day: '2-digit',
-            month: 'long',
-            year: 'numeric'
-        });
+        return date.toLocaleDateString(); // Browser locale
     };
 
-    const formatPrice = (price) => {
-        return new Intl.NumberFormat('pt-BR', {
-            style: 'currency',
-            currency: 'BRL'
-        }).format(price);
-    };
-
-    if (loading) return <div className="loading-spinner">Carregando biblioteca...</div>;
+    if (loading) return <div className="loading-spinner">Carregando...</div>;
     if (error) return <div className="error-message">{error}</div>;
 
     return (
         <div className="library-tab">
-            <h2>Minha Biblioteca de Estampas</h2>
+            <h2>{t('profile.biblioteca')}</h2>
 
             <div className="library-search">
                 <input
                     type="text"
-                    placeholder="Buscar em meus downloads..."
+                    placeholder="Buscar..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="search-input"
@@ -119,7 +101,7 @@ export default function LibraryTab() {
 
             {filteredPedidos.length === 0 ? (
                 <p className="empty-state">
-                    {searchTerm ? 'Nenhum produto encontrado para sua busca.' : 'Você ainda não possui estampas. Explore a loja!'}
+                    {searchTerm ? 'Nenhum item encontrado.' : t('profile.nenhumPedido')}
                 </p>
             ) : (
                 <div className="pedidos-list">
@@ -128,7 +110,7 @@ export default function LibraryTab() {
                             <div className="pedido-header">
                                 <div className="pedido-info">
                                     <h3>
-                                        <FaReceipt /> Pedido #{pedido._id.slice(-8).toUpperCase()}
+                                        <FaReceipt /> #{pedido._id.slice(-8).toUpperCase()}
                                     </h3>
                                     <div className="pedido-meta">
                                         <span className="pedido-date">
@@ -146,12 +128,10 @@ export default function LibraryTab() {
 
                             <div className="pedido-items">
                                 {pedido.items.map((item, index) => {
-                                    // Pega a imagem do objeto populado
                                     const productImg = item.productId?.imageUrls?.[0] || null;
 
                                     return (
                                         <div key={index} className="library-card">
-                                            {/* Renderiza a imagem se existir */}
                                             <div className="card-thumb">
                                                 {productImg ? (
                                                     <img src={productImg} alt={item.productName} />
@@ -174,7 +154,7 @@ export default function LibraryTab() {
                                                         className="btn-download primary"
                                                         disabled={!item.downloadUrl}
                                                     >
-                                                        <FaDownload /> Baixar Arquivo
+                                                        <FaDownload /> {t('profile.fazerDownload')}
                                                     </button>
                                                 </div>
                                             </div>
