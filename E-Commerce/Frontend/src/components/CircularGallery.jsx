@@ -1,5 +1,6 @@
 import { Camera, Mesh, Plane, Program, Renderer, Texture, Transform } from 'ogl';
 import { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import './CircularGallery.css';
 
@@ -291,12 +292,15 @@ class App {
             borderRadius = 0,
             font = 'bold 30px Figtree',
             scrollSpeed = 2,
-            scrollEase = 0.05
+            scrollEase = 0.05,
+            onItemClick
         } = {}
     ) {
         document.documentElement.classList.remove('no-js');
         this.container = container;
         this.scrollSpeed = scrollSpeed;
+        this.onItemClick = onItemClick;
+        this.items = items;
         this.scroll = { ease: scrollEase, current: 0, target: 0, last: 0 };
         this.onCheckDebounce = debounce(this.onCheck, 200);
         this.createRenderer();
@@ -372,6 +376,8 @@ class App {
         this.isDown = true;
         this.scroll.position = this.scroll.current;
         this.start = e.touches ? e.touches[0].clientX : e.clientX;
+        this.clickStartX = this.start;
+        this.clickStartTime = Date.now();
     }
     onTouchMove(e) {
         if (!this.isDown) return;
@@ -379,9 +385,30 @@ class App {
         const distance = (this.start - x) * (this.scrollSpeed * 0.025);
         this.scroll.target = this.scroll.position + distance;
     }
-    onTouchUp() {
+    onTouchUp(e) {
         this.isDown = false;
+
+        const x = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+        const diff = Math.abs(x - this.clickStartX);
+        const timeDiff = Date.now() - this.clickStartTime;
+
+        if (diff < 10 && timeDiff < 300) {
+            this.handleItemClick();
+        }
+
         this.onCheck();
+    }
+    handleItemClick() {
+        if (!this.medias || !this.medias[0]) return;
+        const width = this.medias[0].width;
+        let activeIndex = Math.round(Math.abs(this.scroll.target) / width);
+
+        const totalLength = this.mediasImages.length;
+        const realIndex = activeIndex % (totalLength / 2);
+
+        if (this.items && this.items[realIndex] && this.onItemClick) {
+            this.onItemClick(this.items[realIndex]);
+        }
     }
     onWheel(e) {
         const delta = e.deltaY || e.wheelDelta || e.detail;
@@ -428,29 +455,42 @@ class App {
         this.boundOnTouchDown = this.onTouchDown.bind(this);
         this.boundOnTouchMove = this.onTouchMove.bind(this);
         this.boundOnTouchUp = this.onTouchUp.bind(this);
+
         window.addEventListener('resize', this.boundOnResize);
-        window.addEventListener('mousewheel', this.boundOnWheel);
-        window.addEventListener('wheel', this.boundOnWheel);
-        window.addEventListener('mousedown', this.boundOnTouchDown);
-        window.addEventListener('mousemove', this.boundOnTouchMove);
-        window.addEventListener('mouseup', this.boundOnTouchUp);
-        window.addEventListener('touchstart', this.boundOnTouchDown);
-        window.addEventListener('touchmove', this.boundOnTouchMove);
-        window.addEventListener('touchend', this.boundOnTouchUp);
+
+        // Attach interaction events to the canvas only
+        const target = this.gl.canvas;
+        target.addEventListener('mousewheel', this.boundOnWheel, { passive: false });
+        target.addEventListener('wheel', this.boundOnWheel, { passive: false });
+        target.addEventListener('mousedown', this.boundOnTouchDown);
+        target.addEventListener('mousemove', this.boundOnTouchMove);
+        target.addEventListener('mouseup', this.boundOnTouchUp);
+        target.addEventListener('touchstart', this.boundOnTouchDown, { passive: false });
+        target.addEventListener('touchmove', this.boundOnTouchMove, { passive: false });
+        target.addEventListener('touchend', this.boundOnTouchUp);
+
+        // Handle mouse leave or drag outside
+        target.addEventListener('mouseleave', this.boundOnTouchUp);
     }
     destroy() {
         window.cancelAnimationFrame(this.raf);
         window.removeEventListener('resize', this.boundOnResize);
-        window.removeEventListener('mousewheel', this.boundOnWheel);
-        window.removeEventListener('wheel', this.boundOnWheel);
-        window.removeEventListener('mousedown', this.boundOnTouchDown);
-        window.removeEventListener('mousemove', this.boundOnTouchMove);
-        window.removeEventListener('mouseup', this.boundOnTouchUp);
-        window.removeEventListener('touchstart', this.boundOnTouchDown);
-        window.removeEventListener('touchmove', this.boundOnTouchMove);
-        window.removeEventListener('touchend', this.boundOnTouchUp);
-        if (this.renderer && this.renderer.gl && this.renderer.gl.canvas.parentNode) {
-            this.renderer.gl.canvas.parentNode.removeChild(this.renderer.gl.canvas);
+
+        if (this.gl && this.gl.canvas) {
+            const target = this.gl.canvas;
+            target.removeEventListener('mousewheel', this.boundOnWheel);
+            target.removeEventListener('wheel', this.boundOnWheel);
+            target.removeEventListener('mousedown', this.boundOnTouchDown);
+            target.removeEventListener('mousemove', this.boundOnTouchMove);
+            target.removeEventListener('mouseup', this.boundOnTouchUp);
+            target.removeEventListener('touchstart', this.boundOnTouchDown);
+            target.removeEventListener('touchmove', this.boundOnTouchMove);
+            target.removeEventListener('touchend', this.boundOnTouchUp);
+            target.removeEventListener('mouseleave', this.boundOnTouchUp);
+
+            if (target.parentNode) {
+                target.parentNode.removeChild(target);
+            }
         }
     }
 }
@@ -465,11 +505,28 @@ export default function CircularGallery({
     scrollEase = 0.05
 }) {
     const containerRef = useRef(null);
+    const navigate = useNavigate();
+
     useEffect(() => {
-        const app = new App(containerRef.current, { items, bend, textColor, borderRadius, font, scrollSpeed, scrollEase });
+        const handleItemClick = (item) => {
+            if (item.link) {
+                navigate(item.link);
+            }
+        };
+
+        const app = new App(containerRef.current, {
+            items,
+            bend,
+            textColor,
+            borderRadius,
+            font,
+            scrollSpeed,
+            scrollEase,
+            onItemClick: handleItemClick
+        });
         return () => {
             app.destroy();
         };
-    }, [items, bend, textColor, borderRadius, font, scrollSpeed, scrollEase]);
+    }, [items, bend, textColor, borderRadius, font, scrollSpeed, scrollEase, navigate]);
     return <div className="circular-gallery" ref={containerRef} />;
 }

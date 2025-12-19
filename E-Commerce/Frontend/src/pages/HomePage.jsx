@@ -44,7 +44,7 @@ const HomePage = () => {
             productsData.forEach(product => {
               if (product.imageUrls && Array.isArray(product.imageUrls)) {
                 product.imageUrls.forEach(url => {
-                  if (url) allMockups.push(url);
+                  if (url) allMockups.push({ url, id: product._id, productName: product.productName });
                 });
               }
             });
@@ -67,8 +67,9 @@ const HomePage = () => {
   // Memoize items to prevent CircularGallery re-initialization on every render
   const galleryItems = React.useMemo(() => {
     return heroItems.map(item => ({
-      image: isBannerMode ? getImageUrl(item.imageUrl) : getImageUrl(item),
-      text: ''
+      image: isBannerMode ? getImageUrl(item.imageUrl) : getImageUrl(item.url),
+      text: isBannerMode ? (item.title || '') : '',
+      link: isBannerMode ? (item.link || '') : `/produto/${item.id}`
     }));
   }, [heroItems, isBannerMode]);
 

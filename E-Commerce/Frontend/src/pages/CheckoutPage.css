@@ -19,10 +19,16 @@
   gap: 3rem;
 }
 
-.coluna-form h2,
+.coluna-form h2 {
+  font-size: 1.5rem;
+  border-bottom: 2px solid var(--cor-acento);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+  color: white;
+}
+
 .coluna-resumo h2 {
   font-size: 1.5rem;
-  /* Ajuste para melhor hierarquia */
   border-bottom: 2px solid var(--cor-acento);
   padding-bottom: 0.5rem;
   margin-bottom: 1.5rem;
@@ -164,8 +170,36 @@
 }
 
 .payment-method-selector input[type="radio"] {
-  accent-color: var(--cor-acento);
-  transform: scale(1.2);
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ccc;
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.payment-method-selector input[type="radio"]:hover {
+  border-color: var(--cor-acento);
+}
+
+.payment-method-selector input[type="radio"]:checked {
+  background-color: var(--cor-acento);
+  border-color: var(--cor-acento);
+}
+
+.payment-method-selector input[type="radio"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
 }
 
 /* Pix Result Styles */
