@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import './ProfileTabs.css';
 
 export default function SecurityTab() {
@@ -26,7 +25,7 @@ export default function SecurityTab() {
         }
 
         try {
-            const token = localStorage.getItem('userToken');
+            // const token = localStorage.getItem('userToken');
             // Assumindo que existe uma rota para atualizar senha. Se não existir, precisaremos criar.
             // Por enquanto, vamos simular ou usar uma rota genérica de update user se houver.
             // Como não criamos rota específica de "change-password" no backend plan, vamos usar um placeholder
@@ -45,7 +44,7 @@ export default function SecurityTab() {
 
             setMessage('Funcionalidade de alteração de senha será implementada em breve (Backend pendente).');
 
-        } catch (err) {
+        } catch {
             setError('Erro ao atualizar senha.');
         }
     };

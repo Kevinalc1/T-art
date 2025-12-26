@@ -31,7 +31,7 @@ export default function ConfiguracoesPage() {
 
         setLoadingEmail(true);
         try {
-            const response = await axios.put(
+            await axios.put(
                 `${API_URL}/api/users/update-email`,
                 {
                     newEmail: emailData.newEmail,
@@ -78,7 +78,7 @@ export default function ConfiguracoesPage() {
 
         setLoadingPassword(true);
         try {
-            const response = await axios.put(
+            await axios.put(
                 `${API_URL}/api/users/update-password`,
                 {
                     currentPassword: passwordData.currentPassword,

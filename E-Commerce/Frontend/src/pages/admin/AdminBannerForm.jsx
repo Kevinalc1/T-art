@@ -22,13 +22,7 @@ export default function AdminBannerForm() {
     const navigate = useNavigate();
     const { token } = useAuth();
 
-    useEffect(() => {
-        if (id) {
-            fetchBanner();
-        }
-    }, [id]);
-
-    const fetchBanner = async () => {
+    const fetchBanner = React.useCallback(async () => {
         try {
             const response = await fetch(`${API_URL}/api/banners/admin`, {
                 headers: { 'Authorization': `Bearer ${token}` }
@@ -46,10 +40,16 @@ export default function AdminBannerForm() {
                     endDate: banner.endDate ? banner.endDate.split('T')[0] : ''
                 });
             }
-        } catch (error) {
+        } catch {
             toast.error('Erro ao carregar banner');
         }
-    };
+    }, [id, token]);
+
+    useEffect(() => {
+        if (id) {
+            fetchBanner();
+        }
+    }, [id, fetchBanner]);
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -72,27 +72,7 @@ export default function AdminBannerForm() {
         }
     };
 
-    const uploadImage = async () => {
-        if (!imageFile) return formData.imageUrl;
 
-        const formDataUpload = new FormData();
-        formDataUpload.append('image', imageFile);
-
-        try {
-            const response = await fetch(`${API_URL}/api/upload`, {
-                method: 'POST',
-                body: formDataUpload,
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            const data = await response.json();
-            return data.imageUrl; // Adjust based on your upload response structure
-        } catch (error) {
-            console.error('Upload error:', error);
-            throw new Error('Falha no upload da imagem');
-        }
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();

@@ -1,67 +1,205 @@
-/* Container principal do rodapé */
-.main-footer {
-  background-color: transparent;
-  /* Remove o fundo escuro */
-  color: #fff;
-  /* Texto branco */
-  padding: 2rem 5%;
-  margin-top: 5rem;
-  /* Aumenta um pouco a margem para dar mais respiro */
-  font-family: sans-serif;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  /* Linha sutil clara */
+/* Main Footer Container */
+.footer-dark {
+  background-color: #111827;
+  /* Dark Gray 900 */
+  color: #e5e7eb;
+  /* Gray 200 */
+  padding-top: 4rem;
+  padding-bottom: 2rem;
+  margin-top: auto;
+  /* Push to bottom if flex container */
+  font-family: 'Inter', sans-serif;
+  border-top: 1px solid #1f2937;
 }
 
-/* Conteúdo interno do rodapé */
-.footer-content {
-  max-width: var(--largura-maxima);
+.footer-container {
+  width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
-  display: flex;
-  /* Muda para flexbox para um layout mais simples */
-  justify-content: center;
-  /* Centraliza o conteúdo */
+  padding: 0 1.5rem;
+}
+
+/* Grid Layout */
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
   gap: 3rem;
-  /* Espaço entre as colunas */
-  text-align: center;
+  margin-bottom: 4rem;
 }
 
-/* Coluna individual no rodapé */
-.footer-column h4 {
-  color: #fff;
-  /* Título branco */
-  font-size: 1rem;
+@media (min-width: 640px) {
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+    /* 2 cols on tablet */
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer-grid {
+    grid-template-columns: repeat(4, 1fr);
+    /* 4 cols on desktop */
+    gap: 2rem;
+  }
+}
+
+/* Column Styles */
+.footer-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-brand {
+  color: #ffffff;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.1em;
+  font-weight: 700;
   margin-bottom: 1rem;
-  font-weight: 600;
 }
 
-.footer-column ul {
+.footer-desc {
+  color: #9ca3af;
+  /* Gray 400 */
+  font-size: 0.875rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.social-links {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.social-btn {
+  background-color: #1f2937;
+  color: #d1d5db;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  font-size: 1.1rem;
+  text-decoration: none;
+}
+
+.social-btn:hover {
+  background-color: #374151;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* Headings */
+.footer-heading {
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+}
+
+/* Links */
+.footer-links {
   list-style: none;
   padding: 0;
   margin: 0;
   display: flex;
-  /* Coloca os links lado a lado */
-  gap: 1.5rem;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-.footer-column a {
-  color: rgba(255, 255, 255, 0.8);
-  /* Branco levemente transparente */
+.footer-links a {
+  color: #9ca3af;
   text-decoration: none;
-  transition: color 0.3s ease;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  display: inline-block;
 }
 
-.footer-column a:hover {
-  color: #fff;
-  /* Branco puro no hover */
-  text-decoration: underline;
+.footer-links a:hover {
+  color: #ffffff;
+  transform: translateX(4px);
 }
 
-/* Barra inferior com o copyright */
+/* Payment & Security */
+.footer-text-sm {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin-bottom: 1rem;
+}
+
+.payment-badges {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.badge {
+  background-color: #ffffff;
+  color: #1f2937;
+  height: 32px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+.security-seal {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: #34d399;
+  /* Green 400 */
+}
+
+/* Footer Bottom */
 .footer-bottom {
-  max-width: var(--largura-maxima);
-  margin: 2.5rem auto 0;
+  border-top: 1px solid #1f2937;
+  padding-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
   text-align: center;
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.6);
-  /* Branco mais transparente */
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+@media (min-width: 768px) {
+  .footer-bottom {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+}
+
+.cnpj-text {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .cnpj-text {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.separator {
+  display: none;
+  margin: 0 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .separator {
+    display: inline;
+  }
 }

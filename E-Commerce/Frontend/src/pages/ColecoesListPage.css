@@ -1,70 +1,174 @@
 .colecoes-list-page {
-  padding: 2rem 5%;
+  padding: 4rem 5%;
   max-width: 1200px;
   margin: 0 auto;
-  font-family: sans-serif;
+  font-family: 'Inter', sans-serif;
+  min-height: 80vh;
 }
 
-.colecoes-list-page h1 {
+/* Header Sections */
+.colecoes-header {
   text-align: center;
-  margin-bottom: 3rem;
-  /* Mais espaço abaixo do título */
-  font-size: 2.5rem;
-  color: white;
+  margin-bottom: 4rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
+.colecoes-header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  color: var(--cor-texto-titulo);
+  margin-bottom: 1rem;
+}
+
+.colecoes-header p {
+  font-size: 1.1rem;
+  color: var(--cor-texto-corpo);
+  line-height: 1.6;
+}
+
+/* Grid Layout */
 .colecoes-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
-  /* Garante o espaçamento consistente */
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2.5rem;
 }
 
-.colecao-card {
-  background-color: #fff;
-  border: 1px solid #eee;
-  /* Borda mais suave */
-  border-radius: 8px;
+/* Card Styles */
+.collection-card {
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border-radius: 16px;
   overflow: hidden;
   text-decoration: none;
-  color: inherit;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  /* Sombra padrão */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  /* Shadow SM */
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #f3f4f6;
+  position: relative;
+  height: 100%;
 }
 
-.colecao-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  /* Sombra mais pronunciada no hover */
+.collection-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  /* Shadow XL */
 }
 
-.colecao-card img {
+/* Image Area */
+.card-image-wrapper {
+  position: relative;
   width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-bottom: 1px solid #eee;
-  /* Linha sutil separando a imagem do texto */
+  aspect-ratio: 4 / 3;
+  /* Standard aspect ratio */
+  overflow: hidden;
+  background-color: #f3f4f6;
 }
 
-.colecao-card-info {
-  padding: 1rem;
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.collection-card:hover .card-image {
+  transform: scale(1.08);
+  /* Zoom effect */
+}
+
+.card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.1) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.collection-card:hover .card-overlay {
+  opacity: 1;
+}
+
+/* Content Area */
+.card-content {
+  padding: 1.5rem;
   flex-grow: 1;
-  /* Faz o conteúdo textual ocupar o espaço restante */
   display: flex;
   flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background-color: #ffffff;
+  transition: background-color 0.3s ease;
 }
 
-.colecao-card-info h3 {
-  font-size: 1.3rem;
-  color: var(--cor-primaria);
+.collection-card:hover .card-content {
+  background-color: #f9fafb;
+  /* Slight gray on hover */
+}
+
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: var(--cor-texto-titulo);
   margin-bottom: 0.5rem;
+  font-weight: 700;
+  transition: color 0.3s ease;
 }
 
-.colecao-card-info p {
-  font-size: 0.95rem;
-  color: #666;
+.collection-card:hover .card-title {
+  color: #1d4ed8;
+  /* Blue 700 - optional accent color on hover */
+}
+
+.card-description {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-bottom: 1.5rem;
   line-height: 1.5;
+}
+
+/* CTA */
+.card-cta {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2563eb;
+  /* Blue 600 */
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.collection-card:hover .card-cta {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cta-icon {
+  transition: transform 0.3s ease;
+}
+
+.collection-card:hover .cta-icon {
+  transform: translateX(4px);
+}
+
+/* Misc */
+.loading-container,
+.error-container,
+.no-results {
+  text-align: center;
+  padding: 4rem;
+  color: #6b7280;
+  font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+  .colecoes-header h1 {
+    font-size: 2.25rem;
+  }
 }

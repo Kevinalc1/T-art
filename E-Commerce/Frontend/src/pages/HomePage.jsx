@@ -1,59 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import ProductCard from '../components/ProductCard.jsx';
-import CircularGallery from '../components/CircularGallery.jsx';
 import './HomePage.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-const getImageUrl = (url) => {
-  if (!url) return '';
-  if (url.startsWith('http') || url.startsWith('data:')) return url;
-  const cleanUrl = url.startsWith('/') ? url.slice(1) : url;
-  const cleanApiUrl = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
-  return `${cleanApiUrl}/${cleanUrl}`;
-};
-
 const HomePage = () => {
-  const { t } = useTranslation();
   const [products, setProducts] = useState([]);
-  const [heroItems, setHeroItems] = useState([]); // Can be banners or mockups
   const [loading, setLoading] = useState(true);
-  const [isBannerMode, setIsBannerMode] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 1. Fetch Banners
-        const bannersResponse = await fetch(`${API_URL}/api/banners?position=hero`);
-        const bannersData = await bannersResponse.json();
-
-        if (bannersData && bannersData.length > 0) {
-          setHeroItems(bannersData);
-          setIsBannerMode(true);
-        } else {
-          // 2. Fallback to Product Mockups
-          const productsResponse = await fetch(`${API_URL}/api/produtos`);
-          if (!productsResponse.ok) throw new Error('Falha ao buscar produtos');
-          const productsData = await productsResponse.json();
-          setProducts(productsData);
-
-          const allMockups = [];
-          if (Array.isArray(productsData)) {
-            productsData.forEach(product => {
-              if (product.imageUrls && Array.isArray(product.imageUrls)) {
-                product.imageUrls.forEach(url => {
-                  if (url) allMockups.push({ url, id: product._id, productName: product.productName });
-                });
-              }
-            });
-          }
-
-          const shuffled = [...allMockups].sort(() => Math.random() - 0.5);
-          setHeroItems(shuffled.slice(0, 10));
-          setIsBannerMode(false);
-        }
+        const productsResponse = await fetch(`${API_URL}/api/produtos`);
+        if (!productsResponse.ok) throw new Error('Falha ao buscar produtos');
+        const productsData = await productsResponse.json();
+        setProducts(productsData);
       } catch (error) {
         console.error("Erro ao carregar homepage:", error);
       } finally {
@@ -64,46 +26,54 @@ const HomePage = () => {
     fetchData();
   }, []);
 
-  // Memoize items to prevent CircularGallery re-initialization on every render
-  const galleryItems = React.useMemo(() => {
-    return heroItems.map(item => ({
-      image: isBannerMode ? getImageUrl(item.imageUrl) : getImageUrl(item.url),
-      text: isBannerMode ? (item.title || '') : '',
-      link: isBannerMode ? (item.link || '') : `/produto/${item.id}`
-    }));
-  }, [heroItems, isBannerMode]);
+
 
   return (
     <div className="home-container">
-      {/* Hero Section Replaced with CircularGallery */}
-      <section className="hero-carousel" style={{ height: '600px', position: 'relative', overflow: 'hidden' }}>
-        {/* Circular Gallery Foreground */}
-        <div style={{ position: 'relative', zIndex: 1, width: '100%', height: '100%' }}>
-          {heroItems.length > 0 && (
-            <CircularGallery
-              items={galleryItems}
-              bend={3}
-              textColor="#ffffff"
-              borderRadius={0.05}
-              font="bold 30px Playfair Display"
-            />
-          )}
+      {/* 1. Hero Section with Static Banner */}
+      <header className="hero-header">
+        {/* Static Hero Banner */}
+        <div className="hero-banner">
+          <img src="/hero-banner.png" alt="GENS Artes Sublimação" className="hero-banner-image" />
         </div>
-      </section>
 
-      {/* Products Grid */}
+        {/* Content (stays on top) */}
+        <div className="hero-content-container">
+          <span className="hero-subtitle">Nova Coleção 2024</span>
+          <h1 className="hero-title">Encontre sua arte. <br /> Vista sua essência.</h1>
+          <p className="hero-description">
+            Descubra estampas exclusivas criadas por artistas independentes.
+            Moda com propósito, qualidade e design único.
+          </p>
+          <div className="hero-actions">
+            <Link to="/loja" className="btn-primary-hero">
+              Explorar Coleção
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      {/* 2. Products Grid */}
       <section className="products-section">
-        <h2 style={{ color: '#ffffff' }}>{t('home.estampasDestaque')}</h2>
+        <div className="section-header">
+          <h2>Estampas em Destaque</h2>
+          <p>As peças mais desejadas da semana</p>
+        </div>
+
         <div className="products-grid">
           {loading ? (
-            <p className="loading-text">{t('home.carregando')}</p>
+            <p className="loading-text">Carregando estampas...</p>
           ) : products.length > 0 ? (
             products.slice(0, 8).map(product => (
               <ProductCard key={product._id} produto={product} />
             ))
           ) : (
-            <p className="loading-text">{t('home.nenhumaEstampa')}</p>
+            <p className="loading-text">Nenhuma estampa encontrada.</p>
           )}
+        </div>
+
+        <div className="view-all-container">
+          <Link to="/loja" className="btn-view-all">Ver Toda a Loja</Link>
         </div>
       </section>
     </div>

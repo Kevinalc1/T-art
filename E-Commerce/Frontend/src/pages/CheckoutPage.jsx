@@ -3,16 +3,19 @@ import { useCarrinho } from '../context/CarrinhoContext.jsx';
 import { useCurrency } from '../context/CurrencyContext.jsx';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
-import { useTranslation } from 'react-i18next';
 import './CheckoutPage.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+// Icons Components
+const LockIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lock-icon"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>;
+const CreditCardIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>;
+const PixIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>;
+
 export default function CheckoutPage() {
   const { state } = useCarrinho();
-  const { formatPrice, currency } = useCurrency(); // Added currency
+  const { formatPrice } = useCurrency();
   const { user } = useAuth();
-  const { t } = useTranslation(); // Added translations
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -24,13 +27,6 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('card');
   const [pixData, setPixData] = useState(null);
-
-  // Auto-select card if not BRL (Pix is Brazil only)
-  useEffect(() => {
-    if (currency !== 'BRL') {
-      setSelectedPaymentMethod('card');
-    }
-  }, [currency]);
 
   useEffect(() => {
     if (user) {
@@ -45,31 +41,26 @@ export default function CheckoutPage() {
   // Polling para checar status do Pix
   useEffect(() => {
     let interval;
-
     if (pixData && pixData.id) {
       interval = setInterval(async () => {
         try {
           const response = await fetch(`${API_URL}/api/pix/status/${pixData.id}`);
           if (response.ok) {
             const data = await response.json();
-            console.log('Status Pix:', data.status);
-
             if (data.status === 'approved') {
               clearInterval(interval);
-              console.log(t('checkout.sucessoPix'));
               navigate('/confirmacao');
             }
           }
         } catch (error) {
           console.error('Erro ao verificar status:', error);
         }
-      }, 5000); // Checa a cada 5 segundos
+      }, 5000);
     }
-
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [pixData, navigate, t]);
+  }, [pixData, navigate]);
 
   const calcularTotal = () => {
     return state.items.reduce((total, item) => {
@@ -78,6 +69,8 @@ export default function CheckoutPage() {
   };
 
   const valorTotal = calcularTotal();
+  // Simulação de desconto PIX, se necessário no futuro
+  // const valorTotalPix = valorTotal * 0.95; 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -86,17 +79,17 @@ export default function CheckoutPage() {
 
   const handlePayment = async () => {
     if (formData.email !== formData.confirmarEmail) {
-      alert(t('checkout.emailNaoCoincide'));
+      alert('Os e-mails não coincidem!');
       return;
     }
 
     if (selectedPaymentMethod === 'pix' && !formData.userDoc) {
-      alert(t('checkout.avisoPix'));
+      alert('Por favor, informe o CPF para pagamento via Pix.');
       return;
     }
 
     setLoading(true);
-    setPixData(null); // Limpa dados anteriores
+    setPixData(null);
 
     try {
       let endpoint = '';
@@ -110,7 +103,7 @@ export default function CheckoutPage() {
         bodyData.paymentMethod = 'card';
       } else {
         endpoint = `${API_URL}/api/pix/create-pix-payment`;
-        bodyData.userDoc = formData.userDoc.replace(/\D/g, ''); // Remove pontuação
+        bodyData.userDoc = formData.userDoc.replace(/\D/g, '');
       }
 
       const response = await fetch(endpoint, {
@@ -125,31 +118,29 @@ export default function CheckoutPage() {
 
       if (response.ok) {
         if (selectedPaymentMethod === 'card') {
-          // Redirect Stripe
           window.location.href = data.url;
         } else {
-          // Show Pix QR Code
           setPixData(data);
           setLoading(false);
         }
       } else {
-        alert(data.error || t('checkout.erroComunicacao'));
+        alert(data.error || 'Não foi possível iniciar o pagamento. Tente novamente.');
         setLoading(false);
       }
     } catch (error) {
       console.error('Erro ao processar pagamento:', error);
-      alert(t('checkout.erroComunicacao'));
+      alert('Ocorreu um erro de comunicação com o servidor.');
       setLoading(false);
     }
   };
 
   if (state.items.length === 0) {
     return (
-      <div className="checkout-page carrinho-vazio">
-        <h1>{t('checkout.carrinhoVazio')}</h1>
-        <p>{t('checkout.adicioneProdutos')}</p>
+      <div className="checkout-page carrinho-vazio-container">
+        <h1>Seu carrinho está vazio</h1>
+        <p>Adicione produtos à sua cesta antes de finalizar a compra.</p>
         <Link to="/loja" className="btn-loja">
-          {t('checkout.voltarLoja')}
+          Voltar para a Loja
         </Link>
       </div>
     );
@@ -157,101 +148,140 @@ export default function CheckoutPage() {
 
   return (
     <div className="checkout-page">
-      <h1>{t('checkout.titulo')}</h1>
+      <h1>Finalizar Compra</h1>
 
-      {/* Exibição do PIX gerado */}
-      {pixData && (
-        <div className="pix-result-container">
+      {pixData ? (
+        <div className="card-pix-result">
           <h2>Pagamento Pix Gerado!</h2>
           <p>Utilize o QR Code abaixo para pagar:</p>
-          <img
-            src={`data:image/png;base64,${pixData.qr_code}`}
-            alt="QR Code Pix"
-            style={{ maxWidth: '250px', margin: '20px auto', display: 'block' }}
-          />
-          <p>Ou copie e cole o código abaixo:</p>
-          <textarea
-            readOnly
-            value={pixData.qr_code_copy_paste}
-            style={{ width: '100%', height: '100px', padding: '10px', fontSize: '0.9rem' }}
-          />
-          <p style={{ marginTop: '10px', fontSize: '0.9rem', color: '#666' }}>
-            Após o pagamento, você receberá a confirmação por e-mail.
-          </p>
-        </div>
-      )}
-
-      {!pixData && (
-        <div className="checkout-container">
-          {/* Coluna do Formulário */}
-          <div className="coluna-form">
-            <h2>{t('checkout.seusDados')}</h2>
-            <input type="text" name="nome" placeholder={t('checkout.nomePlaceholder')} value={formData.nome} onChange={handleChange} required />
-            <input type="email" name="email" placeholder={t('checkout.emailPlaceholder')} value={formData.email} onChange={handleChange} required />
-            <input type="email" name="confirmarEmail" placeholder={t('checkout.confirmaEmailPlaceholder')} value={formData.confirmarEmail} onChange={handleChange} required />
-
-            {/* Input Extra para CPF quando Pix é selecionado e Moeda é BRL */}
-            {selectedPaymentMethod === 'pix' && currency === 'BRL' && (
-              <input
-                type="text"
-                name="userDoc"
-                placeholder={t('checkout.cpfPlaceholder')}
-                value={formData.userDoc}
-                onChange={handleChange}
-                required
-              />
-            )}
+          <div className="qr-wrapper">
+            <img
+              src={`data:image/png;base64,${pixData.qr_code}`}
+              alt="QR Code Pix"
+            />
           </div>
 
-          {/* Coluna do Resumo */}
-          <div className="coluna-resumo">
-            <h2>{t('checkout.resumoPedido')}</h2>
-            {state.items.map((item) => (
-              <div key={item._id} className="resumo-item">
-                <span>{`${item.productName} (x${item.quantidade})`}</span>
-                <span>{formatPrice(item.price * item.quantidade)}</span>
+          <div className="copy-paste-area">
+            <p>Ou copie e cole o código abaixo:</p>
+            <textarea
+              readOnly
+              value={pixData.qr_code_copy_paste}
+              onClick={(e) => e.target.select()}
+            />
+          </div>
+          <p className="pix-instruction">
+            Após o pagamento, você será redirecionado automaticamente.
+          </p>
+        </div>
+      ) : (
+        <div className="checkout-layout">
+          {/* Esquerda: Formulário de Dados */}
+          <div className="checkout-form-section">
+            <div className="card-data">
+              <h2>Seus Dados</h2>
+              <div className="form-group">
+                <label>Nome Completo</label>
+                <input type="text" name="nome" placeholder="Ex: Maria Silva" value={formData.nome} onChange={handleChange} required />
               </div>
-            ))}
-            <div className="total-final">
-              {t('checkout.total')}: <strong>{formatPrice(valorTotal)}</strong>
-            </div>
+              <div className="form-group">
+                <label>E-mail</label>
+                <input type="email" name="email" placeholder="seu@email.com" value={formData.email} onChange={handleChange} required />
+              </div>
+              <div className="form-group">
+                <label>Confirme seu E-mail</label>
+                <input type="email" name="confirmarEmail" placeholder="seu@email.com" value={formData.confirmarEmail} onChange={handleChange} required />
+              </div>
 
-            {/* Warning for International Users */}
-            {currency !== 'BRL' && (
-              <p style={{ fontSize: '0.8rem', color: '#666', marginTop: '0.5rem', fontStyle: 'italic' }}>
-                * Charged in BRL. Your bank will handle conversion.
-              </p>
-            )}
-
-            <h3>{t('checkout.pagamento')}</h3>
-            <div className="payment-method-selector">
-              <label>
-                <input
-                  type="radio"
-                  value="card"
-                  checked={selectedPaymentMethod === 'card'}
-                  onChange={() => setSelectedPaymentMethod('card')}
-                />
-                {t('checkout.cartaoCredito')}
-              </label>
-
-              {/* Show Pix Option ONLY if Currency is BRL */}
-              {currency === 'BRL' && (
-                <label>
+              {selectedPaymentMethod === 'pix' && (
+                <div className="form-group slide-in">
+                  <label>CPF (Necessário para Pix)</label>
                   <input
-                    type="radio"
-                    value="pix"
-                    checked={selectedPaymentMethod === 'pix'}
-                    onChange={() => setSelectedPaymentMethod('pix')}
+                    type="text"
+                    name="userDoc"
+                    placeholder="000.000.000-00"
+                    value={formData.userDoc}
+                    onChange={handleChange}
+                    required
                   />
-                  {t('checkout.pix')}
-                </label>
+                </div>
               )}
             </div>
+          </div>
 
-            <button type="button" onClick={handlePayment} disabled={loading} className="btn-finalizar-pedido">
-              {loading ? t('checkout.processando') : (selectedPaymentMethod === 'card' ? t('checkout.irParaPagamento') : t('checkout.gerarPix'))}
-            </button>
+          {/* Direita: Resumo e Pagamento */}
+          <div className="checkout-summary-section">
+            <div className="card-summary">
+              <h2>Resumo do Pedido</h2>
+              <div className="summary-items">
+                {state.items.map((item) => (
+                  <div key={item._id} className="summary-item-row">
+                    <div className="item-thumb">
+                      <img src={item.imageUrls?.[0] || 'https://dummyimage.com/50x50/ccc/000.png'} alt="prod" />
+                      <span className="qty-badge">{item.quantidade}</span>
+                    </div>
+                    <div className="item-info">
+                      <span className="item-name">{item.productName}</span>
+                      <span className="item-price">{formatPrice(item.price)}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="summary-totals">
+                <div className="total-row">
+                  <span>Total:</span>
+                  <strong>{formatPrice(valorTotal)}</strong>
+                </div>
+              </div>
+
+              <div className="payment-section">
+                <h3>Forma de Pagamento</h3>
+                <div className="payment-options-grid">
+                  <label
+                    className={`payment-radio-card ${selectedPaymentMethod === 'card' ? 'selected card-blue' : ''}`}
+                  >
+                    <input
+                      type="radio"
+                      name="payment"
+                      value="card"
+                      checked={selectedPaymentMethod === 'card'}
+                      onChange={() => setSelectedPaymentMethod('card')}
+                    />
+                    <div className="radio-content">
+                      <CreditCardIcon />
+                      <span>Cartão de Crédito</span>
+                    </div>
+                  </label>
+
+                  <label
+                    className={`payment-radio-card ${selectedPaymentMethod === 'pix' ? 'selected card-green' : ''}`}
+                  >
+                    <input
+                      type="radio"
+                      name="payment"
+                      value="pix"
+                      checked={selectedPaymentMethod === 'pix'}
+                      onChange={() => setSelectedPaymentMethod('pix')}
+                    />
+                    <div className="radio-content">
+                      <PixIcon />
+                      <div className="pix-text">
+                        <span>Pix (Instantâneo)</span>
+                      </div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <button type="button" onClick={handlePayment} disabled={loading} className="btn-pay-now">
+                {loading ? 'Processando...' : `Pagar ${formatPrice(valorTotal)}`}
+              </button>
+
+              <div className="security-badge">
+                <LockIcon />
+                <span>Ambiente 100% seguro e criptografado</span>
+              </div>
+            </div>
           </div>
         </div>
       )}

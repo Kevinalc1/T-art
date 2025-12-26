@@ -1,193 +1,36 @@
-.main-header {
-  background-color: var(--cor-card) !important;
-  border-bottom: 1px solid var(--cor-borda);
-  padding: 0 !important;
-  margin: 0 !important;
-  position: sticky;
+/* Wrapper to ensure the header sits on top but doesn't block clicks outside the pill */
+.main-header-wrapper {
+  position: fixed;
+  /* Floating behavior */
   top: 0;
-  z-index: 100;
-  transition: all 0.3s ease;
-  line-height: 0 !important;
-  overflow: visible !important;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  pointer-events: none;
+  /* Let clicks pass through the wrapper */
+  padding-top: 1rem;
 }
 
-/* Header quando o usuário rola a página */
-.main-header.scrolled {
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+/* Re-enable pointer events for the PillNav itself and its children */
+.main-header-wrapper>* {
+  pointer-events: auto;
 }
 
-/* Container interno para alinhar o conteúdo no centro */
-.header-container {
-  max-width: var(--largura-maxima);
-  margin: 0 auto !important;
-  padding: 0 1.5rem !important;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 2rem;
-  height: 100px;
-  line-height: normal;
-}
-
-.main-header.scrolled .header-container {
-  padding: 0.5rem 1.5rem !important;
-  height: 60px !important;
-  transition: height 0.3s ease;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  margin: 0 !important;
-  padding: 0 !important;
-  line-height: 0;
-}
-
-.logo-image {
-  height: 200px !important;
-  width: auto;
-  display: block !important;
-  margin: 30px 0 0 0 !important;
-  padding: 0 !important;
-  vertical-align: bottom;
-  transition: all 0.3s ease;
-}
-
-.main-header.scrolled .logo-image {
-  height: 150px !important;
-  margin-top: 20px !important;
-}
-
-.icons-area {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  flex-shrink: 0;
-}
-
+/* Icon Link Styles (used inside rightContent) */
 .icon-link {
-  color: var(--cor-texto-corpo);
-  font-size: 1.4rem;
-  display: flex;
-  align-items: center;
-  transition: all 0.2s ease;
-}
-
-.main-header.scrolled .icon-link {
-  font-size: 1.2rem;
-}
-
-.icon-link:hover {
-  color: var(--cor-primaria);
-}
-
-nav {
-  display: flex;
-  gap: 2rem;
-  align-items: center;
-}
-
-nav a {
-  font-size: 1.4rem;
-  color: var(--cor-texto-corpo);
-  font-weight: 500;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-
-.main-header.scrolled nav a {
-  font-size: 0.95rem;
-}
-
-nav a:hover {
-  color: var(--cor-primaria);
-}
-
-/* Estilo para o link da página ativa */
-nav a.active {
-  color: var(--cor-acento);
-}
-
-.mobile-menu-toggle {
-  display: none;
-}
-
-/* Responsividade Básica */
-@media (max-width: 768px) {
-  .header-container {
-    padding: 0 1rem !important;
-    gap: 1rem;
-    height: 60px;
-  }
-
-  /* Botão Hamburger */
-  .mobile-menu-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: none;
-    border: none;
-    font-size: 1.8rem;
-    color: var(--cor-texto-titulo);
-    cursor: pointer;
-    z-index: 101;
-    /* Acima de tudo */
-  }
-
-  /* Menu de Navegação - Mobile (Gaveta/Dropdown) */
-  .nav-menu {
-    position: absolute;
-    top: 60px;
-    /* Altura do header mobile */
-    left: 0;
-    width: 100%;
-    background-color: var(--cor-card);
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem 0;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    transform: translateY(-150%);
-    /* Escondido acima */
-    opacity: 0;
-    transition: all 0.3s ease-in-out;
-    z-index: 99;
-    display: flex !important;
-  }
-
-  .nav-menu.active {
-    transform: translateY(0);
-    opacity: 1;
-  }
-
-  .nav-menu a {
-    font-size: 1.2rem;
-    padding: 1rem 0;
-    width: 100%;
-    text-align: center;
-    border-bottom: 1px solid var(--cor-borda);
-  }
-
-  .nav-menu a:last-child {
-    border-bottom: none;
-  }
-
-  /* Esconde ícones menos importantes no mobile se necessário, ou ajusta */
-  .icons-area {
-    gap: 0.8rem;
-  }
-
-  .icon-link {
-    font-size: 1.2rem;
-  }
-}
-
-.logout-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: inherit;
+  font-size: 1.1rem;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.icon-link:hover {
+  background-color: rgba(0, 0, 0, 0.05);
 }

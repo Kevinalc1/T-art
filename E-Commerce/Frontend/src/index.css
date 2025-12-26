@@ -3,23 +3,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
 /* 2. Variáveis de Design (O "DNA" do seu site) */
+/* 2. Variáveis de Design (O "DNA" do seu site) */
 :root {
-  /* Paleta Monocromática */
-  --cor-fundo: #f9fafb;
-  /* Cinza muito claro, quase branco */
-  --cor-card: #ffffff;
+  /* Paleta Monocromática (Minimalista Premium) */
+  --cor-fundo: #F9FAFB;
+  /* Cinza muito claro */
+  --cor-card: #FFFFFF;
   /* Branco puro */
 
   --cor-texto-titulo: #111827;
-  /* Preto suave */
+  /* Preto suave ("Cool Gray 900") */
   --cor-texto-corpo: #4b5563;
-  /* Cinza médio para leitura */
+  /* Cinza médio */
   --cor-texto-leve: #9ca3af;
-  /* Cinza claro para detalhes */
+  /* Cinza claro */
 
-  --cor-primaria: #133853;
-  /* Azul elegante (Cor primária) */
-  --cor-primaria-hover: #0d2838;
+  --cor-primaria: #111827;
+  /* Preto Sólido (Confiança/Premium) */
+  --cor-primaria-hover: #000000;
+  /* Preto absoluto no hover */
 
   /* Cor de Destaque (Dourado) para botões principais e links */
   --cor-acento: #987E4B;
@@ -31,10 +33,14 @@
   --cor-sucesso: #10b981;
 
   /* Espaçamento e Formas */
-  --raio-borda: 8px;
-  /* Cantos arredondados modernos */
-  --sombra-suave: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  --sombra-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+  --raio-borda: 16px;
+  /* Aumentado para 16px (Heurística: Suavização) */
+
+  /* Sombras mais sofisticadas */
+  --sombra-suave: 0 4px 6px -1px rgba(0, 0, 0, 0.05),
+    0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --sombra-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
   /* Layout */
   --largura-maxima: 1200px;
@@ -49,12 +55,19 @@
 
 body {
   font-family: 'Inter', sans-serif;
-  /* A mágica acontece aqui */
   background-color: var(--cor-fundo);
   color: var(--cor-texto-corpo);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  /* Fontes mais nítidas */
+
+  /* Background Image (Hero Banner) - Sutil */
+  background-image:
+    linear-gradient(rgba(249, 250, 251, 0.95), rgba(249, 250, 251, 0.95)),
+    url('/hero-banner.png');
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 /* 4. Estilos Globais para Títulos */
@@ -103,11 +116,11 @@ button,
   /* Usa a cor de destaque azul */
   color: white;
   border: none;
-  padding: 0.85rem 1.5rem;
-  /* Leve ajuste no padding */
+  padding: 1rem 2rem;
+  /* Aumentado para melhor toque (Heurística: Otimização de Toque) */
   border-radius: var(--raio-borda);
-  font-size: 0.95rem;
-  font-weight: 500;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
   display: inline-flex;

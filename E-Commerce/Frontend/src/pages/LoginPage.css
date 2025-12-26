@@ -5,10 +5,8 @@
   align-items: center;
   padding: 4rem 2rem;
   min-height: 80vh;
-  /* Garante que o container ocupe boa parte da tela */
-  background-color: #f9f9f9;
-  /* Fundo suave para a página */
-  font-family: sans-serif;
+  background-color: var(--cor-fundo);
+  font-family: 'Inter', sans-serif;
 }
 
 /* O "card" do formulário */
@@ -16,10 +14,10 @@
   width: 100%;
   max-width: 420px;
   padding: 2.5rem;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  border: 1px solid #eee;
+  background-color: var(--cor-card);
+  border-radius: var(--raio-borda);
+  box-shadow: var(--sombra-suave);
+  border: 1px solid var(--cor-borda);
 }
 
 .login-form h1 {
@@ -37,15 +35,15 @@
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  font-weight: bold;
-  color: #555;
+  font-weight: 600;
+  color: var(--cor-texto-corpo);
 }
 
 .form-group input {
   width: 100%;
   padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-borda);
   font-size: 1rem;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -61,11 +59,11 @@
   width: 100%;
   padding: 1rem;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--raio-borda);
   background-color: var(--cor-acento);
   color: white;
   font-size: 1.1rem;
-  font-weight: bold;
+  font-weight: 700;
   text-transform: uppercase;
   cursor: pointer;
   margin-top: 1rem;
@@ -87,14 +85,14 @@
 }
 
 .login-links a {
-  color: #666;
+  color: var(--cor-texto-corpo);
   text-decoration: none;
   font-size: 0.9rem;
   transition: color 0.3s ease;
 }
 
 .login-links a:hover {
-  color: #000;
+  color: var(--cor-primaria);
 }
 
 /* Social Login Styles */
@@ -103,7 +101,7 @@
   align-items: center;
   text-align: center;
   margin: 1.5rem 0;
-  color: #888;
+  color: var(--cor-texto-leve);
   font-size: 0.9rem;
 }
 
@@ -111,7 +109,7 @@
 .social-login-divider::after {
   content: '';
   flex: 1;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--cor-borda);
 }
 
 .social-login-divider span {
@@ -127,12 +125,12 @@
 .btn-social {
   padding: 0.75rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 12px;
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
   color: white;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .btn-google {

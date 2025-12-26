@@ -1,7 +1,9 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 
 const WishlistContext = createContext();
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const useWishlist = () => {
     const context = useContext(WishlistContext);
@@ -16,38 +18,38 @@ export const WishlistProvider = ({ children }) => {
     const [wishlistItems, setWishlistItems] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    const API_URL = import.meta.env.VITE_API_URL;
+
 
     // Carregar wishlist do backend quando usuário estiver logado
     useEffect(() => {
+        const fetchWishlist = async () => {
+            if (!token) return;
+
+            try {
+                setLoading(true);
+                const response = await fetch(`${API_URL}/api/wishlist`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setWishlistItems(data);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar wishlist:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
         if (user && token) {
             fetchWishlist();
         } else {
             setWishlistItems([]);
         }
     }, [user, token]);
-
-    const fetchWishlist = async () => {
-        if (!token) return;
-
-        try {
-            setLoading(true);
-            const response = await fetch(`${API_URL}/api/wishlist`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setWishlistItems(data);
-            }
-        } catch (error) {
-            console.error('Erro ao carregar wishlist:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const addToWishlist = async (productId) => {
         if (!token) {

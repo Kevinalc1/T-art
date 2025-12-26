@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../context/AuthContext';
@@ -25,7 +25,7 @@ const AdminAuditDashboard = () => {
     });
 
     // Buscar logs
-    const fetchLogs = async () => {
+    const fetchLogs = React.useCallback(async () => {
         try {
             setLoading(true);
             const params = new URLSearchParams({
@@ -46,10 +46,10 @@ const AdminAuditDashboard = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [pagination.page, pagination.limit, filters, token]);
 
     // Buscar estatísticas
-    const fetchStats = async () => {
+    const fetchStats = React.useCallback(async () => {
         try {
             const params = new URLSearchParams({
                 startDate: filters.startDate,
@@ -64,7 +64,7 @@ const AdminAuditDashboard = () => {
         } catch (error) {
             console.error('Erro ao buscar estatísticas:', error);
         }
-    };
+    }, [filters.startDate, filters.endDate, token]);
 
     useEffect(() => {
         if (!token) {
@@ -73,7 +73,7 @@ const AdminAuditDashboard = () => {
         }
         fetchLogs();
         fetchStats();
-    }, [pagination.page, filters]);
+    }, [fetchLogs, fetchStats, token]);
 
     // Exportar para CSV
     const handleExport = async () => {

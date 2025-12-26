@@ -22,7 +22,7 @@ export default function Header() {
   const rightContent = (
     <>
       <CurrencySwitcher />
-      <Link to={user ? "/perfil" : "/login"} className="icon-link">
+      <Link to={user ? "/perfil" : "/login"} className="icon-link" aria-label="Minha Conta">
         <FaUser />
       </Link>
       <CartIcon />
@@ -35,19 +35,17 @@ export default function Header() {
   );
 
   return (
-    /* We remove main-header class to let PillNav handle the floating/sticky behavior per its CSS */
-    /* Or we keep a wrapper if we want to constrain it */
-    <header className="main-header-wrapper" style={{ pointerEvents: 'none', position: 'relative', zIndex: 100 }}>
+    <header className="main-header-wrapper">
       <PillNav
         logo="/logo.svg"
         logoAlt="Gens Logo"
         items={navItems}
         rightContent={rightContent}
-        mobileMenuContent={rightContent} /* Optional: pass icons to mobile menu if supported */
+        mobileMenuContent={rightContent}
         baseColor="#ffffff"
-        pillColor="#133853" /* Primary Blue */
-        pillTextColor="#133853"
-        hoveredPillTextColor="#ffffff"
+        pillColor="#e5e7eb" /* Light Gray for hover pill background */
+        pillTextColor="#111827" /* Dark Text */
+        hoveredPillTextColor="#111827"
       />
     </header>
   );

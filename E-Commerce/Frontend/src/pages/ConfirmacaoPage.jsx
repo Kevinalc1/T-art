@@ -9,7 +9,7 @@ const ConfirmacaoPage = () => {
   // Limpa o carrinho assim que o usuário chega na página de confirmação
   useEffect(() => {
     limparCarrinho();
-  }, []);
+  }, [limparCarrinho]);
 
   return (
     <div className="confirmacao-wrapper">

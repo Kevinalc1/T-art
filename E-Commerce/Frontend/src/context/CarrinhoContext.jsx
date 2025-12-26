@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useReducer, useContext, useEffect } from 'react';
 
 // Estado inicial do carrinho

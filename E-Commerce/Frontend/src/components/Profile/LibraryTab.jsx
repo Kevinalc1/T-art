@@ -41,7 +41,7 @@ export default function LibraryTab() {
         )
     })).filter(pedido => pedido.items.length > 0);
 
-    const handleDownload = async (item, pedidoId) => {
+    const handleDownload = async (item) => {
         try {
             toast.info('Gerando link de download seguro...');
             const token = localStorage.getItem('userToken');
@@ -150,7 +150,7 @@ export default function LibraryTab() {
                                                 </div>
                                                 <div className="download-actions">
                                                     <button
-                                                        onClick={() => handleDownload(item, pedido._id)}
+                                                        onClick={() => handleDownload(item)}
                                                         className="btn-download primary"
                                                         disabled={!item.downloadUrl}
                                                     >

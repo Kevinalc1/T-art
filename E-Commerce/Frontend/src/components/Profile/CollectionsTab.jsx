@@ -38,7 +38,7 @@ export default function CollectionsTab() {
             setNewCollectionName('');
             setIsCreating(false);
             fetchCollections();
-        } catch (err) {
+        } catch {
             alert('Erro ao criar coleção');
         }
     };
@@ -51,7 +51,7 @@ export default function CollectionsTab() {
                 headers: { Authorization: `Bearer ${token}` }
             });
             fetchCollections();
-        } catch (err) {
+        } catch {
             alert('Erro ao excluir coleção');
         }
     };

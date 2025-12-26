@@ -12,11 +12,7 @@ export default function AdminBannerDashboard() {
     const [loading, setLoading] = useState(true);
     const { token } = useAuth();
 
-    useEffect(() => {
-        fetchBanners();
-    }, []);
-
-    const fetchBanners = async () => {
+    const fetchBanners = React.useCallback(async () => {
         try {
             const response = await fetch(`${API_URL}/api/banners/admin`, {
                 headers: {
@@ -26,12 +22,16 @@ export default function AdminBannerDashboard() {
             if (!response.ok) throw new Error('Erro ao carregar banners');
             const data = await response.json();
             setBanners(data);
-        } catch (error) {
-            toast.error(error.message);
+        } catch {
+            toast.error('Erro ao carregar banners');
         } finally {
             setLoading(false);
         }
-    };
+    }, [token]);
+
+    useEffect(() => {
+        fetchBanners();
+    }, [fetchBanners]);
 
     const handleDelete = async (id) => {
         if (!window.confirm('Tem certeza que deseja excluir este banner?')) return;
@@ -50,7 +50,7 @@ export default function AdminBannerDashboard() {
             } else {
                 toast.error('Erro ao excluir banner');
             }
-        } catch (error) {
+        } catch {
             toast.error('Erro de conexão');
         }
     };
@@ -71,7 +71,7 @@ export default function AdminBannerDashboard() {
                 setBanners(banners.map(b => b._id === updatedBanner._id ? updatedBanner : b));
                 toast.success(`Banner ${updatedBanner.active ? 'ativado' : 'desativado'}`);
             }
-        } catch (error) {
+        } catch {
             toast.error('Erro ao atualizar status');
         }
     };

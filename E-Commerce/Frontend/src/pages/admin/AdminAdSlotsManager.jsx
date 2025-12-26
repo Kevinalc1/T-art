@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../context/AuthContext';
@@ -12,7 +12,7 @@ const AdminAdSlotsManager = () => {
     const [loading, setLoading] = useState(true);
 
     // Buscar todos os ad slots
-    const fetchSlots = async () => {
+    const fetchSlots = React.useCallback(async () => {
         try {
             setLoading(true);
             const response = await axios.get(`${API_URL}/api/ad-slots`, {
@@ -25,7 +25,7 @@ const AdminAdSlotsManager = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [token]);
 
     useEffect(() => {
         if (!token) {
@@ -33,7 +33,7 @@ const AdminAdSlotsManager = () => {
             return;
         }
         fetchSlots();
-    }, [token]);
+    }, [token, fetchSlots]);
 
     // Popular slots iniciais
     const handleSeedSlots = async () => {
