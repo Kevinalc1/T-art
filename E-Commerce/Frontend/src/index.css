@@ -61,6 +61,15 @@ body {
   -webkit-font-smoothing: antialiased;
 
   /* Fontes mais nítidas */
+
+  /* Background Image (Hero Banner) - Sutil */
+  background-image:
+    linear-gradient(rgba(249, 250, 251, 0.95), rgba(249, 250, 251, 0.95)),
+    url('/hero-banner.png');
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 /* 4. Estilos Globais para Títulos */
