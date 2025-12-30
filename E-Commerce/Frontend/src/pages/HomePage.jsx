@@ -39,7 +39,7 @@ const HomePage = () => {
 
         {/* Content (stays on top) */}
         <div className="hero-content-container">
-          <span className="hero-subtitle">Nova Coleção 2024</span>
+          <span className="hero-subtitle">Nova Coleção 2026</span>
           <h1 className="hero-title">Encontre sua arte. <br /> Vista sua essência.</h1>
           <p className="hero-description">
             Descubra estampas exclusivas criadas por artistas independentes.
