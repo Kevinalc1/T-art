@@ -66,62 +66,83 @@ export default function ProdutoDetalhePage() {
     navigate('/checkout');
   };
 
-  if (!product) return <h1>Carregando...</h1>;
-  if (product.notFound) return <h1>Produto não encontrado</h1>;
+  if (!product) return <div className="loading-container"><h1>Carregando...</h1></div>;
+  if (product.notFound) return <div className="error-container"><h1>Produto não encontrado</h1></div>;
 
   return (
-    <div className="detalhe-produto-container">
-      <div className="coluna-imagem">
-        {/* Imagem Principal */}
-        {selectedImage && (
-          <img src={selectedImage} alt={product.productName} className="imagem-principal-galeria" />
-        )}
+    <div className="produto-detalhe-page">
+      <button className="btn-voltar" onClick={() => navigate(-1)}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        Voltar
+      </button>
 
-        {/* Miniaturas */}
-        <div className="miniaturas-galeria">
-          {product.imageUrls && product.imageUrls.map((url, index) => (
-            <img
-              key={index}
-              src={url}
-              alt={`${product.productName} - miniatura ${index + 1}`}
-              className={`miniatura-item ${url === selectedImage ? 'ativa' : ''}`}
-              onClick={() => setSelectedImage(url)}
-              onMouseOver={() => setSelectedImage(url)}
-            />
-          ))}
-        </div>
-      </div>
-
-      <div className="coluna-info">
-        <h1>{product.productName}</h1>
-
-        <p className="preco-detalhe">
-          {formatPrice(product.price)}
-        </p>
-        <h3>Descrição</h3>
-        <p>{product.description || 'Sem descrição disponível.'}</p>
-        <h3>Arquivos Inclusos</h3>
-        <ul>
-          <li>PNG (Fundo Transparente)</li>
-          <li>CDR (Vetor CorelDraw)</li>
-          <li>JPG (Alta Resolução)</li>
-        </ul>
-
-        {/* Combo Details */}
-        {product.isCombo && product.comboProducts && product.comboProducts.length > 0 && (
-          <div className="combo-detalhes-incluidos">
-            <h3>Artes Incluídas neste Pacote:</h3>
-            <ul>
-              {product.comboProducts.map(subProd => (
-                <li key={subProd._id}>{subProd.productName}</li>
-              ))}
-            </ul>
+      <div className="produto-detalhe-container">
+        {/* Coluna da Esquerda: Imagens */}
+        <div className="coluna-imagem">
+          <div className="imagem-principal-wrapper">
+            {selectedImage && (
+              <img src={selectedImage} alt={product.productName} className="imagem-principal" />
+            )}
           </div>
-        )}
 
-        <div className="acoes-detalhe">
-          <button className="btn-comprar" onClick={handleAdicionar}>Adicionar ao Carrinho</button>
-          <button className="btn-comprar-agora" onClick={handleComprarAgora}>Comprar Agora</button>
+          <div className="miniaturas-galeria">
+            {product.imageUrls && product.imageUrls.map((url, index) => (
+              <img
+                key={index}
+                src={url}
+                alt={`${product.productName} - miniatura ${index + 1}`}
+                className={`miniatura-item ${url === selectedImage ? 'ativa' : ''}`}
+                onClick={() => setSelectedImage(url)}
+                onMouseOver={() => setSelectedImage(url)}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Coluna da Direita: Informações */}
+        <div className="coluna-info">
+          <span className="produto-categoria-tag">Arte Exclusiva</span>
+          <h1>{product.productName}</h1>
+
+          <div className="produto-preco-wrapper">
+            <span className="produto-preco-destaque">
+              {formatPrice(product.price)}
+            </span>
+          </div>
+
+          <div className="acoes-detalhe">
+            <button className="btn-adicionar-carrinho" onClick={handleAdicionar}>
+              Adicionar ao Carrinho
+            </button>
+            <button className="btn-comprar-agora" onClick={handleComprarAgora}>
+              Comprar Agora
+            </button>
+          </div>
+
+          <div className="produto-descricao">
+            <h3>Descrição do Produto</h3>
+            <p>{product.description || 'Sem descrição disponível.'}</p>
+
+            <div className="features-list">
+              <h3>Arquivos Inclusos:</h3>
+              <ul>
+                <li>✅ PNG (Fundo Transparente)</li>
+                <li>✅ CDR (Vetor CorelDraw)</li>
+                <li>✅ JPG (Alta Resolução)</li>
+              </ul>
+            </div>
+
+            {product.isCombo && product.comboProducts && product.comboProducts.length > 0 && (
+              <div className="combo-items">
+                <h3>Neste pacote você recebe:</h3>
+                <ul>
+                  {product.comboProducts.map(subProd => (
+                    <li key={subProd._id}>{subProd.productName}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

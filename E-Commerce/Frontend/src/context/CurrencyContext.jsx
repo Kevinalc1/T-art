@@ -49,10 +49,18 @@ export function CurrencyProvider({ children }) {
     }, []);
 
     const formatPrice = (valueInBrl) => {
-        if (valueInBrl === undefined || valueInBrl === null) return '';
+        if (valueInBrl === undefined || valueInBrl === null || valueInBrl === '') return '';
+
+        // Safely parse string inputs (e.g., "15,50" -> 15.50)
+        let numericValue = valueInBrl;
+        if (typeof valueInBrl === 'string') {
+            numericValue = parseFloat(valueInBrl.replace(',', '.'));
+        }
+
+        if (isNaN(numericValue)) return '';
 
         const rate = rates[currency] || 1;
-        const convertedValue = valueInBrl * rate;
+        const convertedValue = numericValue * rate;
 
         return new Intl.NumberFormat(currencyLocales[currency], {
             style: 'currency',

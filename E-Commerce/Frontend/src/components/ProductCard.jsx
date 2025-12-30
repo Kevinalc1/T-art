@@ -73,11 +73,12 @@ export default function ProductCard({ produto }) {
           </Link>
           <p className="product-category">Arte Exclusiva</p>
 
-          <div className="price-wrapper">
-            <span className="current-price">
-              {formatPrice(produto.price)}
-            </span>
-          </div>
+          <span className="current-price">
+            {(() => {
+              const numericPrice = parseFloat(produto.price);
+              return (numericPrice && numericPrice > 0) ? formatPrice(numericPrice) : 'Sob Consulta';
+            })()}
+          </span>
         </div>
 
         {/* 3. Área de Ação (CTA Unificado) */}

@@ -145,6 +145,7 @@ app.use(cors({
     const allowedOrigins = [
       'https://gens-five.vercel.app',       // Sua URL oficial
       'http://localhost:5173',              // Seu Vite Local
+      'http://localhost:5174',              // Fallback port
       'http://192.168.18.220:5173',         // Seu teste na rede (celular)
       'https://gens-backend.onrender.com'   // O próprio backend
     ];
