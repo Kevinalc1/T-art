@@ -56,6 +56,11 @@ export default function LojaPage() {
     setCurrentPage(1);
   }, [termoBusca, categoriaSelecionada]);
 
+  // Scroll to top when page changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentPage]);
+
   return (
     <div className="loja-page">
       <div className="loja-header">
