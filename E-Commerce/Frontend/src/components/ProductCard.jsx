@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useCarrinho } from '../context/CarrinhoContext';
 import { useCurrency } from '../context/CurrencyContext';
 import { toast } from 'react-toastify';
+import { trackAddToCart } from '../utils/analytics.js';
 import './ProductCard.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -42,6 +43,10 @@ export default function ProductCard({ produto }) {
     }
 
     adicionarItem(produto);
+
+    // Track add to cart event
+    trackAddToCart(produto, 1);
+
     toast.success('Adicionado à sacola!', {
       position: "bottom-right",
       autoClose: 3000,
@@ -62,6 +67,14 @@ export default function ProductCard({ produto }) {
           />
           {/* Badge Opcional */}
           <span className="category-badge">Destaque</span>
+
+          {/* Urgency Badges */}
+          {produto.price > 50 && (
+            <span className="urgency-badge best-seller">🔥 Mais Vendido</span>
+          )}
+          {produto.price < 30 && (
+            <span className="urgency-badge limited-offer">⚡ Oferta</span>
+          )}
         </Link>
       </div>
 

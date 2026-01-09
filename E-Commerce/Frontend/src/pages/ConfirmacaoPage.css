@@ -217,7 +217,45 @@
 .info-note {
     font-size: 0.85rem !important;
     color: var(--cor-texto-leve) !important;
-    font-style: italic;
+    line-height: 1.6 !important;
+}
+
+/* WhatsApp Support */
+.whatsapp-support {
+    background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+    border: 2px solid #10b981;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 24px 0;
+    text-align: center;
+}
+
+.whatsapp-support p {
+    margin: 0 0 12px 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: #065f46;
+}
+
+.btn-whatsapp {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #25D366;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+}
+
+.btn-whatsapp:hover {
+    background: #128C7E;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
 }
 
 /* Action Buttons */

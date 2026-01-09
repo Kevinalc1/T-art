@@ -1,0 +1,12 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Bloqueia páginas privadas
+Disallow: /admin
+Disallow: /perfil
+Disallow: /checkout
+Disallow: /carrinho
+
+# Sitemap dinâmico gerado pelo backend
+Sitemap: https://seusite.com/api/seo/sitemap.xml

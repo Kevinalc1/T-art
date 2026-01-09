@@ -14,6 +14,89 @@
   font-size: 2.2rem;
 }
 
+/* Progress Bar */
+.checkout-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 600px;
+  margin: 0 auto 3rem;
+  padding: 0 2rem;
+}
+
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.step-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #e5e7eb;
+  color: #9ca3af;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.progress-step.completed .step-circle {
+  background: #10b981;
+  color: white;
+}
+
+.progress-step.active .step-circle {
+  background: #667eea;
+  color: white;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+}
+
+.progress-step span {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.progress-step.active span {
+  color: #667eea;
+  font-weight: 600;
+}
+
+.progress-line {
+  width: 80px;
+  height: 2px;
+  background: #e5e7eb;
+  margin: 0 8px;
+  margin-bottom: 24px;
+}
+
+.progress-line.completed {
+  background: #10b981;
+}
+
+/* Spinner Animation */
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* Layout de 2 Colunas */
 .checkout-layout {
   display: grid;

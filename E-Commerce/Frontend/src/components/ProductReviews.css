@@ -1,0 +1,149 @@
+.product-reviews {
+    margin-top: 32px;
+    padding: 24px;
+    background: #f8f9fa;
+    border-radius: 12px;
+}
+
+.reviews-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.reviews-header h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.reviews-summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.average-rating {
+    font-size: 24px;
+    font-weight: 700;
+    color: #f39c12;
+}
+
+.reviews-count {
+    font-size: 14px;
+    color: #7f8c8d;
+}
+
+.reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.review-item {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.reviewer-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.reviewer-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.reviewer-details h4 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.review-date {
+    font-size: 12px;
+    color: #95a5a6;
+    margin-top: 2px;
+}
+
+.star-rating {
+    display: flex;
+    gap: 2px;
+}
+
+.star {
+    color: #f39c12;
+    font-size: 16px;
+}
+
+.star.empty {
+    color: #ddd;
+}
+
+.review-text {
+    color: #34495e;
+    line-height: 1.6;
+    font-size: 14px;
+    margin: 0;
+}
+
+.no-reviews {
+    text-align: center;
+    padding: 40px 20px;
+    background: white;
+    border-radius: 8px;
+}
+
+.no-reviews-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.no-reviews h4 {
+    font-size: 18px;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.no-reviews p {
+    color: #7f8c8d;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .reviews-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .review-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}

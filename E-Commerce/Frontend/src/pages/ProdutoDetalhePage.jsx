@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { toast } from 'react-toastify';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useCarrinho } from '../context/CarrinhoContext.jsx';
 import { useCurrency } from '../context/CurrencyContext.jsx';
+import { trackViewContent } from '../utils/analytics.js';
+import TrustBadges from '../components/TrustBadges.jsx';
+import ProductReviews from '../components/ProductReviews.jsx';
 import './ProdutoDetalhePage.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -30,6 +34,8 @@ export default function ProdutoDetalhePage() {
         if (data && data.imageUrls && data.imageUrls.length > 0) {
           setSelectedImage(data.imageUrls[0]);
         }
+        // Track product view
+        trackViewContent(data);
       })
       .catch(error => {
         console.error("Erro ao buscar o produto:", error);
@@ -71,6 +77,47 @@ export default function ProdutoDetalhePage() {
 
   return (
     <div className="produto-detalhe-page">
+      {/* Dynamic SEO Meta Tags */}
+      <Helmet>
+        <title>{product.productName} - Artes para Sublimação | GENS Artes</title>
+        <meta name="description" content={product.description || `Compre ${product.productName} - Arte exclusiva para sublimação em alta resolução. PNG, CDR e JPG prontos para imprimir. Entrega instantânea por email.`} />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="product" />
+        <meta property="og:title" content={`${product.productName} - GENS Artes`} />
+        <meta property="og:description" content={product.description || `Arte exclusiva para sublimação em alta resolução. Entrega instantânea por email.`} />
+        {product.imageUrls && product.imageUrls[0] && (
+          <meta property="og:image" content={product.imageUrls[0]} />
+        )}
+        <meta property="og:url" content={`https://seusite.com/produto/${product._id}`} />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${product.productName} - GENS Artes`} />
+        <meta name="twitter:description" content={product.description || `Arte exclusiva para sublimação em alta resolução.`} />
+        {product.imageUrls && product.imageUrls[0] && (
+          <meta name="twitter:image" content={product.imageUrls[0]} />
+        )}
+
+        {/* Product Schema.org structured data */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org/",
+            "@type": "Product",
+            "name": product.productName,
+            "image": product.imageUrls || [],
+            "description": product.description || "Arte para sublimação em alta resolução",
+            "offers": {
+              "@type": "Offer",
+              "url": `https://seusite.com/produto/${product._id}`,
+              "priceCurrency": "BRL",
+              "price": product.price,
+              "availability": "https://schema.org/InStock"
+            }
+          })}
+        </script>
+      </Helmet>
+
       <button className="btn-voltar" onClick={() => navigate(-1)}>
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
         Voltar
@@ -143,8 +190,14 @@ export default function ProdutoDetalhePage() {
               </div>
             )}
           </div>
+
+          {/* Trust Badges */}
+          <TrustBadges />
         </div>
       </div>
+
+      {/* Product Reviews */}
+      <ProductReviews productId={product._id} />
     </div>
   );
 }

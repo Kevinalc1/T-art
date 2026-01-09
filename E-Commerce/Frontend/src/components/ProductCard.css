@@ -62,6 +62,43 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
+/* Urgency Badges */
+.urgency-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  animation: pulse-badge 2s infinite;
+}
+
+.urgency-badge.best-seller {
+  background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+  color: white;
+}
+
+.urgency-badge.limited-offer {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+}
+
+@keyframes pulse-badge {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+}
+
 /* 2. Content Area */
 .card-content {
   padding: 1.25rem;

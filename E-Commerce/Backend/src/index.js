@@ -31,6 +31,7 @@ require('./models/Colecao');
 require('./models/Banner');
 require('./models/TransactionLog');
 require('./models/AdSlot');
+require('./models/Subscriber');
 
 // Importar configuração do Passport APÓS os modelos
 require('./config/passport');
@@ -50,6 +51,8 @@ const transactionLogRoutes = require('./routes/transactionLogRoutes');
 const adSlotRoutes = require('./routes/adSlotRoutes');
 const pixRoutes = require('./routes/pixRoutes');
 const downloadRoutes = require('./routes/downloadRoutes');
+const subscriberRoutes = require('./routes/subscriberRoutes');
+const seoRoutes = require('./routes/seoRoutes');
 const { sendEmail, enviarEmailDownload } = require('./utils/sendEmail');
 
 // Conectar ao banco de dados
@@ -270,6 +273,8 @@ app.use('/api/transaction-logs', transactionLogRoutes);
 app.use('/api/ad-slots', adSlotRoutes);
 app.use('/api/pix', pixRoutes);
 app.use('/api/download', downloadRoutes);
+app.use('/api/subscribers', subscriberRoutes);
+app.use('/api/seo', seoRoutes);
 
 const hotlinkProtection = require('./middleware/hotlinkProtection');
 

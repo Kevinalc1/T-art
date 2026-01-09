@@ -3,6 +3,9 @@ import { useCarrinho } from '../context/CarrinhoContext.jsx';
 import { useCurrency } from '../context/CurrencyContext.jsx';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import { trackBeginCheckout } from '../utils/analytics.js';
+import TrustBadges from '../components/TrustBadges.jsx';
+import { toast } from 'react-toastify';
 import './CheckoutPage.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -21,7 +24,6 @@ export default function CheckoutPage() {
   const [formData, setFormData] = useState({
     nome: '',
     email: '',
-    confirmarEmail: '',
     userDoc: ''
   });
   const [loading, setLoading] = useState(false);
@@ -32,11 +34,18 @@ export default function CheckoutPage() {
     if (user) {
       setFormData(prev => ({
         ...prev,
-        email: user.email,
-        confirmarEmail: user.email
+        email: user.email
       }));
     }
   }, [user]);
+
+  // Track begin checkout when page loads with items
+  useEffect(() => {
+    if (state.items.length > 0) {
+      const total = calcularTotal();
+      trackBeginCheckout(state.items, total);
+    }
+  }, []); // Only track once on mount
 
   // Polling para checar status do Pix
   useEffect(() => {
@@ -78,13 +87,13 @@ export default function CheckoutPage() {
   };
 
   const handlePayment = async () => {
-    if (formData.email !== formData.confirmarEmail) {
-      alert('Os e-mails não coincidem!');
+    if (selectedPaymentMethod === 'pix' && !formData.userDoc) {
+      toast.error('Por favor, informe o CPF para pagamento via Pix.');
       return;
     }
 
-    if (selectedPaymentMethod === 'pix' && !formData.userDoc) {
-      alert('Por favor, informe o CPF para pagamento via Pix.');
+    if (!formData.email || !formData.nome) {
+      toast.error('Por favor, preencha todos os campos obrigatórios.');
       return;
     }
 
@@ -118,18 +127,25 @@ export default function CheckoutPage() {
 
       if (response.ok) {
         if (selectedPaymentMethod === 'card') {
+          // Save purchase data for analytics
+          localStorage.setItem('lastPurchase', JSON.stringify({
+            transactionId: data.sessionId || Date.now().toString(),
+            items: state.items,
+            total: valorTotal
+          }));
           window.location.href = data.url;
         } else {
           setPixData(data);
           setLoading(false);
+          toast.success('QR Code gerado! Escaneie para pagar.');
         }
       } else {
-        alert(data.error || 'Não foi possível iniciar o pagamento. Tente novamente.');
+        toast.error(data.error || 'Não foi possível iniciar o pagamento. Tente novamente.');
         setLoading(false);
       }
     } catch (error) {
       console.error('Erro ao processar pagamento:', error);
-      alert('Ocorreu um erro de comunicação com o servidor.');
+      toast.error('Ocorreu um erro de comunicação com o servidor.');
       setLoading(false);
     }
   };
@@ -148,6 +164,24 @@ export default function CheckoutPage() {
 
   return (
     <div className="checkout-page">
+      {/* Progress Bar */}
+      <div className="checkout-progress">
+        <div className="progress-step completed">
+          <div className="step-circle">✓</div>
+          <span>Carrinho</span>
+        </div>
+        <div className="progress-line completed"></div>
+        <div className="progress-step active">
+          <div className="step-circle">2</div>
+          <span>Identificação</span>
+        </div>
+        <div className="progress-line"></div>
+        <div className="progress-step">
+          <div className="step-circle">3</div>
+          <span>Pagamento</span>
+        </div>
+      </div>
+
       <h1>Finalizar Compra</h1>
 
       {pixData ? (
@@ -184,12 +218,9 @@ export default function CheckoutPage() {
                 <input type="text" name="nome" placeholder="Ex: Maria Silva" value={formData.nome} onChange={handleChange} required />
               </div>
               <div className="form-group">
-                <label>E-mail</label>
+                <label>E-mail *</label>
                 <input type="email" name="email" placeholder="seu@email.com" value={formData.email} onChange={handleChange} required />
-              </div>
-              <div className="form-group">
-                <label>Confirme seu E-mail</label>
-                <input type="email" name="confirmarEmail" placeholder="seu@email.com" value={formData.confirmarEmail} onChange={handleChange} required />
+                <small style={{ color: '#7f8c8d', fontSize: '12px' }}>Você receberá os arquivos neste e-mail</small>
               </div>
 
               {selectedPaymentMethod === 'pix' && (
@@ -274,7 +305,14 @@ export default function CheckoutPage() {
               </div>
 
               <button type="button" onClick={handlePayment} disabled={loading} className="btn-pay-now">
-                {loading ? 'Processando...' : `Pagar ${formatPrice(valorTotal)}`}
+                {loading ? (
+                  <>
+                    <span className="spinner"></span>
+                    Processando...
+                  </>
+                ) : (
+                  `Pagar ${formatPrice(valorTotal)}`
+                )}
               </button>
 
               <div className="security-badge">
@@ -285,6 +323,9 @@ export default function CheckoutPage() {
           </div>
         </div>
       )}
+
+      {/* Trust Badges */}
+      {!pixData && <TrustBadges />}
     </div>
   );
 }

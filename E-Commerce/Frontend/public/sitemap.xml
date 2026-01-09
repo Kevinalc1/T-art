@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  <!-- Homepage -->
+  <url>
+    <loc>https://seusite.com/</loc>
+    <lastmod>2026-01-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- Shop Page -->
+  <url>
+    <loc>https://seusite.com/loja</loc>
+    <lastmod>2026-01-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Collections Page -->
+  <url>
+    <loc>https://seusite.com/colecoes</loc>
+    <lastmod>2026-01-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- 
+    PLACEHOLDER: Product URLs should be dynamically generated
+    Example product URL structure:
+    
+    <url>
+      <loc>https://seusite.com/produto/[product-id]</loc>
+      <lastmod>2026-01-07</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>0.7</priority>
+      <image:image>
+        <image:loc>https://seusite.com/images/product-image.jpg</image:loc>
+        <image:title>Product Name</image:title>
+      </image:image>
+    </url>
+  -->
+  
+  <!-- 
+    TODO: Generate this sitemap dynamically using a backend script
+    that fetches all products from MongoDB and creates entries automatically.
+    Consider using a package like 'sitemap' (npm) for Node.js generation.
+  -->
+  
+</urlset>

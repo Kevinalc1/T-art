@@ -1,9 +1,48 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaInstagram, FaEnvelope, FaLock, FaCheckCircle } from 'react-icons/fa';
 import './Footer.css';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export default function Footer() {
+  const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [message, setMessage] = useState('');
+
+  const handleNewsletterSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setMessage('');
+
+    try {
+      const response = await fetch(`${API_URL}/api/subscribers`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          source: 'footer'
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage('✅ Inscrição realizada com sucesso!');
+        setEmail('');
+      } else {
+        setMessage(data.error || 'Erro ao cadastrar.');
+      }
+    } catch (error) {
+      setMessage('Erro ao processar. Tente novamente.');
+    } finally {
+      setIsSubmitting(false);
+      setTimeout(() => setMessage(''), 5000);
+    }
+  };
+
   return (
     <footer className="footer-dark">
       <div className="footer-container">
@@ -69,13 +108,30 @@ export default function Footer() {
 
         </div>
 
-        {/* Barra Inferior 
+        {/* Newsletter Section */}
+        <div className="footer-newsletter">
+          <h4>📧 Receba Ofertas Exclusivas</h4>
+          <p>Cadastre-se e ganhe 10% de desconto na primeira compra!</p>
+          <form className="newsletter-form" onSubmit={handleNewsletterSubmit}>
+            <input
+              type="email"
+              placeholder="Seu e-mail"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              disabled={isSubmitting}
+            />
+            <button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? 'Enviando...' : 'Assinar'}
+            </button>
+          </form>
+          {message && <p className="newsletter-message">{message}</p>}
+        </div>
+
+        {/* Barra Inferior */}
         <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} K&A. Todos os direitos reservados.</p>
-          <p className="cnpj-text">
-            CNPJ: 00.000.000/0001-00 <span className="separator">|</span> Rua Exemplo, 123 - Cidade, Estado
-          </p>
-        </div>*/}
+          <p>© {new Date().getFullYear()} GENS Artes. Todos os direitos reservados.</p>
+        </div>
 
       </div>
     </footer>
