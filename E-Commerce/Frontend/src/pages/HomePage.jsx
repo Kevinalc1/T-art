@@ -57,7 +57,7 @@ const HomePage = () => {
       <section className="products-section">
         <div className="section-header">
           <h2>Estampas em Destaque</h2>
-          <p>As peças mais desejadas da semana</p>
+          <p>As estampas mais desejadas da semana</p>
         </div>
 
         <div className="products-grid">

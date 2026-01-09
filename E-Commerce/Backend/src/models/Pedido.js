@@ -23,6 +23,10 @@ const pedidoSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    paymentMethod: {
+      type: String,
+      default: 'card', // Default old orders to card
+    },
     isPaid: {
       type: Boolean,
       default: false,

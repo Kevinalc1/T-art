@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './AdminDashboard.css'; // Reusing existing styles or create new ones
+import { FaSearch, FaFileImage, FaCreditCard, FaMoneyBillWave, FaCalendarAlt, FaUser } from 'react-icons/fa';
+import './AdminDashboard.css';
 
 export default function AdminOrdersDashboard() {
     const [purchases, setPurchases] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 10;
+    const itemsPerPage = 8; // Reduce items per page for card layout
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -20,19 +21,25 @@ export default function AdminOrdersDashboard() {
                 // Flatten orders into individual item purchases
                 const allPurchases = [];
                 response.data.forEach(order => {
+                    const paymentMethod = order.paymentMethod || 'card'; // Default to card if missing
+
                     order.items.forEach(item => {
                         allPurchases.push({
-                            _id: item._id || `${order._id}-${item.productId?._id}`, // Fallback key
-                            orderId: order._id,
+                            _id: item._id || `${order._id}-${item.productId?._id}`,
+                            orderId: order._id, // Keep order ID for reference
+                            orderShortId: order._id.slice(-6).toUpperCase(),
                             clientLogin: order.userEmail,
                             fileName: item.productName,
-                            image: item.productId?.imageUrls?.[0] || 'https://via.placeholder.com/60',
-                            date: order.createdAt
+                            image: item.productId?.imageUrls?.[0] || null,
+                            price: item.price,
+                            date: order.createdAt,
+                            paymentMethod: paymentMethod,
+                            status: order.isPaid ? 'Pago' : 'Pendente'
                         });
                     });
                 });
 
-                // Sort by date descending
+                // Sort by date descending (newest first)
                 allPurchases.sort((a, b) => new Date(b.date) - new Date(a.date));
 
                 setPurchases(allPurchases);
@@ -54,6 +61,7 @@ export default function AdminOrdersDashboard() {
         return (
             purchase.clientLogin.toLowerCase().includes(term) ||
             purchase.fileName.toLowerCase().includes(term) ||
+            purchase.orderShortId.toLowerCase().includes(term) ||
             dateStr.includes(term)
         );
     });
@@ -66,114 +74,122 @@ export default function AdminOrdersDashboard() {
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-    // Reset pagination on search
     useEffect(() => {
         setCurrentPage(1);
     }, [searchTerm]);
 
-    return (
-        <div className="admin-dashboard">
-            <main className="admin-content">
-                <div className="admin-header">
-                    <h1>Dashboard de Vendas</h1>
-                </div>
+    const getPaymentIcon = (method) => {
+        if (method === 'pix') return <FaMoneyBillWave className="icon-pix" />;
+        return <FaCreditCard className="icon-card" />;
+    };
 
-                {/* Search Input */}
-                <div className="admin-controls" style={{ marginBottom: '20px' }}>
+    const formatPaymentMethod = (method) => {
+        if (method === 'pix') return 'Pix';
+        if (method === 'card') return 'Cartão';
+        return method;
+    };
+
+    return (
+        <div className="admin-dashboard-enhanced">
+            <header className="admin-header-enhanced">
+                <div className="header-title">
+                    <h1>Vendas Recentes</h1>
+                    <p>Monitore todas as transações da loja em tempo real.</p>
+                </div>
+                <div className="admin-search-enhanced">
+                    <FaSearch className="search-icon" />
                     <input
                         type="text"
-                        placeholder="Buscar por cliente, arquivo ou data..."
+                        placeholder="Buscar por cliente, produto ou ID..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        style={{
-                            padding: '10px',
-                            width: '100%',
-                            maxWidth: '400px',
-                            borderRadius: '5px',
-                            border: '1px solid #ddd',
-                            fontSize: '1rem'
-                        }}
                     />
                 </div>
+            </header>
 
-                {loading ? (
-                    <p>Carregando vendas...</p>
-                ) : (
-                    <>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Imagem</th>
-                                    <th>Cliente (Login)</th>
-                                    <th>Arquivo</th>
-                                    <th>Data</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {currentItems.map((purchase, index) => (
-                                    <tr key={`${purchase.orderId}-${index}`}>
-                                        <td>
-                                            <img
-                                                src={purchase.image}
-                                                alt={purchase.fileName}
-                                                className="admin-product-image"
-                                                style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }}
-                                            />
-                                        </td>
-                                        <td>{purchase.clientLogin}</td>
-                                        <td>{purchase.fileName}</td>
-                                        <td>{new Date(purchase.date).toLocaleDateString('pt-BR')}</td>
-                                    </tr>
-                                ))}
-                                {currentItems.length === 0 && (
-                                    <tr>
-                                        <td colSpan="4" style={{ textAlign: 'center', padding: '2rem' }}>Nenhuma venda encontrada.</td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
+            {loading ? (
+                <div className="admin-loading">
+                    <div className="spinner"></div>
+                    <p>Carregando dados...</p>
+                </div>
+            ) : (
+                <div className="sales-grid-container">
+                    {currentItems.length === 0 ? (
+                        <div className="admin-empty-state">
+                            <p>Nenhuma venda encontrada para os filtros aplicados.</p>
+                        </div>
+                    ) : (
+                        <div className="sales-cards-grid">
+                            {currentItems.map((purchase, index) => (
+                                <div key={`${purchase.orderId}-${index}`} className="sale-card">
+                                    <div className="sale-card-header">
+                                        <span className="order-id">#{purchase.orderShortId}</span>
+                                        <span className={`status-badge ${purchase.status === 'Pago' ? 'paid' : 'pending'}`}>
+                                            {purchase.status}
+                                        </span>
+                                    </div>
 
-                        {/* Pagination Controls */}
-                        {totalPages > 1 && (
-                            <div className="pagination" style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', gap: '5px' }}>
-                                <button
-                                    onClick={() => paginate(currentPage - 1)}
-                                    disabled={currentPage === 1}
-                                    className="page-btn"
-                                    style={{ padding: '5px 10px', cursor: currentPage === 1 ? 'not-allowed' : 'pointer' }}
-                                >
-                                    Anterior
-                                </button>
-                                {Array.from({ length: totalPages }, (_, i) => (
-                                    <button
-                                        key={i + 1}
-                                        onClick={() => paginate(i + 1)}
-                                        className={`page-btn ${currentPage === i + 1 ? 'active' : ''}`}
-                                        style={{
-                                            padding: '5px 10px',
-                                            cursor: 'pointer',
-                                            backgroundColor: currentPage === i + 1 ? '#133853' : '#fff',
-                                            color: currentPage === i + 1 ? '#fff' : '#333',
-                                            border: '1px solid #ddd',
-                                            borderRadius: '3px'
-                                        }}
-                                    >
-                                        {i + 1}
-                                    </button>
-                                ))}
-                                <button
-                                    onClick={() => paginate(currentPage + 1)}
-                                    disabled={currentPage === totalPages}
-                                    className="page-btn"
-                                    style={{ padding: '5px 10px', cursor: currentPage === totalPages ? 'not-allowed' : 'pointer' }}
-                                >
-                                    Próximo
-                                </button>
-                            </div>
-                        )}
-                    </>
-                )}
-            </main>
+                                    <div className="sale-product-info">
+                                        <div className="product-thumb">
+                                            {purchase.image ? (
+                                                <img src={purchase.image} alt={purchase.fileName} />
+                                            ) : (
+                                                <div className="placeholder-thumb"><FaFileImage /></div>
+                                            )}
+                                        </div>
+                                        <div className="product-details">
+                                            <h3 title={purchase.fileName}>{purchase.fileName}</h3>
+                                            <span className="product-price">R$ {purchase.price.toFixed(2)}</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="sale-meta-info">
+                                        <div className="meta-row">
+                                            <FaUser className="meta-icon" />
+                                            <span className="client-email" title={purchase.clientLogin}>
+                                                {purchase.clientLogin}
+                                            </span>
+                                        </div>
+                                        <div className="meta-row">
+                                            <FaCalendarAlt className="meta-icon" />
+                                            <span>{new Date(purchase.date).toLocaleDateString('pt-BR')}</span>
+                                        </div>
+                                        <div className="meta-row payment-row">
+                                            {getPaymentIcon(purchase.paymentMethod)}
+                                            <span className="payment-label">
+                                                Via {formatPaymentMethod(purchase.paymentMethod)}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* Pagination */}
+                    {totalPages > 1 && (
+                        <div className="admin-pagination">
+                            <button
+                                onClick={() => paginate(currentPage - 1)}
+                                disabled={currentPage === 1}
+                                className="pagination-btn"
+                            >
+                                Anterior
+                            </button>
+                            <span className="page-info">
+                                Página {currentPage} de {totalPages}
+                            </span>
+                            <button
+                                onClick={() => paginate(currentPage + 1)}
+                                disabled={currentPage === totalPages}
+                                className="pagination-btn"
+                            >
+                                Próximo
+                            </button>
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 }

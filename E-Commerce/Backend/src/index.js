@@ -96,20 +96,53 @@ async function prepararItensPedidoEEmail(cartItems) {
   return { pedidoItems, emailHtmlLinks };
 }
 
-async function criarPedido(session, pedidoItems) {
+// Função auxiliar para obter o método de pagamento real
+async function getPaymentMethodUsed(stripe, session) {
+  try {
+    // Se já tivermos a info no session (depende da versão da API)
+    if (session.payment_method_options && session.payment_method_types && session.payment_method_types.length === 1) {
+      return session.payment_method_types[0];
+    }
+
+    // Busca o Payment Intent para ter certeza
+    if (session.payment_intent) {
+      const paymentIntent = await stripe.paymentIntents.retrieve(session.payment_intent);
+      // O tipo de método usado está em payment_method_types[0] do PI ou payment_method.type
+      // Mas paymentIntent.payment_method (ID) precisa ser expandido ou buscado.
+      // Simplified: paymentIntent.payment_method_types usually has just one if confirmed?
+      // Actually, best is:
+      if (paymentIntent.payment_method) {
+        const method = await stripe.paymentMethods.retrieve(paymentIntent.payment_method);
+        return method.type;
+      }
+    }
+    return session.payment_method_types?.[0] || 'card';
+  } catch (e) {
+    console.error('Erro ao recuperar método de pagamento detalhado:', e);
+    return session.payment_method_types?.[0] || 'card';
+  }
+}
+
+async function criarPedido(session, pedidoItems, stripe) {
   const Pedido = mongoose.model('Pedido');
   const TransactionLog = mongoose.model('TransactionLog');
+
+  let realPaymentMethod = 'card';
+  if (stripe) {
+    realPaymentMethod = await getPaymentMethodUsed(stripe, session);
+  }
 
   const novoPedido = new Pedido({
     userEmail: session.customer_email,
     items: pedidoItems,
     totalPrice: session.amount_total / 100,
     stripeSessionId: session.id,
+    paymentMethod: realPaymentMethod,
     isPaid: true,
     paidAt: new Date(),
   });
   await novoPedido.save();
-  console.log(`Pedido ${novoPedido._id} criado com sucesso para ${session.customer_email}.`);
+  console.log(`Pedido ${novoPedido._id} criado com sucesso para ${session.customer_email}. Método: ${realPaymentMethod}`);
 
   // Criar log de transação
   try {
@@ -121,7 +154,7 @@ async function criarPedido(session, pedidoItems) {
       userEmail: session.customer_email,
       stripeSessionId: session.id,
       stripeTransactionId: session.payment_intent,
-      paymentMethod: session.payment_method_types?.[0] || 'card',
+      paymentMethod: realPaymentMethod,
       status: 'completed',
       description: `Pagamento recebido - Pedido #${novoPedido._id}`,
       metadata: {
@@ -135,6 +168,7 @@ async function criarPedido(session, pedidoItems) {
     console.error('Erro ao criar log de transação:', error);
   }
 }
+
 
 // --- MIDDLEWARES ---
 app.use(cors({
@@ -182,7 +216,7 @@ app.post('/api/checkout/webhook', express.raw({ type: 'application/json' }), asy
     try {
       const cartItems = JSON.parse(session.metadata.cartItems);
       const { pedidoItems, emailHtmlLinks } = await prepararItensPedidoEEmail(cartItems);
-      await criarPedido(session, pedidoItems);
+      await criarPedido(session, pedidoItems, stripe);
 
       // --- AUTOMAÇÃO DE ENTREGA (Links de Download) ---
       console.log('Pagamento Stripe Confirmado. Processando envio de links...');
