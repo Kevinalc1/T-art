@@ -1,13 +1,15 @@
-/* Container principal da página de perfil */
 .profile-page {
   display: grid;
   grid-template-columns: 250px 1fr;
   /* Coluna para sidebar e conteúdo */
   gap: 2rem;
-  max-width: 1200px;
-  margin: 2rem auto;
-  padding: 0 5%;
+  max-width: 100%;
+  /* Full Width */
+  margin: 0;
+  padding: 2rem;
   font-family: sans-serif;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
 /* Sidebar de navegação */

@@ -43,39 +43,52 @@ export default function AdminColecoesDashboard() {
   if (loading) return <p>A carregar coleções...</p>;
 
   return (
-    <div className="admin-dashboard">
-      <main className="admin-content">
-        <div className="admin-header">
+    <div className="admin-dashboard-enhanced">
+      <header className="admin-header-enhanced">
+        <div className="header-title">
           <h1>Gestão de Coleções</h1>
-          <Link to="/admin/colecoes/nova" className="btn-novo">
-            Adicionar Nova Coleção
-          </Link>
+          <p>Organize seus produtos em coleções temáticas.</p>
         </div>
 
-        <table>
-          <thead>
-            <tr>
-              <th>Imagem</th>
-              <th>Nome da Coleção</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {colecoes.map((colecao) => (
-              <tr key={colecao._id}>
-                <td>
-                  <img src={colecao.coverImage || 'https://via.placeholder.com/60'} alt={colecao.name} className="admin-product-image" />
-                </td>
-                <td>{colecao.name}</td>
-                <td className="acoes">
-                  <Link to={`/admin/colecoes/editar/${colecao._id}`} className="btn-editar">Editar</Link>
-                  <button onClick={() => handleDelete(colecao._id)} className="btn-apagar">Apagar</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </main>
+        <Link to="/admin/colecoes/nova" className="btn-novo" style={{ height: '42px', display: 'flex', alignItems: 'center' }}>
+          + Nova Coleção
+        </Link>
+      </header>
+
+      <div className="admin-content-wrapper">
+        <main className="admin-main-grid-area">
+          {colecoes.length === 0 ? (
+            <div className="admin-empty-state">
+              <p>Nenhuma coleção encontrada.</p>
+            </div>
+          ) : (
+            <div className="admin-product-grid">
+              {colecoes.map((colecao) => (
+                <div key={colecao._id} className="product-card">
+                  <div className="product-card-image">
+                    <img
+                      src={colecao.coverImage || 'https://via.placeholder.com/300x200?text=Sem+Imagem'}
+                      alt={colecao.name}
+                    />
+                  </div>
+                  <div className="product-card-content">
+                    <h3 className="product-card-title">{colecao.name}</h3>
+
+                    <div className="product-card-actions">
+                      <Link to={`/admin/colecoes/editar/${colecao._id}`} className="btn-card-edit">
+                        ✏️ Editar
+                      </Link>
+                      <button onClick={() => handleDelete(colecao._id)} className="btn-card-delete">
+                        🗑️ Apagar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </main>
+      </div>
     </div>
   );
 }

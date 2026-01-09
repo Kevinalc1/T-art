@@ -444,7 +444,7 @@
 /* --- PRODUCT GRID STYLES (NEW) --- */
 .admin-product-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.5rem;
   margin-top: 1.5rem;
 }
@@ -677,7 +677,21 @@
   border-radius: 12px;
   padding: 1.5rem;
   position: sticky;
-  top: 100px;
+  top: 2rem;
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;
+  /* Custom Scrollbar for better look */
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.admin-filter-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.admin-filter-sidebar::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 3px;
 }
 
 .filter-group h3 {
