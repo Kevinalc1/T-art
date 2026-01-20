@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useCarrinho } from '../context/CarrinhoContext.jsx';
 import { useCurrency } from '../context/CurrencyContext.jsx';
+import { useDataLayer } from '../hooks/useDataLayer';
 import './ProdutoDetalhePage.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -11,11 +12,29 @@ export default function ProdutoDetalhePage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { adicionarItem, state } = useCarrinho();
-  const { formatPrice } = useCurrency();
+  const { formatPrice, currency } = useCurrency();
+  const { pushEvent } = useDataLayer();
 
   const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState('');
   const [quantidade] = useState(1);
+
+  useEffect(() => {
+    if (product && !product.notFound) {
+      const price = parseFloat(String(product.price).replace(',', '.'));
+
+      pushEvent('view_item', {
+        currency: currency,
+        value: price,
+        items: [{
+          item_id: product._id,
+          item_name: product.productName,
+          price: price,
+          quantity: 1
+        }]
+      });
+    }
+  }, [product, currency, pushEvent]);
 
   useEffect(() => {
     if (!id) return;
