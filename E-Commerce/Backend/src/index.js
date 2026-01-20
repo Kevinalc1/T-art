@@ -59,6 +59,13 @@ const PORT = 4000;
 const app = express();
 app.set('trust proxy', 1);
 
+// Rota de atalho para o Feed do Google Shopping (Redireciona para o padrão BR ou US)
+// PRECISA vir antes de qualquer middleware ou rota estática
+app.get('/feed/products.xml', (req, res) => {
+  // Redireciona para o feed padrão (Brasil) ou detecta via query param se quiser
+  res.redirect('/api/produtos/feed/products/br.xml');
+});
+
 // --- Funções Auxiliares para o Webhook ---
 async function prepararItensPedidoEEmail(cartItems) {
   const Produto = mongoose.model('Produto');
@@ -292,13 +299,6 @@ app.get('/', (req, res) => {
 });
 
 // --- ROTAS ---
-
-// Rota de atalho para o Feed do Google Shopping (Redireciona para o padrão BR ou US)
-app.get('/feed/products.xml', (req, res) => {
-  // Redireciona para o feed padrão (Brasil) ou detecta via query param se quiser
-  res.redirect('/api/produtos/feed/products/br.xml');
-});
-
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/produtos', productRoutes);
