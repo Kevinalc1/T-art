@@ -292,6 +292,13 @@ app.get('/', (req, res) => {
 });
 
 // --- ROTAS ---
+
+// Rota de atalho para o Feed do Google Shopping (Redireciona para o padrão BR ou US)
+app.get('/feed/products.xml', (req, res) => {
+  // Redireciona para o feed padrão (Brasil) ou detecta via query param se quiser
+  res.redirect('/api/produtos/feed/products/br.xml');
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/produtos', productRoutes);
