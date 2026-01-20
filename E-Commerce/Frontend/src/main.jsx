@@ -7,6 +7,7 @@ import './index.css';
 import './i18n'; // Importar configuração do i18n
 
 // Componentes de Layout e Páginas
+import { HelmetProvider } from 'react-helmet-async';
 import App from './App.jsx';
 import HomePage from './pages/HomePage.jsx';
 import LojaPage from './pages/LojaPage.jsx';
@@ -208,13 +209,15 @@ const router = createBrowserRouter([
 // Renderiza o aplicativo
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <AuthProvider>
-      <CarrinhoProvider>
-        <WishlistProvider>
-          <RouterProvider router={router} />
-          <ToastContainer />
-        </WishlistProvider>
-      </CarrinhoProvider>
-    </AuthProvider>
+    <HelmetProvider>
+      <AuthProvider>
+        <CarrinhoProvider>
+          <WishlistProvider>
+            <RouterProvider router={router} />
+            <ToastContainer />
+          </WishlistProvider>
+        </CarrinhoProvider>
+      </AuthProvider>
+    </HelmetProvider>
   </React.StrictMode>
 );

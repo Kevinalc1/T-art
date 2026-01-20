@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useCarrinho } from '../context/CarrinhoContext.jsx';
 import { useCurrency } from '../context/CurrencyContext.jsx';
 import { useDataLayer } from '../hooks/useDataLayer';
+import SEO from '../components/SEO';
 import './ProdutoDetalhePage.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -85,11 +86,22 @@ export default function ProdutoDetalhePage() {
     navigate('/checkout');
   };
 
+
+
+  // inside the component
   if (!product) return <div className="loading-container"><h1>Carregando...</h1></div>;
   if (product.notFound) return <div className="error-container"><h1>Produto não encontrado</h1></div>;
 
+  const pageUrl = `${window.location.origin}/produto/${product._id}`;
+
   return (
     <div className="produto-detalhe-page">
+      <SEO
+        title={product.productName}
+        description={product.description && product.description.substring(0, 160)}
+        image={selectedImage}
+        url={pageUrl}
+      />
       <button className="btn-voltar" onClick={() => navigate(-1)}>
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
         Voltar

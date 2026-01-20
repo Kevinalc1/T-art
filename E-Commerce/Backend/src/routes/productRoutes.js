@@ -18,6 +18,90 @@ router.get('/', async (req, res) => {
   }
 });
 
+// @desc    Google Shopping XML Feed (Multi-currency)
+// @route   GET /api/produtos/feed/products/:country_code.xml
+// @access  Public
+router.get('/feed/products/:country_code.xml', async (req, res) => {
+  try {
+    const { country_code } = req.params;
+    const country = country_code.toLowerCase();
+
+    // Validar país suportado
+    if (!['br', 'us'].includes(country)) {
+      return res.status(400).send('País não suportado. Use "br" ou "us".');
+    }
+
+    const products = await Produto.find({
+      price: { $exists: true, $ne: null }
+    }).populate('category', 'name');
+
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const currency = country === 'br' ? 'BRL' : 'USD';
+
+    // Taxa de conversão fixa para demo/simplicidade (idealmente viria de uma config ou API)
+    const USD_RATE = 5.5;
+
+    let xml = `<?xml version="1.0"?>
+<rss xmlns:g="http://base.google.com/ns/1.0" version="2.0">
+<channel>
+<title>T-art Store (${currency})</title>
+<link>${frontendUrl}</link>
+<description>Arte Exclusiva e Produtos Digitais</description>
+`;
+
+    products.forEach(product => {
+      // Tratamento de campos
+      const title = product.productName ? product.productName.replace(/[<>&'"]/g, '') : 'Produto sem nome';
+      const description = product.description
+        ? product.description.replace(/<[^>]*>?/gm, '').replace(/[<>&'"]/g, '') // Remove HTML tags e chars especiais XML
+        : 'Sem descrição';
+      const imageUrl = product.imageUrls && product.imageUrls.length > 0 ? product.imageUrls[0] : '';
+
+      let priceValue, priceString, linkUrl;
+
+      if (country === 'br') {
+        priceValue = product.price;
+        priceString = `${priceValue.toFixed(2)} BRL`;
+        linkUrl = `${frontendUrl}/produto/${product._id}`;
+      } else {
+        // Conversão para USD
+        priceValue = product.price / USD_RATE;
+        priceString = `${priceValue.toFixed(2)} USD`;
+        linkUrl = `${frontendUrl}/produto/${product._id}?currency=USD`;
+      }
+
+      // Validação mínima para o feed
+      if (title && imageUrl && product.price) {
+        xml += `
+<item>
+<g:id>${product._id}</g:id>
+<g:title>${title}</g:title>
+<g:description>${description}</g:description>
+<g:link>${linkUrl}</g:link>
+<g:image_link>${imageUrl}</g:image_link>
+<g:availability>in stock</g:availability>
+<g:price>${priceString}</g:price>
+${product.category && product.category.name ? `<g:product_type>${product.category.name}</g:product_type>` : ''}
+<g:condition>new</g:condition>
+</item>
+`;
+      }
+    });
+
+    xml += `
+</channel>
+</rss>`;
+
+    res.header('Content-Type', 'application/xml');
+    res.send(xml);
+
+  } catch (error) {
+    console.error('Erro ao gerar XML Feed:', error);
+    res.status(500).send('Erro ao gerar feed XML');
+  }
+});
+
+
 // @desc    Buscar um produto por ID
 // @route   GET /api/produtos/:id
 // @access  Public
