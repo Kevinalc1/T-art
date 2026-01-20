@@ -3,6 +3,8 @@ const router = express.Router();
 const { protect, admin } = require('../middleware/authMiddleware.js');
 const mongoose = require('mongoose');
 const Produto = mongoose.model('Produto');
+const Colecao = mongoose.model('Colecao');
+const Category = mongoose.model('Category');
 
 // @desc    Buscar todos os produtos
 // @route   GET /api/produtos
@@ -78,6 +80,27 @@ router.post('/', protect, admin, async (req, res) => {
       category,
     });
     await novoProduto.save();
+
+    // Auto-atribuir à coleção baseada na categoria
+    try {
+      if (category) {
+        const categoryDoc = await Category.findById(category);
+        if (categoryDoc) {
+          const colecao = await Colecao.findOne({ name: categoryDoc.name });
+          if (colecao) {
+            if (!colecao.products.includes(novoProduto._id)) {
+              colecao.products.push(novoProduto._id);
+              await colecao.save();
+              console.log(`Produto ${novoProduto._id} adicionado à coleção ${colecao.name}`);
+            }
+          }
+        }
+      }
+    } catch (colecaoError) {
+      console.error('Erro ao auto-atribuir produto à coleção:', colecaoError);
+      // Não falhar a request principal se isso falhar
+    }
+
     res.status(201).json(novoProduto);
   } catch (error) {
     console.error('Erro ao criar produto:', error);
@@ -121,6 +144,27 @@ router.put('/:id', protect, admin, async (req, res) => {
     if (!produtoAtualizado) {
       return res.status(404).json({ message: 'Produto não encontrado para atualizar' });
     }
+
+    // Auto-atribuir à coleção baseada na nova categoria (se mudou)
+    try {
+      if (req.body.category) {
+        const categoryDoc = await Category.findById(req.body.category);
+        if (categoryDoc) {
+          const colecao = await Colecao.findOne({ name: categoryDoc.name });
+          if (colecao) {
+            // Verificar se já está na coleção
+            if (!colecao.products.includes(produtoAtualizado._id)) {
+              colecao.products.push(produtoAtualizado._id);
+              await colecao.save();
+              console.log(`Produto ${produtoAtualizado._id} adicionado à coleção ${colecao.name} após update`);
+            }
+          }
+        }
+      }
+    } catch (colecaoError) {
+      console.error('Erro ao auto-atribuir produto à coleção (update):', colecaoError);
+    }
+
     res.json(produtoAtualizado);
   } catch (error) {
     console.error('Erro ao atualizar produto:', error);

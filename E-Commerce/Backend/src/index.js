@@ -177,7 +177,9 @@ app.use(cors({
     if (!origin) return callback(null, true);
 
     const allowedOrigins = [
-      'https://gens-five.vercel.app',       // Sua URL oficial
+      'https://gens-five.vercel.app',       // Antiga URL oficial (Vercel)
+      'https://www.gensartessublimacao.com.br', // Nova URL oficial (Domínio Próprio)
+      'https://gensartessublimacao.com.br',     // Nova URL oficial (sem www)
       'http://localhost:5173',              // Seu Vite Local
       'http://localhost:5174',              // Fallback port
       'http://192.168.18.220:5173',         // Seu teste na rede (celular)
