@@ -1,6 +1,10 @@
 {
     "rewrites": [
         {
+            "source": "/api/(.*)",
+            "destination": "https://gens-backend.onrender.com/api/$1"
+        },
+        {
             "source": "/feed/products.xml",
             "destination": "https://gens-backend.onrender.com/feed/products.xml"
         },
