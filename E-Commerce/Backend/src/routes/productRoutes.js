@@ -87,6 +87,12 @@ ${product.category && product.category.name ? `<g:product_type>${product.categor
 <g:condition>new</g:condition>
 <g:identifier_exists>no</g:identifier_exists>
 <g:size>U</g:size>
+<g:google_product_category>632</g:google_product_category>
+<g:shipping>
+  <g:country>${country.toUpperCase()}</g:country>
+  <g:service>Download</g:service>
+  <g:price>0.00 ${currency}</g:price>
+</g:shipping>
 </item>
 `;
       }
