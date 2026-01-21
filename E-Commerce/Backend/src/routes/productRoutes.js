@@ -35,7 +35,9 @@ router.get('/feed/products/:country_code.xml', async (req, res) => {
       price: { $exists: true, $ne: null }
     }).populate('category', 'name');
 
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    // MUDANÇA CRÍTICA: Forçando o domínio de produção para o Google Merchant Center
+    // O Google exige que os links no XML batam com o domínio reivindicado.
+    const frontendUrl = 'https://www.gensartessublimacao.com.br';
     const currency = country === 'br' ? 'BRL' : 'USD';
 
     // Taxa de conversão fixa para demo/simplicidade (idealmente viria de uma config ou API)
@@ -83,6 +85,8 @@ router.get('/feed/products/:country_code.xml', async (req, res) => {
 <g:price>${priceString}</g:price>
 ${product.category && product.category.name ? `<g:product_type>${product.category.name}</g:product_type>` : ''}
 <g:condition>new</g:condition>
+<g:identifier_exists>no</g:identifier_exists>
+<g:size>U</g:size>
 </item>
 `;
       }
