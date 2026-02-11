@@ -1,77 +1,189 @@
-/* c/Users/kevin/OneDrive/Área de Trabalho/E-commerce/E-Commerce/Frontend/src/pages/admin/AdminProdutoForm.css */
+/* AdminProdutoForm.css - Layout Compacto sem Scroll */
 
 .admin-produto-form-container {
-  padding: 2rem;
+  height: calc(100vh - 100px);
+  max-height: calc(100vh - 100px);
+  overflow: hidden;
+  padding: 1rem 2rem;
   background-color: #f9f9f9;
-  max-width: 1200px;
-  margin: 2rem auto;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  max-width: 100%;
+  margin: 0 auto;
 }
 
-.admin-produto-form-container h1 {
-  text-align: center;
-  margin-bottom: 2rem;
+/* Header compacto com título e botões na mesma linha */
+.admin-header-enhanced {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.75rem 1.5rem;
   background: linear-gradient(90deg, #133853 0%, #B99955 100%);
-  color: white;
-  padding: 1rem;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(19, 56, 83, 0.3);
+}
+
+.header-title h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: white;
   font-weight: 600;
 }
 
-.admin-produto-form {
+.header-title p {
+  margin: 0.25rem 0 0 0;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Botões de ação no header */
+.form-actions-sticky {
   display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
+  gap: 0.75rem;
+  align-items: center;
 }
 
-/* Coluna da esquerda */
-.form-fields {
-  flex: 2;
-  min-width: 300px;
+.btn-cancel,
+.btn-save-master {
+  padding: 0.5rem 1.25rem;
+  border: none;
+  border-radius: 5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
 }
 
-/* Coluna da direita */
-.form-options {
-  flex: 1;
-  min-width: 250px;
+.btn-cancel {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.btn-cancel:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-save-master {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-save-master:hover:not(:disabled) {
+  background-color: #218838;
+  transform: translateY(-1px);
+}
+
+.btn-save-master:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+
+/* Grid de 2 colunas para o formulário */
+.admin-produto-form-enhanced {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  height: calc(100% - 90px);
+  overflow: hidden;
+}
+
+/* Colunas do grid */
+.form-column-left,
+.form-column-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+/* Scrollbar customizada */
+.form-column-left::-webkit-scrollbar,
+.form-column-right::-webkit-scrollbar,
+.product-list-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.form-column-left::-webkit-scrollbar-track,
+.form-column-right::-webkit-scrollbar-track,
+.product-list-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.form-column-left::-webkit-scrollbar-thumb,
+.form-column-right::-webkit-scrollbar-thumb,
+.product-list-scroll::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.form-column-left::-webkit-scrollbar-thumb:hover,
+.form-column-right::-webkit-scrollbar-thumb:hover,
+.product-list-scroll::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Seções do formulário */
+.form-section {
   background-color: #fff;
-  padding: 1.5rem;
+  padding: 1rem;
   border-radius: 8px;
   border: 1px solid #e0e0e0;
+  margin-bottom: 0;
 }
 
+.form-section h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1rem;
+  color: #133853;
+  font-weight: 600;
+  border-bottom: 2px solid #B99955;
+  padding-bottom: 0.5rem;
+}
+
+/* Grupos de formulário */
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
   font-weight: 500;
   color: #555;
+  font-size: 0.9rem;
 }
 
+.field-hint {
+  font-size: 0.75rem;
+  color: #888;
+  margin: 0.25rem 0;
+}
+
+/* Inputs */
 .form-group input[type="text"],
 .form-group input[type="number"],
 .form-group textarea,
 .form-group select {
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   transition: border-color 0.2s;
 }
 
 .form-group input::placeholder {
   color: #aaa;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
-.form-group input[type="text"]:focus,
-.form-group input[type="number"]:focus,
+.form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus {
   outline: none;
@@ -79,160 +191,272 @@
 }
 
 .form-group textarea {
-  min-height: 120px;
+  min-height: 60px !important;
+  max-height: 80px;
   resize: vertical;
 }
 
+/* Input com prefixo (R$) */
+.input-icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-prefix {
+  position: absolute;
+  left: 0.75rem;
+  color: #666;
+  font-weight: 500;
+  pointer-events: none;
+}
+
+.input-icon-wrapper input {
+  padding-left: 2.5rem;
+}
+
+/* Linha de formulário (2 campos lado a lado) */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* Categoria com botões */
 .category-selection-wrapper {
   display: flex;
   align-items: center;
-  /* Garante alinhamento vertical */
   gap: 0.5rem;
 }
 
 .category-selection-wrapper select {
-  flex-grow: 1;
-  margin: 0;
-  /* Remove margens padrão que podem desalinhá-lo */
+  flex: 1;
 }
 
-.btn-create-category {
-  padding: 0.75rem 1rem;
-  /* Ajusta o padding para corresponder à altura do select */
+.btn-create-category-small {
+  padding: 0.5rem 0.75rem;
   background-color: transparent;
   color: #007bff;
   border: 1px solid #007bff;
   border-radius: 4px;
   cursor: pointer;
   font-weight: 500;
-  line-height: 1;
-  /* Garante que o texto não cause altura extra */
-  transition: background-color 0.2s, color 0.2s;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  transition: all 0.2s;
 }
 
-.btn-create-category:hover {
+.btn-create-category-small:hover {
   background-color: #007bff;
   color: #fff;
 }
 
-/* Estilo para o toggle do combo */
-.combo-toggle label {
+.cat-mini-actions {
   display: flex;
-  align-items: center;
-  padding: 0.75rem;
-  background-color: #f8f9fa;
-  border-radius: 5px;
+  gap: 0.25rem;
+}
+
+.btn-mini-action {
+  padding: 0.35rem 0.5rem;
+  border: none;
+  background-color: transparent;
   cursor: pointer;
-}
-
-.combo-toggle input[type="checkbox"] {
-  margin-right: 0.75rem;
-  width: 18px;
-  height: 18px;
-}
-
-/* Estilo para a seleção de produtos do combo */
-.combo-product-selection h3 {
-  margin-top: 0;
-  margin-bottom: 1rem;
-  color: #333;
-  font-size: 1.1rem;
-}
-
-.product-list {
-  max-height: 350px;
-  overflow-y: auto;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  padding: 0.5rem;
-}
-
-.product-item label {
-  display: flex;
-  align-items: center;
-  padding: 0.5rem;
-  cursor: pointer;
+  font-size: 1rem;
   border-radius: 4px;
   transition: background-color 0.2s;
 }
 
-.product-item label:hover {
+.btn-mini-action:hover {
   background-color: #f0f0f0;
 }
 
-.product-item input[type="checkbox"] {
-  margin-right: 0.75rem;
+.btn-mini-action.delete:hover {
+  background-color: #ffe0e0;
+}
+
+/* Toggle de combo */
+.combo-toggle {
+  margin-bottom: 0.75rem;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  padding: 0.6rem;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.toggle-label input[type="checkbox"] {
+  margin-right: 0.5rem;
   width: 16px;
   height: 16px;
-}
-
-/* Estilo para inputs de ficheiro */
-input[type="file"] {
-  font-size: 0.9rem;
-}
-
-.file-info,
-.upload-status {
-  font-size: 0.85rem;
-  color: #666;
-  margin-top: 0.5rem;
-  background-color: #e9ecef;
-  padding: 0.4rem 0.8rem;
-  border-radius: 4px;
-  display: inline-block;
-}
-
-.image-preview-list {
-  font-size: 0.85rem;
-  color: #666;
-  margin-top: 0.5rem;
-}
-
-.image-preview-single {
-  margin-top: 1rem;
-}
-
-.image-preview-single p {
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-  color: #666;
-}
-
-.image-preview-single img {
-  max-width: 150px;
-  height: auto;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-}
-
-/* Botão Salvar */
-.btn-salvar {
-  display: block;
-  width: 100%;
-  max-width: 300px;
-  margin: 2rem auto 0;
-  padding: 0.8rem 1.5rem;
-  background-color: #28a745;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 1.1rem;
-  font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
 }
 
-.btn-salvar:hover:not(:disabled) {
-  background-color: #218838;
-  transform: translateY(-2px);
+/* Área de upload de imagens */
+.image-upload-area {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background-color: #fafafa;
 }
 
-.btn-salvar:disabled {
-  background-color: #999;
-  cursor: not-allowed;
+.image-upload-area:hover {
+  border-color: #007bff;
+  background-color: #f0f8ff;
 }
 
-/* Estilos para o Modal */
+.upload-placeholder p {
+  margin: 0.5rem 0 0 0;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+/* Preview de imagens */
+.file-list-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.image-preview-thumb {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.image-preview-thumb img {
+  display: block;
+}
+
+/* Seleção de produtos do combo */
+.combo-selection-area {
+  margin-top: 0.75rem;
+}
+
+.info-text {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.product-list-scroll {
+  max-height: 180px;
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 0.5rem;
+  background-color: #fafafa;
+}
+
+.product-checkbox-item {
+  padding: 0.4rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.product-checkbox-item:hover {
+  background-color: #f0f0f0;
+}
+
+.product-checkbox-item label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.product-checkbox-item input[type="checkbox"] {
+  margin-right: 0.5rem;
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
+
+/* Grid de upload de arquivos */
+.files-upload-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.files-upload-grid input[type="file"] {
+  font-size: 0.85rem;
+  padding: 0.4rem;
+}
+
+.file-status-ok {
+  font-size: 0.8rem;
+  color: #28a745;
+  margin: 0.25rem 0 0 0;
+}
+
+.file-status-ok a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.file-status-ok a:hover {
+  text-decoration: underline;
+}
+
+/* Barra de progresso */
+.upload-progress-bar {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 0.5rem;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 0.85rem;
+  margin-top: 0.75rem;
+  border: 1px solid #ffeaa7;
+}
+
+.upload-status {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+/* Loading */
+.admin-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 1rem;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #133853;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Modais */
 .modal-backdrop {
   position: fixed;
   top: 0;
@@ -260,41 +484,50 @@ input[type="file"] {
   margin-top: 0;
   margin-bottom: 1.5rem;
   color: #333;
+  font-size: 1.25rem;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9rem;
 }
 
 .modal-actions {
   display: flex;
   justify-content: flex-end;
   gap: 0.75rem;
-  margin-top: 2rem;
+  margin-top: 1.5rem;
 }
 
-.btn-modal-confirm,
-.btn-modal-cancel {
-  padding: 0.6rem 1.2rem;
+.modal-actions button {
+  padding: 0.5rem 1rem;
   border: none;
   border-radius: 5px;
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s;
+  font-size: 0.9rem;
 }
 
-.btn-modal-confirm {
+.modal-actions button.confirm {
   background-color: #007bff;
   color: white;
 }
 
-.btn-modal-confirm:hover {
+.modal-actions button.confirm:hover {
   background-color: #0056b3;
 }
 
-.btn-modal-cancel {
+.modal-actions button:not(.confirm) {
   background-color: #e9ecef;
   color: #333;
   border: 1px solid #ced4da;
 }
 
-.btn-modal-cancel:hover {
+.modal-actions button:not(.confirm):hover {
   background-color: #d6d8db;
 }
 
@@ -307,5 +540,20 @@ input[type="file"] {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 1366px) {
+  .admin-produto-form-enhanced {
+    gap: 1rem;
+  }
+
+  .form-section {
+    padding: 0.75rem;
+  }
+
+  .form-group {
+    margin-bottom: 0.5rem;
   }
 }

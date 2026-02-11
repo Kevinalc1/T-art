@@ -353,200 +353,213 @@ export default function AdminProdutoForm() {
           <h1>{isEditing ? 'Editar Produto' : 'Adicionar Novo Produto'}</h1>
           <p>{isEditing ? 'Atualize as informações do seu produto.' : 'Preencha os dados abaixo para criar um novo item.'}</p>
         </div>
+        <div className="form-actions-sticky">
+          <button type="button" className="btn-cancel" onClick={() => navigate('/admin/dashboard')}>
+            Cancelar
+          </button>
+          <button type="submit" form="product-form" className="btn-save-master" disabled={uploading || galleryUploading}>
+            {uploading || galleryUploading ? 'Processando...' : 'Salvar Alterações'}
+          </button>
+        </div>
       </div>
 
       <form id="product-form" onSubmit={handleSubmit} className="admin-produto-form-enhanced">
 
-        {/* SEÇÃO 1: INFORMAÇÕES BÁSICAS */}
-        <div className="form-section">
-          <h3>Informações Básicas</h3>
-          <div className="form-group">
-            <label htmlFor="productName">Nome do Produto</label>
-            <input
-              type="text"
-              id="productName"
-              name="productName"
-              value={formData.productName}
-              onChange={handleChange}
-              placeholder="Ex: Cartão de Visita Minimalista"
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="description">Descrição Detalhada</label>
-            <textarea
-              id="description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              placeholder="Descreva o que o cliente irá receber, detalhes técnicos, etc..."
-              rows={5}
-            />
-          </div>
-        </div>
+        {/* COLUNA ESQUERDA */}
+        <div className="form-column-left">
 
-        {/* SEÇÃO 2: PREÇO E CATEGORIA */}
-        <div className="form-section">
-          <h3>Categorização e Valor</h3>
-          <div className="form-row">
+          {/* SEÇÃO 1: INFORMAÇÕES BÁSICAS */}
+          <div className="form-section">
+            <h3>Informações Básicas</h3>
             <div className="form-group">
-              <label htmlFor="price">Preço (R$)</label>
-              <div className="input-icon-wrapper">
-                <span className="input-prefix">R$</span>
-                <input
-                  type="number"
-                  id="price"
-                  name="price"
-                  value={formData.price}
-                  onChange={handleChange}
-                  placeholder="0.00"
-                  step="0.01"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="category">Categoria</label>
-              <div className="category-selection-wrapper">
-                <select
-                  id="category"
-                  name="category"
-                  value={formData.category}
-                  onChange={handleChange}
-                  style={{ flex: 1 }}
-                  required
-                >
-                  <option value="">-- Selecione --</option>
-                  {allCategories.map(cat => (
-                    <option key={cat._id} value={cat._id}>{cat.name}</option>
-                  ))}
-                </select>
-
-                {/* Ações de Categoria Pequenas */}
-                {formData.category && (
-                  <div className="cat-mini-actions">
-                    <button type="button" onClick={handleEditClick} className="btn-mini-action edit" title="Editar Categoria">✏️</button>
-                    <button type="button" onClick={handleDeleteCategory} className="btn-mini-action delete" title="Excluir Categoria">🗑️</button>
-                  </div>
-                )}
-
-                <button type="button" className="btn-create-category-small" onClick={() => setIsModalOpen(true)}>
-                  + Nova
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* SEÇÃO 3: IMAGENS DA GALERIA */}
-        <div className="form-section">
-          <h3>Visual e Galeria</h3>
-          <div className="form-group">
-            <label>Imagens do Produto (Mockups)</label>
-            <p className="field-hint">Selecione uma ou mais imagens para mostrar na loja.</p>
-
-            <div className="image-upload-area" onClick={() => document.getElementById('gallery').click()}>
+              <label htmlFor="productName">Nome do Produto</label>
               <input
-                type="file"
-                id="gallery"
-                multiple
-                onChange={(e) => setGalleryFiles(e.target.files)}
-                style={{ display: 'none' }}
+                type="text"
+                id="productName"
+                name="productName"
+                value={formData.productName}
+                onChange={handleChange}
+                placeholder="Ex: Cartão de Visita Minimalista"
+                required
               />
-              <div className="upload-placeholder">
-                <span style={{ fontSize: '2rem' }}>🖼️</span>
-                <p>{galleryFiles ? `${galleryFiles.length} imagens selecionadas` : 'Clique para selecionar imagens'}</p>
-              </div>
             </div>
+            <div className="form-group">
+              <label htmlFor="description">Descrição Detalhada</label>
+              <textarea
+                id="description"
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                placeholder="Descreva o que o cliente irá receber, detalhes técnicos, etc..."
+                rows={3}
+              />
+            </div>
+          </div>
 
-            {/* Preview de imagens existentes ou selecionadas */}
-            <div className="file-list-preview">
-              {/* Imagens Já Salvas */}
-              {formData.imageUrls && formData.imageUrls.map((url, idx) => (
-                <div key={idx} className="image-preview-thumb">
-                  <img src={url} alt={`Preview ${idx}`} style={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 4 }} />
+          {/* SEÇÃO 2: PREÇO E CATEGORIA */}
+          <div className="form-section">
+            <h3>Categorização e Valor</h3>
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="price">Preço (R$)</label>
+                <div className="input-icon-wrapper">
+                  <span className="input-prefix">R$</span>
+                  <input
+                    type="number"
+                    id="price"
+                    name="price"
+                    value={formData.price}
+                    onChange={handleChange}
+                    placeholder="0.00"
+                    step="0.01"
+                    required
+                  />
                 </div>
-              ))}
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="category">Categoria</label>
+                <div className="category-selection-wrapper">
+                  <select
+                    id="category"
+                    name="category"
+                    value={formData.category}
+                    onChange={handleChange}
+                    style={{ flex: 1 }}
+                    required
+                  >
+                    <option value="">-- Selecione --</option>
+                    {allCategories.map(cat => (
+                      <option key={cat._id} value={cat._id}>{cat.name}</option>
+                    ))}
+                  </select>
+
+                  {/* Ações de Categoria Pequenas */}
+                  {formData.category && (
+                    <div className="cat-mini-actions">
+                      <button type="button" onClick={handleEditClick} className="btn-mini-action edit" title="Editar Categoria">✏️</button>
+                      <button type="button" onClick={handleDeleteCategory} className="btn-mini-action delete" title="Excluir Categoria">🗑️</button>
+                    </div>
+                  )}
+
+                  <button type="button" className="btn-create-category-small" onClick={() => setIsModalOpen(true)}>
+                    + Nova
+                  </button>
+                </div>
+              </div>
             </div>
-            {galleryUploading && <p className="upload-status">Enviando imagens...</p>}
           </div>
+
+          {/* SEÇÃO 3: TIPO DE PRODUTO */}
+          <div className="form-section">
+            <h3>Tipo de Produto</h3>
+            <div className="form-group combo-toggle">
+              <label className="toggle-label">
+                <input
+                  type="checkbox"
+                  checked={formData.isCombo}
+                  onChange={handleComboToggle}
+                />
+                <span>Este produto é um Combo (Pacote de vários produtos)</span>
+              </label>
+            </div>
+          </div>
+
         </div>
 
-        {/* SEÇÃO 4: ARQUIVOS DE ENTREGA */}
-        <div className="form-section">
-          <h3>Arquivos de Entrega (Download)</h3>
+        {/* COLUNA DIREITA */}
+        <div className="form-column-right">
 
-          <div className="form-group combo-toggle">
-            <label className="toggle-label">
-              <input
-                type="checkbox"
-                checked={formData.isCombo}
-                onChange={handleComboToggle}
-              />
-              <span>Este produto é um Combo (Pacote de vários produtos)</span>
-            </label>
-          </div>
+          {/* SEÇÃO 4: IMAGENS DA GALERIA */}
+          <div className="form-section">
+            <h3>Visual e Galeria</h3>
+            <div className="form-group">
+              <label>Imagens do Produto (Mockups)</label>
+              <p className="field-hint">Selecione uma ou mais imagens para mostrar na loja.</p>
 
-          {formData.isCombo ? (
-            <div className="combo-selection-area">
-              <p className="info-text">Selecione quais produtos individuais compõem este combo:</p>
-              <div className="product-list-scroll">
-                {allProducts.filter(p => !p.isCombo && p._id !== id).map(prod => (
-                  <div key={prod._id} className="product-checkbox-item">
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={(formData.comboProducts || []).map(p => typeof p === 'object' ? p._id : p).includes(prod._id)}
-                        onChange={() => handleProductSelect(prod._id)}
-                      />
-                      {prod.productName}
-                    </label>
+              <div className="image-upload-area" onClick={() => document.getElementById('gallery').click()}>
+                <input
+                  type="file"
+                  id="gallery"
+                  multiple
+                  onChange={(e) => setGalleryFiles(e.target.files)}
+                  style={{ display: 'none' }}
+                />
+                <div className="upload-placeholder">
+                  <span style={{ fontSize: '2rem' }}>🖼️</span>
+                  <p>{galleryFiles ? `${galleryFiles.length} imagens selecionadas` : 'Clique para selecionar imagens'}</p>
+                </div>
+              </div>
+
+              {/* Preview de imagens existentes ou selecionadas */}
+              <div className="file-list-preview">
+                {/* Imagens Já Salvas */}
+                {formData.imageUrls && formData.imageUrls.map((url, idx) => (
+                  <div key={idx} className="image-preview-thumb">
+                    <img src={url} alt={`Preview ${idx}`} style={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 4 }} />
                   </div>
                 ))}
               </div>
+              {galleryUploading && <p className="upload-status">Enviando imagens...</p>}
             </div>
-          ) : (
-            <div className="files-upload-grid">
-              <div className="form-group">
-                <label>Arquivo Principal (ZIP/CDR/AI)</label>
-                <input type="file" onChange={(e) => setFiles(e.target.files)} />
-                {formData.downloadUrls && formData.downloadUrls.length > 0 && (
-                  <p className="file-status-ok">✔️ Arquivo atual: <a href={formData.downloadUrls[0]} target="_blank">Baixar</a></p>
-                )}
-              </div>
+          </div>
 
-              <div className="form-group">
-                <label>Arquivo de Fonte (.ttf/.otf) (Opcional)</label>
-                <input type="file" onChange={(e) => setFontFile(e.target.files[0])} />
-                {formData.fontUrl && (
-                  <p className="file-status-ok">✔️ Fonte atual salva</p>
-                )}
-              </div>
+          {/* SEÇÃO 5: ARQUIVOS DE ENTREGA */}
+          <div className="form-section">
+            <h3>Arquivos de Entrega</h3>
 
-              <div className="form-group">
-                <label>Arquivo Vetor Extra (Opcional)</label>
-                <input type="file" onChange={(e) => setVectorFile(e.target.files[0])} />
-                {formData.vectorUrl && (
-                  <p className="file-status-ok">✔️ Vetor atual salvo</p>
-                )}
+            {formData.isCombo ? (
+              <div className="combo-selection-area">
+                <p className="info-text">Selecione quais produtos individuais compõem este combo:</p>
+                <div className="product-list-scroll">
+                  {allProducts.filter(p => !p.isCombo && p._id !== id).map(prod => (
+                    <div key={prod._id} className="product-checkbox-item">
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={(formData.comboProducts || []).map(p => typeof p === 'object' ? p._id : p).includes(prod._id)}
+                          onChange={() => handleProductSelect(prod._id)}
+                        />
+                        {prod.productName}
+                      </label>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            ) : (
+              <div className="files-upload-grid">
+                <div className="form-group">
+                  <label>Arquivo Principal (ZIP/CDR/AI)</label>
+                  <input type="file" onChange={(e) => setFiles(e.target.files)} />
+                  {formData.downloadUrls && formData.downloadUrls.length > 0 && (
+                    <p className="file-status-ok">✔️ Arquivo atual: <a href={formData.downloadUrls[0]} target="_blank">Baixar</a></p>
+                  )}
+                </div>
 
-          {uploading && <div className="upload-progress-bar">Enviando arquivos... aguarde.</div>}
+                <div className="form-group">
+                  <label>Arquivo de Fonte (.ttf/.otf) (Opcional)</label>
+                  <input type="file" onChange={(e) => setFontFile(e.target.files[0])} />
+                  {formData.fontUrl && (
+                    <p className="file-status-ok">✔️ Fonte atual salva</p>
+                  )}
+                </div>
+
+                <div className="form-group">
+                  <label>Arquivo Vetor Extra (Opcional)</label>
+                  <input type="file" onChange={(e) => setVectorFile(e.target.files[0])} />
+                  {formData.vectorUrl && (
+                    <p className="file-status-ok">✔️ Vetor atual salvo</p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {uploading && <div className="upload-progress-bar">Enviando arquivos... aguarde.</div>}
+          </div>
+
         </div>
 
       </form>
-
-      <div className="form-actions-sticky">
-        <button type="button" className="btn-cancel" onClick={() => navigate('/admin/dashboard')}>
-          Cancelar
-        </button>
-        <button type="submit" form="product-form" className="btn-save-master" disabled={uploading || galleryUploading}>
-          {uploading || galleryUploading ? 'Processando...' : 'Salvar Alterações'}
-        </button>
-      </div>
 
       {/* MODALS (Categoria) */}
       {showEditModal && (

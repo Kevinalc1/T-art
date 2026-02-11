@@ -103,6 +103,14 @@ router.post('/webhook', async (req, res) => {
                 const userEmail = metadata.user_email || paymentInfo.payer.email;
                 const items = metadata.items || [];
 
+                // --- IDEMPOTENCY CHECK ---
+                const Pedido = require('../models/Pedido');
+                const existingOrder = await Pedido.findOne({ stripeSessionId: `pix_${data.id}` });
+                if (existingOrder) {
+                    console.log(`⚠️ [Idempotency] Pedido Pix ${data.id} já processado. Ignorando.`);
+                    return res.status(200).send('OK');
+                }
+
                 console.log(`Pagamento Pix Aprovado para ${userEmail}. Processando ${items.length} itens.`);
 
                 // Criar array de itens do pedido
@@ -152,7 +160,8 @@ router.post('/webhook', async (req, res) => {
                                 secureEmailLink,
                                 produtoDb._id,
                                 data.id,
-                                paymentInfo.payer?.first_name || null
+                                paymentInfo.payer?.first_name || null,
+                                produtoDb.imageUrls && produtoDb.imageUrls.length > 0 ? produtoDb.imageUrls[0] : null
                             );
                             console.log(`Link enviado para ${userEmail} (Produto: ${produtoDb.productName})`);
                         } else {

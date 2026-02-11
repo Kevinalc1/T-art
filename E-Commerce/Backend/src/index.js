@@ -223,6 +223,14 @@ app.post('/api/checkout/webhook', express.raw({ type: 'application/json' }), asy
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
     try {
+      // --- IDEMPOTENCY CHECK ---
+      const Pedido = mongoose.model('Pedido');
+      const existingOrder = await Pedido.findOne({ stripeSessionId: session.id });
+      if (existingOrder) {
+        console.log(`⚠️ [Idempotency] Pedido Stripe ${session.id} já processado. Ignorando.`);
+        return res.status(200).send();
+      }
+
       const cartItems = JSON.parse(session.metadata.cartItems);
       const { pedidoItems, emailHtmlLinks } = await prepararItensPedidoEEmail(cartItems);
       await criarPedido(session, pedidoItems, stripe);
@@ -267,7 +275,8 @@ app.post('/api/checkout/webhook', express.raw({ type: 'application/json' }), asy
                 secureEmailLink, // Passamos o link http://.../api/download/xyz
                 produtoDb._id,
                 session.id,
-                session.customer_details?.name || null
+                session.customer_details?.name || null,
+                produtoDb.imageUrls && produtoDb.imageUrls.length > 0 ? produtoDb.imageUrls[0] : null
               );
               console.log(`Link seguro enviado (Stripe) para ${session.customer_details.email} - Token: ${token}`);
             } else {
